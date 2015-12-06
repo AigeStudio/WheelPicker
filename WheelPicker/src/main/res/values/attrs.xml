@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="WheelPicker">
+        <attr name="wheel_data" format="reference" />
+        <attr name="wheel_style" format="enum">
+            <enum name="straight" value="0" />
+            <enum name="curved" value="1" />
+        </attr>
+        <attr name="wheel_direction" format="enum">
+            <enum name="horizontal" value="0" />
+            <enum name="vertical" value="1" />
+        </attr>
+        <attr name="wheel_item_index" format="integer" />
+        <attr name="wheel_item_index_size_maximum" format="integer" />
+        <attr name="wheel_item_same_size" format="boolean" />
+        <attr name="wheel_item_count" format="integer" />
+        <attr name="wheel_item_space" format="dimension" />
+        <attr name="wheel_text_size" format="dimension" />
+        <attr name="wheel_text_maximum_size" format="string" />
+        <attr name="wheel_text_color" format="color" />
+        <attr name="wheel_text_transparent_gradient" format="boolean" />
+    </declare-styleable>
+</resources>

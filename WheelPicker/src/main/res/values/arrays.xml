@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="WheelArrayDefault">
+        <item>AigeStudio</item>
+        <item>Aige</item>
+        <item>爱哥</item>
+        <item>الحب  اخي</item>
+        <item>jeg elsker</item>
+        <item>사랑해요 형</item>
+        <item>Amor de irmão</item>
+        <item>armastan</item>
+        <item>愛の兄</item>
+        <item>обичам те</item>
+        <item>любовь - братa</item>
+    </string-array>
+</resources>

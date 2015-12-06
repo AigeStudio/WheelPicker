@@ -1,0 +1,16 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.aigestudio.wheelpicker.demo">
+
+    <application
+        android:icon="@mipmap/ic_launcher"
+        android:label="WheelPickerDemo"
+        android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen">
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>
