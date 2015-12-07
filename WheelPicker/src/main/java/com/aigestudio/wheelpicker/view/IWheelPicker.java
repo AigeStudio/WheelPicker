@@ -83,4 +83,13 @@ interface IWheelPicker {
      *             Text size
      */
     void setTextSize(int size);
+
+
+    /**
+     * 获取当前Item项上对应的文本数据
+     * Get text of current item display
+     *
+     * @return 当前Item项上对应的文本数据 Text of current item
+     */
+    String getCurrentItemText();
 }

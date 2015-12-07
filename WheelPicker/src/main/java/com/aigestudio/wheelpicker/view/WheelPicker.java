@@ -113,4 +113,9 @@ public class WheelPicker extends WheelView implements IWheelPicker {
         wheel.computeWheel();
         requestLayout();
     }
+
+    @Override
+    public String getCurrentItemText() {
+        return wheel.textCurrentItem;
+    }
 }

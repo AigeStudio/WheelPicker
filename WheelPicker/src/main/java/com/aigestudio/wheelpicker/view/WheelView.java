@@ -33,7 +33,7 @@ class WheelView extends View {
 
     int textSize, textColor;
     int itemCount, itemSpace, itemIndex;
-    int itemIndexWidthMaximum, itemIndexHeightMaximum;
+    int itemIndexWidthMaximum = -1, itemIndexHeightMaximum = -1;
 
     boolean hasSameSize;
     boolean isTextTransGradient;
