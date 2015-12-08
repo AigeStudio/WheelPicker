@@ -1,8 +1,11 @@
 package com.aigestudio.wheelpicker.demo;
 
 import android.app.Activity;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.os.Bundle;
 
+import com.aigestudio.wheelpicker.view.AbstractWheelDecor;
 import com.aigestudio.wheelpicker.view.WheelPicker;
 
 /**
@@ -22,6 +25,12 @@ public class MainActivity extends Activity {
 //        }
         picker = (WheelPicker) findViewById(R.id.main_wp);
         picker.setStyle(WheelPicker.Style.CURVED);
+        picker.setCurrentItemBackgroundDecor(false, new AbstractWheelDecor() {
+            @Override
+            public void drawDecor(Canvas canvas, Paint paint) {
+                canvas.drawColor(0x33ffffff);
+            }
+        });
 //        picker.setData(data);
 //        picker.setTextColor(0xFF986325);
 //        picker.setItemIndex(1);

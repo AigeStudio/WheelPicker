@@ -25,6 +25,7 @@ import java.util.List;
  */
 class WheelView extends View {
     AbstractWheelStyle wheel;
+    AbstractWheelDecor decorBg, decorFg;
 
     Direction direction;
     Style style;
@@ -36,7 +37,7 @@ class WheelView extends View {
     int itemIndexWidthMaximum = -1, itemIndexHeightMaximum = -1;
 
     boolean hasSameSize;
-    boolean isTextTransGradient;
+    boolean ignorePadding;
 
     String textWidthMaximum, textHeightMaximum;
 
@@ -57,16 +58,15 @@ class WheelView extends View {
         direction = Direction.fromID(a.getInt(R.styleable.WheelPicker_wheel_direction, 1));
         style = Style.fromID(a.getInt(R.styleable.WheelPicker_wheel_style, 1));
         itemIndex = a.getInt(R.styleable.WheelPicker_wheel_item_index, 0);
-//        itemIndexWidthMaximum = a.getInt(R.styleable.WheelPicker_wheel_item_index_size_maximum, -1);
+        itemIndexWidthMaximum = a.getInt(R.styleable.WheelPicker_wheel_item_index_width_maximum, -1);
+        itemIndexHeightMaximum = a.getInt(R.styleable.WheelPicker_wheel_item_index_height_maximum, -1);
         itemCount = a.getInt(R.styleable.WheelPicker_wheel_item_count, 5);
         itemSpace = a.getDimensionPixelSize(R.styleable.WheelPicker_wheel_item_space, 25);
         textSize = a.getDimensionPixelSize(R.styleable.WheelPicker_wheel_text_size, 100);
         textColor = a.getColor(R.styleable.WheelPicker_wheel_text_color, Color.BLACK);
         hasSameSize = a.getBoolean(R.styleable.WheelPicker_wheel_item_same_size, false);
-//        textWidthMaximum = a.getString(R.styleable.WheelPicker_wheel_text_maximum_size);
-        isTextTransGradient = true;
-//        isTextTransGradient = a.getBoolean(R.styleable.WheelPicker_wheel_text_transparent_gradient,
-//                false);
+        textWidthMaximum = a.getString(R.styleable.WheelPicker_wheel_text_maximum_width);
+        textHeightMaximum = a.getString(R.styleable.WheelPicker_wheel_text_maximum_height);
         a.recycle();
 
         wheel = WheelFactory.createWheelStyle(style, this);

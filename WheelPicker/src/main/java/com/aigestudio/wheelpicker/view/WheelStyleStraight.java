@@ -23,12 +23,12 @@ class WheelStyleStraight extends AbstractWheelStyle {
         height = direction.computeStraightHeight(view.itemCount, view.itemSpace, maxTextWidth,
                 maxTextHeight);
         unit = direction.computeUnitStraight(width, height, view.itemCount);
-        unitDisplayMin = -Math.max(width, height) / 2;
+        unitDisplayMin = -direction.getUnitDisplayRule(width, height);
         unitDisplayMax = -unitDisplayMin;
     }
 
     @Override
-    void onDraw(Canvas canvas) {
+    void drawItems(Canvas canvas) {
         for (int i = -view.itemIndex; i < view.data.size() - view.itemIndex; i++) {
             int curUnit = unit * i;
             curUnit += (unitTotalMove + distanceSingleMove);
@@ -36,8 +36,7 @@ class WheelStyleStraight extends AbstractWheelStyle {
                 continue;
             }
             canvas.save();
-            if (view.isTextTransGradient)
-                paint.setAlpha(255 - 255 * Math.abs(curUnit) / unitDisplayMax);
+            paint.setAlpha(255 - 255 * Math.abs(curUnit) / unitDisplayMax);
             canvas.drawText(view.data.get(i + view.itemIndex), centerX,
                     centerTextY + curUnit, paint);
             canvas.restore();

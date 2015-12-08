@@ -15,7 +15,7 @@
         aigestudio:wheel_data="@array/WheelArrayDefault"
         aigestudio:wheel_item_count="7"
         aigestudio:wheel_item_index="2"
-        aigestudio:wheel_item_space="5dp"
+        aigestudio:wheel_item_space="10dp"
         aigestudio:wheel_text_color="#fff"
         aigestudio:wheel_text_size="30dp" />
 </LinearLayout>

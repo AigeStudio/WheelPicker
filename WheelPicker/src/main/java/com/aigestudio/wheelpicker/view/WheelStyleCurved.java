@@ -37,7 +37,7 @@ class WheelStyleCurved extends AbstractWheelStyle {
     }
 
     @Override
-    void onDraw(Canvas canvas) {
+    void drawItems(Canvas canvas) {
         for (int i = -view.itemIndex; i < view.data.size() - view.itemIndex; i++) {
             int curUnit = unit * i;
             curUnit += (unitTotalMove + degreeSingleMove);
@@ -61,8 +61,7 @@ class WheelStyleCurved extends AbstractWheelStyle {
             matrixDepth.postTranslate(centerX, centerY + space);
             matrixRotate.postConcat(matrixDepth);
             canvas.concat(matrixRotate);
-            if (view.isTextTransGradient)
-                paint.setAlpha(255 - 255 * Math.abs(curUnit) / unitDisplayMax);
+            paint.setAlpha(255 - 255 * Math.abs(curUnit) / unitDisplayMax);
             canvas.drawText(view.data.get(i + view.itemIndex), centerX,
                     centerTextY + space, paint);
             canvas.restore();

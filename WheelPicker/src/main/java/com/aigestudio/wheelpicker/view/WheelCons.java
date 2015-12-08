@@ -36,5 +36,5 @@ class WheelCons {
      * 速度追踪单位值
      * Value of velocity track
      */
-    static final int VELOCITY_TRACKER_UNITS = 200;
+    static final int VELOCITY_TRACKER_UNITS = 400;
 }

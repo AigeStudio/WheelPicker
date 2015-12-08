@@ -35,17 +35,6 @@ interface IWheelPicker {
      */
     void setStyle(Style style);
 
-//    /**
-//     * 设置是否开启文本半透明渐变
-//     * 该方法将在下个版本启动
-//     * Set is text transparent gradient enable
-//     * This method will available in next version
-//     *
-//     * @param isTextTransGradient true表示开启 false表示关闭
-//     *                            true is enable, otherwise
-//     */
-//    void setTextTransGradientEnable(boolean isTextTransGradient);
-
     /**
      * 设置显示数据
      * 目前为止WheelPicker仅仅支持字符串列表类型的数据源
@@ -92,4 +81,26 @@ interface IWheelPicker {
      * @return 当前Item项上对应的文本数据 Text of current item
      */
     String getCurrentItemText();
+
+    /**
+     * 设置当前Item项的背景装饰物
+     * Set background decorate of current item
+     *
+     * @param ignorePadding 是否忽略WheelView的内边距
+     *                      Is ignore padding of WheelView
+     * @param decor         装饰物对象
+     *                      Subclass of AbstractWheelDecor{@link AbstractWheelDecor}
+     */
+    void setCurrentItemBackgroundDecor(boolean ignorePadding, AbstractWheelDecor decor);
+
+    /**
+     * 设置当前Item项的前景装饰物
+     * Set foreground decorate of current item
+     *
+     * @param ignorePadding 是否忽略WheelView的内边距
+     *                      Is ignore padding of WheelView
+     * @param decor         装饰物对象
+     *                      Subclass of AbstractWheelDecor{@link AbstractWheelDecor}
+     */
+    void setCurrentItemForegroundDecor(boolean ignorePadding, AbstractWheelDecor decor);
 }

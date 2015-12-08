@@ -9,7 +9,8 @@ import android.widget.Scroller;
  * Implement of WheelView's vertical direction
  *
  * @author AigeStudio 2015-12-03
- * @version 1.0.0 preview
+ * @author AigeStudio 2015-12-08
+ * @version 1.0.0 beta
  */
 class WheelDirectVer implements IWheelDirection {
     @Override
@@ -34,7 +35,7 @@ class WheelDirectVer implements IWheelDirection {
 
     @Override
     public void startScroll(Scroller scroller, int start, int distance) {
-        scroller.startScroll(0, start, 0, distance);
+        scroller.startScroll(0, start, 0, distance, 500);
     }
 
     @Override
@@ -79,6 +80,11 @@ class WheelDirectVer implements IWheelDirection {
 
     @Override
     public int computeRadiusCurved(int width, int height) {
+        return height / 2;
+    }
+
+    @Override
+    public int getUnitDisplayRule(int width, int height) {
         return height / 2;
     }
 }

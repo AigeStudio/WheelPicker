@@ -118,4 +118,24 @@ public class WheelPicker extends WheelView implements IWheelPicker {
     public String getCurrentItemText() {
         return wheel.textCurrentItem;
     }
+
+    @Override
+    public void setCurrentItemBackgroundDecor(boolean ignorePadding, AbstractWheelDecor decor) {
+        decorBg = decor;
+        if (this.ignorePadding != ignorePadding) {
+            this.ignorePadding = ignorePadding;
+            wheel.computeCurrentDecorArea();
+        }
+        invalidate();
+    }
+
+    @Override
+    public void setCurrentItemForegroundDecor(boolean ignorePadding, AbstractWheelDecor decor) {
+        decorFg = decor;
+        if (this.ignorePadding != ignorePadding) {
+            this.ignorePadding = ignorePadding;
+            wheel.computeCurrentDecorArea();
+        }
+        invalidate();
+    }
 }

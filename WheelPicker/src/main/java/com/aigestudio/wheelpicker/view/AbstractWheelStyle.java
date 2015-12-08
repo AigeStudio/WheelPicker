@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.Scroller;
 
 /**
@@ -24,6 +25,8 @@ abstract class AbstractWheelStyle {
     Scroller scroller;
     VelocityTracker tracker;
     Paint paint;
+    Paint paintDecor;
+    Rect rectDecorCurrent = new Rect();
 
     int centerX, centerY;
     int centerTextY;
@@ -48,12 +51,14 @@ abstract class AbstractWheelStyle {
 
         direction = WheelFactory.createWheelDirection(view.direction);
 
-        scroller = new Scroller(view.getContext());
+        scroller = new Scroller(view.getContext(), new DecelerateInterpolator());
 
         paint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG | Paint.LINEAR_TEXT_FLAG);
         paint.setTextAlign(Paint.Align.CENTER);
         paint.setColor(view.textColor);
         paint.setTextSize(view.textSize);
+
+        paintDecor = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG | Paint.LINEAR_TEXT_FLAG);
 
         computeTextSize();
         computeWheel();
@@ -68,14 +73,20 @@ abstract class AbstractWheelStyle {
             paint.getTextBounds(tmp, 0, tmp.length(), textBounds);
             maxTextWidth = textBounds.width();
             maxTextHeight = textBounds.height();
-        } else if (!TextUtils.isEmpty(view.textWidthMaximum)) {
-            paint.getTextBounds(view.textWidthMaximum, 0, view.textWidthMaximum.length(), textBounds);
+        } else if (!TextUtils.isEmpty(view.textWidthMaximum) &&
+                !TextUtils.isEmpty(view.textHeightMaximum)) {
+            paint.getTextBounds(view.textWidthMaximum, 0, view.textWidthMaximum.length(),
+                    textBounds);
             maxTextWidth = textBounds.width();
+            paint.getTextBounds(view.textHeightMaximum, 0, view.textHeightMaximum.length(),
+                    textBounds);
             maxTextHeight = textBounds.height();
-        } else if (view.itemIndexWidthMaximum != -1) {
+        } else if (view.itemIndexWidthMaximum != -1 && view.itemIndexHeightMaximum != -1) {
             String tmp = view.data.get(view.itemIndexWidthMaximum);
             paint.getTextBounds(tmp, 0, tmp.length(), textBounds);
             maxTextWidth = textBounds.width();
+            tmp = view.data.get(view.itemIndexHeightMaximum);
+            paint.getTextBounds(tmp, 0, tmp.length(), textBounds);
             maxTextHeight = textBounds.height();
         } else {
             for (String tmp : view.data) {
@@ -121,9 +132,36 @@ abstract class AbstractWheelStyle {
         unitMoveMax = unit * view.itemIndex;
 
         textCurrentItem = view.data.get(view.itemIndex);
+
+        computeCurrentDecorArea();
     }
 
-    abstract void onDraw(Canvas canvas);
+    void computeCurrentDecorArea() {
+        int tmp = maxTextHeight / 2 + view.itemSpace / 4;
+        int left = 0, top = centerY - tmp,
+                right = width + view.getPaddingRight() * 2, bottom = centerY + tmp;
+        if (!view.ignorePadding) {
+            left = view.getPaddingLeft();
+            right = width + view.getPaddingRight();
+        }
+        rectDecorCurrent.set(left, top, right, bottom);
+    }
+
+    void onDraw(Canvas canvas) {
+        canvas.save();
+        canvas.clipRect(rectDecorCurrent);
+        if (null != view.decorBg) view.decorBg.drawDecor(canvas, paintDecor);
+        canvas.restore();
+
+        drawItems(canvas);
+
+        canvas.save();
+        canvas.clipRect(rectDecorCurrent);
+        if (null != view.decorFg) view.decorFg.drawDecor(canvas, paintDecor);
+        canvas.restore();
+    }
+
+    abstract void drawItems(Canvas canvas);
 
     void onTouchEvent(MotionEvent event) {
         if (null == tracker) {

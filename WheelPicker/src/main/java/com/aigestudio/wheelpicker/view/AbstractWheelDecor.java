@@ -1,5 +1,8 @@
 package com.aigestudio.wheelpicker.view;
 
+import android.graphics.Canvas;
+import android.graphics.Paint;
+
 /**
  * 抽象滚轮装饰物
  * 滚轮装饰物功能将在下一个版本中启用
@@ -7,7 +10,12 @@ package com.aigestudio.wheelpicker.view;
  * This function will be available in next version
  *
  * @author AigeStudio 2015-12-03
- * @version 1.0.0 preview
+ *         类初始化
+ * @author AigeStudio 2015-12-08
+ *         修改类限定符
+ *         新增方法{@link #drawDecor(Canvas, Paint)}
+ * @version 1.0.0 beta
  */
-abstract class AbstractWheelDecor {
+public abstract class AbstractWheelDecor {
+    public abstract void drawDecor(Canvas canvas, Paint paint);
 }
