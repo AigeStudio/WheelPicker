@@ -3,10 +3,12 @@ package com.aigestudio.wheelpicker.view;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.os.Build;
 import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.widget.Scroller;
 
 /**
@@ -14,7 +16,8 @@ import android.widget.Scroller;
  * Abstract of WheelView's style
  *
  * @author AigeStudio 2015-12-03
- * @version 1.0.0 preview
+ * @author AigeStudio 2015-12-08
+ * @version 1.0.0 beta
  */
 abstract class AbstractWheelStyle {
     WheelView view;
@@ -24,6 +27,9 @@ abstract class AbstractWheelStyle {
     Scroller scroller;
     VelocityTracker tracker;
     Paint paint;
+    Paint paintDecor;
+    Rect rectDecorCurrentBG = new Rect();
+    Rect rectDecorCurrentFG = new Rect();
 
     int centerX, centerY;
     int centerTextY;
@@ -40,6 +46,7 @@ abstract class AbstractWheelStyle {
     int unitTotalMove;
 
     boolean isScrollingTerminal;
+    boolean isStateLooped;
 
     String textCurrentItem;
 
@@ -48,15 +55,28 @@ abstract class AbstractWheelStyle {
 
         direction = WheelFactory.createWheelDirection(view.direction);
 
-        scroller = new Scroller(view.getContext());
-
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+            scroller = new Scroller(view.getContext());
+        } else {
+            scroller = new Scroller(view.getContext(), null, true);
+            scroller.setFriction(ViewConfiguration.getScrollFriction() / 50);
+        }
         paint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG | Paint.LINEAR_TEXT_FLAG);
         paint.setTextAlign(Paint.Align.CENTER);
         paint.setColor(view.textColor);
         paint.setTextSize(view.textSize);
 
+        paintDecor = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG | Paint.LINEAR_TEXT_FLAG);
+        paintDecor.setTextAlign(Paint.Align.CENTER);
+
         computeTextSize();
         computeWheel();
+        computeUnitArea();
+    }
+
+    void computeUnitArea() {
+        unitMoveMin = -unit * (view.data.size() - view.itemIndex - 1);
+        unitMoveMax = unit * view.itemIndex;
     }
 
     void computeTextSize() {
@@ -68,14 +88,20 @@ abstract class AbstractWheelStyle {
             paint.getTextBounds(tmp, 0, tmp.length(), textBounds);
             maxTextWidth = textBounds.width();
             maxTextHeight = textBounds.height();
-        } else if (!TextUtils.isEmpty(view.textWidthMaximum)) {
-            paint.getTextBounds(view.textWidthMaximum, 0, view.textWidthMaximum.length(), textBounds);
+        } else if (!TextUtils.isEmpty(view.textWidthMaximum) &&
+                !TextUtils.isEmpty(view.textHeightMaximum)) {
+            paint.getTextBounds(view.textWidthMaximum, 0, view.textWidthMaximum.length(),
+                    textBounds);
             maxTextWidth = textBounds.width();
+            paint.getTextBounds(view.textHeightMaximum, 0, view.textHeightMaximum.length(),
+                    textBounds);
             maxTextHeight = textBounds.height();
-        } else if (view.itemIndexWidthMaximum != -1) {
+        } else if (view.itemIndexWidthMaximum != -1 && view.itemIndexHeightMaximum != -1) {
             String tmp = view.data.get(view.itemIndexWidthMaximum);
             paint.getTextBounds(tmp, 0, tmp.length(), textBounds);
             maxTextWidth = textBounds.width();
+            tmp = view.data.get(view.itemIndexHeightMaximum);
+            paint.getTextBounds(tmp, 0, tmp.length(), textBounds);
             maxTextHeight = textBounds.height();
         } else {
             for (String tmp : view.data) {
@@ -87,8 +113,16 @@ abstract class AbstractWheelStyle {
     }
 
     int measureSize(int mode, int sizeExpect, int sizeActual) {
-        if (mode == View.MeasureSpec.EXACTLY) return sizeExpect;
-        else return Math.min(sizeExpect, sizeActual);
+        int realSize;
+        if (mode == View.MeasureSpec.EXACTLY) {
+            realSize = sizeExpect;
+        } else {
+            realSize = sizeActual;
+            if (mode == View.MeasureSpec.AT_MOST) {
+                realSize = Math.min(realSize, sizeExpect);
+            }
+        }
+        return realSize;
     }
 
     abstract void computeWheel();
@@ -117,26 +151,85 @@ abstract class AbstractWheelStyle {
         centerY = (int) (height / 2.0F);
         centerTextY = (int) (height / 2.0F - (paint.ascent() + paint.descent()) / 2.0F);
 
-        unitMoveMin = -unit * (view.data.size() - view.itemIndex - 1);
-        unitMoveMax = unit * view.itemIndex;
-
         textCurrentItem = view.data.get(view.itemIndex);
+        if (null != view.listener) {
+            view.listener.onWheelSelected(view.itemIndex, textCurrentItem);
+            view.listener.onWheelScrollStateChanged(view.state);
+        }
+
+        computeCurrentDecorArea();
     }
 
-    abstract void onDraw(Canvas canvas);
+    void computeCurrentDecorArea() {
+        int tmp = maxTextHeight / 2 + view.itemSpace / 2;
+
+        int left = 0;
+        int top = centerY - tmp;
+        int right = width + view.getPaddingRight() * 2;
+        int bottom = centerY + tmp;
+        if (!view.ignorePaddingDecorBG) {
+            left = view.getPaddingLeft();
+            right = width + view.getPaddingRight();
+        }
+        rectDecorCurrentBG.set(left, top, right, bottom);
+
+        left = 0;
+        top = centerY - tmp;
+        right = width + view.getPaddingRight() * 2;
+        bottom = centerY + tmp;
+        if (!view.ignorePaddingDecorFG) {
+            left = view.getPaddingLeft();
+            right = width + view.getPaddingRight();
+        }
+        rectDecorCurrentFG.set(left, top, right, bottom);
+    }
+
+    void onDraw(Canvas canvas) {
+        canvas.save();
+        canvas.clipRect(rectDecorCurrentBG);
+        if (null != view.decorBg)
+            view.decorBg.drawDecor(canvas, rectDecorCurrentBG, paintDecor);
+        canvas.restore();
+
+        drawItems(canvas);
+
+        canvas.save();
+        canvas.clipRect(rectDecorCurrentFG);
+        if (null != view.decorFg)
+            view.decorFg.drawDecor(canvas, rectDecorCurrentFG, paintDecor);
+        canvas.restore();
+    }
+
+    abstract void drawItems(Canvas canvas);
+
+    void computeCurrentVelocity() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB)
+            tracker.computeCurrentVelocity(WheelCons.VELOCITY_TRACKER_UNITS_GEAR_SECOND);
+        else
+            tracker.computeCurrentVelocity(WheelCons.VELOCITY_TRACKER_UNITS_GEAR_FIRST);
+    }
 
     void onTouchEvent(MotionEvent event) {
-        if (null == tracker) {
-            tracker = VelocityTracker.obtain();
-        }
+        if (null == tracker) tracker = VelocityTracker.obtain();
         tracker.addMovement(event);
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 view.interceptTouchEvent(true);
+                isStateLooped = true;
                 if (!scroller.isFinished()) scroller.abortAnimation();
                 lastPoint = direction.getCurrentPoint(event);
                 break;
             case MotionEvent.ACTION_MOVE:
+                if (direction.isValidArea(event, view.getWidth(), view.getHeight())) break;
+                if (null != view.listener && isStateLooped) {
+                    if (view.state != WheelPicker.SCROLL_STATE_IDLE)
+                        view.listener.onWheelScrolling();
+                    int state = WheelPicker.SCROLL_STATE_DRAGGING;
+                    if (state != view.state) {
+                        view.state = state;
+                        view.listener.onWheelScrollStateChanged(state);
+                    }
+                }
                 onTouchEventMove(event);
                 break;
             case MotionEvent.ACTION_UP:
@@ -149,12 +242,34 @@ abstract class AbstractWheelStyle {
         view.invalidate();
     }
 
+    boolean checkScrollState() {
+        if (unitTotalMove > unitMoveMax) {
+            textCurrentItem = "";
+            direction.startScroll(scroller, unitTotalMove, unitMoveMax - unitTotalMove, 600);
+            return true;
+        }
+        if (unitTotalMove < unitMoveMin) {
+            textCurrentItem = "";
+            direction.startScroll(scroller, unitTotalMove, unitMoveMin - unitTotalMove, 600);
+            return true;
+        }
+        return false;
+    }
+
     abstract void onTouchEventMove(MotionEvent event);
 
     abstract void onTouchEventUp(MotionEvent event);
 
     void computeScroll() {
         if (scroller.computeScrollOffset()) {
+            if (null != view.listener && isStateLooped) {
+                view.listener.onWheelScrolling();
+                int state = WheelPicker.SCROLL_STATE_SCROLLING;
+                if (state != view.state) {
+                    view.state = state;
+                    view.listener.onWheelScrollStateChanged(state);
+                }
+            }
             unitTotalMove = direction.getCurrent(scroller);
             view.invalidate();
         }
@@ -162,13 +277,22 @@ abstract class AbstractWheelStyle {
             isScrollingTerminal = false;
             if (unitTotalMove != 0) correctDegree();
         }
-        if (unitTotalMove % unit == 0) {
+        if (unitTotalMove == finalUnit && unitTotalMove % unit == 0) {
             int tmpIndex = view.itemIndex - unitTotalMove / unit;
             if (tmpIndex < 0) tmpIndex = 0;
             if (tmpIndex >= view.data.size()) tmpIndex = view.data.size() - 1;
             String tmpData = view.data.get(tmpIndex);
             if (!tmpData.equals(textCurrentItem)) {
                 textCurrentItem = tmpData;
+                if (null != view.listener && isStateLooped) {
+                    view.listener.onWheelSelected(view.itemIndex, textCurrentItem);
+                    int state = WheelPicker.SCROLL_STATE_IDLE;
+                    if (state != view.state) {
+                        isStateLooped = false;
+                        view.state = state;
+                        view.listener.onWheelScrollStateChanged(state);
+                    }
+                }
             }
         }
     }
@@ -184,7 +308,8 @@ abstract class AbstractWheelStyle {
     }
 
     private void correctScroll(int endBack, int endForward) {
-        if (unitTotalMove < 0) direction.startScroll(scroller, unitTotalMove, endBack);
-        else direction.startScroll(scroller, unitTotalMove, endForward);
+        if (unitTotalMove < 0) direction.startScroll(scroller, unitTotalMove, endBack, 300);
+        else direction.startScroll(scroller, unitTotalMove, endForward, 300);
+        finalUnit = direction.getFinal(scroller);
     }
 }

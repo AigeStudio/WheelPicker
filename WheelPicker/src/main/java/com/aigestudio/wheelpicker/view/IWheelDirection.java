@@ -9,7 +9,9 @@ import android.widget.Scroller;
  * Interface of WheelView's direction
  *
  * @author AigeStudio 2015-12-03
- * @version 1.0.0 preview
+ * @author AigeStudio 2015-12-08
+ *         新增方法
+ * @version 1.0.0 beta
  */
 interface IWheelDirection {
     int measureWidth(int sizeA, int sizeB);
@@ -20,7 +22,7 @@ interface IWheelDirection {
 
     boolean isValidArea(MotionEvent event, int width, int height);
 
-    void startScroll(Scroller scroller, int start, int distance);
+    void startScroll(Scroller scroller, int start, int distance, int duration);
 
     void startFling(Scroller scroller, VelocityTracker tracker, int start, int disMin, int disMax);
 
@@ -39,4 +41,6 @@ interface IWheelDirection {
     int computeUnitStraight(int width, int height, int count);
 
     int computeRadiusCurved(int width, int height);
+
+    int getUnitDisplayRule(int width, int height);
 }

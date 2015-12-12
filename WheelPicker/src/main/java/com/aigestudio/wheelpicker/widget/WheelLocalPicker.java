@@ -5,20 +5,20 @@ import android.util.AttributeSet;
 import android.widget.LinearLayout;
 
 /**
- * 基于WheelPicker的日期选择控件
+ * 基于WheelPicker的省市区三级联动选择控件
  * 该控件会在下一个版本中启用
- * DatePicker base on WheelPicker
+ * Provinces and cities picker base on WheelPicker
  * Available in next version
  *
  * @author AigeStudio 2015-12-03
  * @version 1.0.0 preview
  */
-class WheeDatePicker extends LinearLayout {
-    public WheeDatePicker(Context context) {
+class WheelLocalPicker extends LinearLayout {
+    public WheelLocalPicker(Context context) {
         super(context);
     }
 
-    public WheeDatePicker(Context context, AttributeSet attrs) {
+    public WheelLocalPicker(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 }

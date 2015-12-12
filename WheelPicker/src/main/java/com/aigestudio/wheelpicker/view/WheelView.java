@@ -9,8 +9,6 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.aigestudio.wheelpicker.R;
-import com.aigestudio.wheelpicker.view.WheelPicker.Direction;
-import com.aigestudio.wheelpicker.view.WheelPicker.Style;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,22 +19,26 @@ import java.util.List;
  * Controller of WheelView
  *
  * @author AigeStudio 2015-12-03
- * @version 1.0.0 preview
+ * @author AigeStudio 2015-12-08
+ * @version 1.0.0 beta
  */
 class WheelView extends View {
     AbstractWheelStyle wheel;
+    AbstractWheelDecor decorBg, decorFg;
+    WheelPicker.OnWheelChangeListener listener;
 
-    Direction direction;
-    Style style;
+    int direction;
+    int style;
+    int state = WheelPicker.SCROLL_STATE_IDLE;
 
     List<String> data = new ArrayList<>();
 
     int textSize, textColor;
     int itemCount, itemSpace, itemIndex;
-    int itemIndexWidthMaximum, itemIndexHeightMaximum;
+    int itemIndexWidthMaximum = -1, itemIndexHeightMaximum = -1;
 
     boolean hasSameSize;
-    boolean isTextTransGradient;
+    boolean ignorePaddingDecorBG, ignorePaddingDecorFG;
 
     String textWidthMaximum, textHeightMaximum;
 
@@ -54,19 +56,22 @@ class WheelView extends View {
         int idData = a.getResourceId(R.styleable.WheelPicker_wheel_data, 0);
         if (idData == 0) idData = R.array.WheelArrayDefault;
         data = Arrays.asList(context.getResources().getStringArray(idData));
-        direction = Direction.fromID(a.getInt(R.styleable.WheelPicker_wheel_direction, 1));
-        style = Style.fromID(a.getInt(R.styleable.WheelPicker_wheel_style, 1));
+        direction = a.getInt(R.styleable.WheelPicker_wheel_direction, 1);
+        style = a.getInt(R.styleable.WheelPicker_wheel_style, 1);
         itemIndex = a.getInt(R.styleable.WheelPicker_wheel_item_index, 0);
-//        itemIndexWidthMaximum = a.getInt(R.styleable.WheelPicker_wheel_item_index_size_maximum, -1);
-        itemCount = a.getInt(R.styleable.WheelPicker_wheel_item_count, 5);
-        itemSpace = a.getDimensionPixelSize(R.styleable.WheelPicker_wheel_item_space, 25);
-        textSize = a.getDimensionPixelSize(R.styleable.WheelPicker_wheel_text_size, 100);
+        itemIndexWidthMaximum =
+                a.getInt(R.styleable.WheelPicker_wheel_item_index_width_maximum, -1);
+        itemIndexHeightMaximum =
+                a.getInt(R.styleable.WheelPicker_wheel_item_index_height_maximum, -1);
+        itemCount = a.getInt(R.styleable.WheelPicker_wheel_item_count, 7);
+        itemSpace = a.getDimensionPixelSize(R.styleable.WheelPicker_wheel_item_space,
+                getResources().getDimensionPixelSize(R.dimen.WheelItemSpace));
+        textSize = a.getDimensionPixelSize(R.styleable.WheelPicker_wheel_text_size,
+                getResources().getDimensionPixelSize(R.dimen.WheelTextSize));
         textColor = a.getColor(R.styleable.WheelPicker_wheel_text_color, Color.BLACK);
         hasSameSize = a.getBoolean(R.styleable.WheelPicker_wheel_item_same_size, false);
-//        textWidthMaximum = a.getString(R.styleable.WheelPicker_wheel_text_maximum_size);
-        isTextTransGradient = true;
-//        isTextTransGradient = a.getBoolean(R.styleable.WheelPicker_wheel_text_transparent_gradient,
-//                false);
+        textWidthMaximum = a.getString(R.styleable.WheelPicker_wheel_text_maximum_width);
+        textHeightMaximum = a.getString(R.styleable.WheelPicker_wheel_text_maximum_height);
         a.recycle();
 
         wheel = WheelFactory.createWheelStyle(style, this);
