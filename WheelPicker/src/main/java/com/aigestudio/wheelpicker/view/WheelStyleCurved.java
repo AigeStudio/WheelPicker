@@ -13,7 +13,9 @@ import static com.aigestudio.wheelpicker.view.WheelCons.DEGREE_MINIMUM;
  * Curve style implement of WheelView
  *
  * @author AigeStudio 2015-12-03
- * @version 1.0.0 preview
+ * @author AigeStudio 2015-12-08
+ *         修复当前Item静止后跳动bug
+ * @version 1.0.0 beta
  */
 class WheelStyleCurved extends AbstractWheelStyle {
     private final Camera camera = new Camera();
@@ -45,6 +47,7 @@ class WheelStyleCurved extends AbstractWheelStyle {
                 continue;
             }
             int space = WheelUtil.calculateSpace(curUnit, radius);
+            if (space == 0) curUnit = 1;
             int depth = WheelUtil.calculateDepth(curUnit, radius);
             canvas.save();
             camera.save();
@@ -70,7 +73,6 @@ class WheelStyleCurved extends AbstractWheelStyle {
 
     @Override
     void onTouchEventMove(MotionEvent event) {
-        if (direction.isValidArea(event, view.getWidth(), view.getHeight())) return;
         distanceSingleMove += (direction.getCurrentPoint(event) - lastPoint);
         if (Math.abs(distanceSingleMove) < WheelCons.TOUCH_DISTANCE_MINIMUM) return;
         if (Math.abs(distanceSingleMove) >= radius) return;
@@ -85,15 +87,8 @@ class WheelStyleCurved extends AbstractWheelStyle {
         distanceSingleMove = 0;
         unitTotalMove += degreeSingleMove;
         degreeSingleMove = 0;
-        if (unitTotalMove > unitMoveMax) {
-            direction.startScroll(scroller, unitTotalMove, unitMoveMax - unitTotalMove);
-            return;
-        }
-        if (unitTotalMove < unitMoveMin) {
-            direction.startScroll(scroller, unitTotalMove, unitMoveMin - unitTotalMove);
-            return;
-        }
-        tracker.computeCurrentVelocity(WheelCons.VELOCITY_TRACKER_UNITS);
+        if (checkScrollState()) return;
+        computeCurrentVelocity();
         direction.startFling(scroller, tracker, unitTotalMove, unitMoveMin, unitMoveMax);
         finalUnit = direction.getFinal(scroller);
     }

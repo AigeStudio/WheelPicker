@@ -8,7 +8,8 @@ import android.view.MotionEvent;
  * Default style implement of WheelView in Straight
  *
  * @author AigeStudio 2015-12-03
- * @version 1.0.0 preview
+ * @author AigeStudio 2015-12-08
+ * @version 1.0.0 beta
  */
 class WheelStyleStraight extends AbstractWheelStyle {
 
@@ -45,7 +46,6 @@ class WheelStyleStraight extends AbstractWheelStyle {
 
     @Override
     void onTouchEventMove(MotionEvent event) {
-        if (direction.isValidArea(event, view.getWidth(), view.getHeight())) return;
         distanceSingleMove += (direction.getCurrentPoint(event) - lastPoint);
         if (Math.abs(distanceSingleMove) < WheelCons.TOUCH_DISTANCE_MINIMUM) return;
         if (Math.abs(distanceSingleMove) >= width) return;
@@ -58,15 +58,8 @@ class WheelStyleStraight extends AbstractWheelStyle {
         isScrollingTerminal = true;
         unitTotalMove += distanceSingleMove;
         distanceSingleMove = 0;
-        if (unitTotalMove > unitMoveMax) {
-            direction.startScroll(scroller, unitTotalMove, unitMoveMax - unitTotalMove);
-            return;
-        }
-        if (unitTotalMove < unitMoveMin) {
-            direction.startScroll(scroller, unitTotalMove, unitMoveMin - unitTotalMove);
-            return;
-        }
-        tracker.computeCurrentVelocity(WheelCons.VELOCITY_TRACKER_UNITS);
+        if (checkScrollState()) return;
+        computeCurrentVelocity();
         direction.startFling(scroller, tracker, unitTotalMove, unitMoveMin, unitMoveMax);
         finalUnit = direction.getFinal(scroller);
     }

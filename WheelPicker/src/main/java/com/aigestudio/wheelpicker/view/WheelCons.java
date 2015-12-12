@@ -5,7 +5,8 @@ package com.aigestudio.wheelpicker.view;
  * General constant value
  *
  * @author AigeStudio 2015-12-01
- * @version 1.0.0 preview
+ * @author AigeStudio 2015-12-08
+ * @version 1.0.0 beta
  */
 class WheelCons {
     /**
@@ -36,5 +37,6 @@ class WheelCons {
      * 速度追踪单位值
      * Value of velocity track
      */
-    static final int VELOCITY_TRACKER_UNITS = 400;
+    static final int VELOCITY_TRACKER_UNITS_GEAR_FIRST = 200;
+    static final int VELOCITY_TRACKER_UNITS_GEAR_SECOND = 400;
 }

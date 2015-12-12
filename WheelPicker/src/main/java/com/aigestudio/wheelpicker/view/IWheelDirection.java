@@ -22,7 +22,7 @@ interface IWheelDirection {
 
     boolean isValidArea(MotionEvent event, int width, int height);
 
-    void startScroll(Scroller scroller, int start, int distance);
+    void startScroll(Scroller scroller, int start, int distance, int duration);
 
     void startFling(Scroller scroller, VelocityTracker tracker, int start, int disMin, int disMax);
 

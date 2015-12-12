@@ -1,7 +1,5 @@
 package com.aigestudio.wheelpicker.view;
 
-import com.aigestudio.wheelpicker.view.WheelPicker.Style;
-
 import java.util.List;
 
 /**
@@ -9,9 +7,11 @@ import java.util.List;
  * Interface of WheelView's function
  *
  * @author AigeStudio 2015-12-03
- * @version 1.0.0 preview
+ * @author AigeStudio 2015-12-08
+ *         修改{@link #setStyle(int)}方法入参类型
+ * @version 1.0.0 beta
  */
-interface IWheelPicker {
+public interface IWheelPicker {
 //    /**
 //     * 设置滚轮的滚动方向
 //     * 目前位置仅仅支持垂直滚动{@link WheelPicker.Direction#VERTICAL}
@@ -22,18 +22,18 @@ interface IWheelPicker {
 //     * @param direction 滚轮的滚动方向
 //     *                  Direction of WheelView
 //     */
-//    void setDirection(Direction direction);
+//    void setDirection(int direction);
 
     /**
      * 设置滚轮的样式
-     * 目前为止WheelPicker仅仅支持直向{@link WheelPicker.Style#STRAIGHT}和弯曲{@link WheelPicker.Style#CURVED}两种样式
+     * 目前为止WheelPicker仅仅支持直向{@link WheelPicker#STRAIGHT}和弯曲{@link WheelPicker#CURVED}两种样式
      * Set style of WheelView
-     * So far, WheelPicker only support straight{@link WheelPicker.Style#STRAIGHT} and curved{@link WheelPicker.Style#CURVED} style
+     * So far, WheelPicker only support straight{@link WheelPicker#STRAIGHT} and curved{@link WheelPicker#CURVED} style
      *
      * @param style 滚轮的样式
      *              Style of WheelView
      */
-    void setStyle(Style style);
+    void setStyle(int style);
 
     /**
      * 设置显示数据
@@ -73,14 +73,13 @@ interface IWheelPicker {
      */
     void setTextSize(int size);
 
-
     /**
-     * 获取当前Item项上对应的文本数据
-     * Get text of current item display
+     * 设置滚动监听
+     * Set listener
      *
-     * @return 当前Item项上对应的文本数据 Text of current item
+     * @param listener 滚动监听器
      */
-    String getCurrentItemText();
+    void setOnWheelChangeListener(WheelPicker.OnWheelChangeListener listener);
 
     /**
      * 设置当前Item项的背景装饰物
@@ -103,4 +102,22 @@ interface IWheelPicker {
      *                      Subclass of AbstractWheelDecor{@link AbstractWheelDecor}
      */
     void setCurrentItemForegroundDecor(boolean ignorePadding, AbstractWheelDecor decor);
+
+    /**
+     * 设置Item间距
+     * Set space of items
+     *
+     * @param space Item间距大小
+     *              Space of items
+     */
+    void setItemSpace(int space);
+
+    /**
+     * 设置显示的Item个数
+     * Set count of item display
+     *
+     * @param count Item显示的个数
+     *              Count of item display
+     */
+    void setItemCount(int count);
 }

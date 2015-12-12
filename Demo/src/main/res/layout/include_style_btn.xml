@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:orientation="horizontal">
+
+    <Button
+        android:id="@+id/btn_straight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="STRAIGHT" />
+
+    <Button
+        android:id="@+id/btn_obtain"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="OBTAIN" />
+
+    <Button
+        android:id="@+id/btn_curved"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=" CURVED " />
+</LinearLayout>

@@ -1,36 +1,35 @@
 package com.aigestudio.wheelpicker.view;
 
-import com.aigestudio.wheelpicker.view.WheelPicker.Style;
-import com.aigestudio.wheelpicker.view.WheelPicker.Direction;
-
 /**
  * 滚轮构建工厂
  * Factory to create WheelView's objects
  *
  * @author AigeStudio 2015-12-03
- * @version 1.0.0 preview
+ * @author AigeStudio 2015-12-08
+ *         修改方法入参
+ * @version 1.0.0 beta
  */
 final class WheelFactory {
-    static AbstractWheelStyle createWheelStyle(Style style, WheelView view) {
+    static AbstractWheelStyle createWheelStyle(int style, WheelView view) {
         AbstractWheelStyle wheel = null;
         switch (style) {
-            case STRAIGHT:
+            case WheelPicker.STRAIGHT:
                 wheel = new WheelStyleStraight(view);
                 break;
-            case CURVED:
+            case WheelPicker.CURVED:
                 wheel = new WheelStyleCurved(view);
                 break;
         }
         return wheel;
     }
 
-    static IWheelDirection createWheelDirection(Direction direction) {
+    static IWheelDirection createWheelDirection(int direction) {
         IWheelDirection wheel = null;
         switch (direction) {
-            case HORIZONTAL:
+            case WheelPicker.HORIZONTAL:
                 wheel = new WheelDirectHor();
                 break;
-            case VERTICAL:
+            case WheelPicker.VERTICAL:
                 wheel = new WheelDirectVer();
                 break;
         }

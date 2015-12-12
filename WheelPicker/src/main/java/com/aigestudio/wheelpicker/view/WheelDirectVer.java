@@ -34,8 +34,8 @@ class WheelDirectVer implements IWheelDirection {
     }
 
     @Override
-    public void startScroll(Scroller scroller, int start, int distance) {
-        scroller.startScroll(0, start, 0, distance, 500);
+    public void startScroll(Scroller scroller, int start, int distance, int duration) {
+        scroller.startScroll(0, start, 0, distance, duration);
     }
 
     @Override

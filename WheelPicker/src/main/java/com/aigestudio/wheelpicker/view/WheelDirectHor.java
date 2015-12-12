@@ -34,7 +34,7 @@ class WheelDirectHor implements IWheelDirection {
     }
 
     @Override
-    public void startScroll(Scroller scroller, int start, int distance) {
+    public void startScroll(Scroller scroller, int start, int distance, int duration) {
 
     }
 
