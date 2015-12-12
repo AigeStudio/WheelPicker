@@ -3,7 +3,7 @@
 **API 1**
 
 ## Preview
-![](https://github.com/AigeStudio/WheelPicker/blob/master/Previews/Demo.png)
+![](https://github.com/AigeStudio/WheelPicker/blob/master/Previews/DemoPreview.png)
 ### Views
 **In Straight Style**
 
