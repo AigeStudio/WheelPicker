@@ -3,13 +3,32 @@
 **API 1**
 
 ## Preview
-**In normal style**
+![](https://github.com/AigeStudio/WheelPicker/blob/master/Previews/Demo.png)
+### Views
+**In Straight Style**
 
-![](https://github.com/AigeStudio/WheelPicker/blob/master/Previews/1.gif)
+![](https://github.com/AigeStudio/WheelPicker/blob/master/Previews/StraightStyle.gif)
 
-**In curved style**
+**In Curved Style**
 
-![](https://github.com/AigeStudio/WheelPicker/blob/master/Previews/2.gif)
+![](https://github.com/AigeStudio/WheelPicker/blob/master/Previews/CurvedStyle.gif)
+
+### Widgets
+**WheelDatePicker**
+
+![](https://github.com/AigeStudio/WheelPicker/blob/master/Previews/WheelDatePicker.gif)
+
+**WheelConstellationPicker**
+
+![](https://github.com/AigeStudio/WheelPicker/blob/master/Previews/WheelConstellationPicker.gif)
+
+**WheelYearPicker**
+
+![](https://github.com/AigeStudio/WheelPicker/blob/master/Previews/WheelYearPicker.gif)
+
+**WheelZodiacPicker**
+
+![](https://github.com/AigeStudio/WheelPicker/blob/master/Previews/WheelZodiacPicker.gif)
 
 ## Versions
 ### 1.0.0 preview
