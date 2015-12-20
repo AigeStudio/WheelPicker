@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="ColorButtonRelease">#FCC689</color>
+    <color name="ColorButtonPressed">#FF7438</color>
+    <color name="ColorButtonDisable">#EEE</color>
+</resources>

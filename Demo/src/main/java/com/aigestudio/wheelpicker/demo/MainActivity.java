@@ -2,150 +2,197 @@ package com.aigestudio.wheelpicker.demo;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.aigestudio.wheelpicker.view.WheelPicker;
-import com.aigestudio.wheelpicker.widget.WheelConstellationPicker;
-import com.aigestudio.wheelpicker.widget.WheelDatePicker;
-import com.aigestudio.wheelpicker.widget.WheelDayPicker;
-import com.aigestudio.wheelpicker.widget.WheelMonthPicker;
-import com.aigestudio.wheelpicker.widget.WheelYearPicker;
-import com.aigestudio.wheelpicker.widget.WheelZodiacPicker;
+import com.aigestudio.wheelpicker.core.AbstractWheelPicker;
+import com.aigestudio.wheelpicker.view.WheelCrossPicker;
+import com.aigestudio.wheelpicker.widget.curved.WheelDatePicker;
+import com.aigestudio.wheelpicker.widget.curved.WheelDayPicker;
+import com.aigestudio.wheelpicker.widget.curved.WheelHourPicker;
+import com.aigestudio.wheelpicker.widget.curved.WheelMinutePicker;
+import com.aigestudio.wheelpicker.widget.curved.WheelMonthPicker;
+import com.aigestudio.wheelpicker.widget.curved.WheelTimePicker;
+import com.aigestudio.wheelpicker.widget.curved.WheelYearPicker;
 
 /**
  * @author AigeStudio 2015-12-06
  */
 public class MainActivity extends Activity implements View.OnClickListener {
-    private WheelPicker picker;
     private MainDialog dialog;
-    private Button btnObtain;
+    private Button btnObtainStraight, btnObtainCurved;
 
-    private String data;
+    private String dataStraight, dataCurved;
+    private int padding;
+    private int textSize;
+    private int itemSpace;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ac_main);
 
-        picker = (WheelPicker) findViewById(R.id.main_wheel_picker);
-        picker.setOnWheelChangeListener(new WheelPicker.SimpleWheelChangeListener() {
+        padding = getResources().getDimensionPixelSize(R.dimen.WheelPadding);
+        textSize = getResources().getDimensionPixelSize(R.dimen.TextSizeLarge);
+        itemSpace = getResources().getDimensionPixelSize(R.dimen.ItemSpaceLarge);
+
+        WheelCrossPicker straightPicker = (WheelCrossPicker) findViewById(R.id.main_wheel_straight);
+        straightPicker.setItemIndex(2);
+        straightPicker.setBackgroundColor(0xFFE5DEEB);
+        straightPicker.setTextColor(0xFFA7A7DB);
+        straightPicker.setCurrentTextColor(0xFF536D8A);
+        straightPicker.setOnWheelChangeListener(new AbstractWheelPicker.SimpleWheelChangeListener() {
             @Override
             public void onWheelScrollStateChanged(int state) {
-                if (state == WheelPicker.SCROLL_STATE_IDLE) {
-                    btnObtain.setEnabled(true);
+                if (state != AbstractWheelPicker.SCROLL_STATE_IDLE) {
+                    btnObtainStraight.setEnabled(false);
                 } else {
-                    btnObtain.setEnabled(false);
+                    btnObtainStraight.setEnabled(true);
                 }
-                Log.d("AigeStudio", "state:" + state);
             }
 
             @Override
             public void onWheelSelected(int index, String data) {
-                MainActivity.this.data = data;
+                dataStraight = data;
             }
         });
-        findViewById(R.id.btn_straight).setOnClickListener(this);
-        btnObtain = (Button) findViewById(R.id.btn_obtain);
-        btnObtain.setOnClickListener(this);
-        findViewById(R.id.btn_curved).setOnClickListener(this);
+        WheelCrossPicker curvedPicker = (WheelCrossPicker) findViewById(R.id.main_wheel_curved);
+        curvedPicker.setOnWheelChangeListener(new AbstractWheelPicker.SimpleWheelChangeListener() {
+            @Override
+            public void onWheelScrollStateChanged(int state) {
+                if (state != AbstractWheelPicker.SCROLL_STATE_IDLE) {
+                    btnObtainCurved.setEnabled(false);
+                } else {
+                    btnObtainCurved.setEnabled(true);
+                }
+            }
 
-        findViewById(R.id.main_btn_date).setOnClickListener(this);
-        findViewById(R.id.main_btn_year).setOnClickListener(this);
-        findViewById(R.id.main_btn_month).setOnClickListener(this);
-        findViewById(R.id.main_btn_day).setOnClickListener(this);
-        findViewById(R.id.main_btn_zodiac).setOnClickListener(this);
-        findViewById(R.id.main_btn_constellation).setOnClickListener(this);
-        findViewById(R.id.main_btn_province).setOnClickListener(this);
-        findViewById(R.id.main_btn_city).setOnClickListener(this);
-        findViewById(R.id.main_btn_districts).setOnClickListener(this);
-        findViewById(R.id.main_btn_hour).setOnClickListener(this);
-        findViewById(R.id.main_btn_time).setOnClickListener(this);
-        findViewById(R.id.main_btn_sex).setOnClickListener(this);
+            @Override
+            public void onWheelSelected(int index, String data) {
+                dataCurved = data;
+            }
+        });
+
+        btnObtainStraight = (Button) findViewById(R.id.main_obtain_straight_btn);
+        btnObtainStraight.setOnClickListener(this);
+        btnObtainCurved = (Button) findViewById(R.id.main_obtain_curved_btn);
+        btnObtainCurved.setOnClickListener(this);
+
+        findViewById(R.id.main_year_btn).setOnClickListener(this);
+        findViewById(R.id.main_month_btn).setOnClickListener(this);
+        findViewById(R.id.main_day_btn).setOnClickListener(this);
+        findViewById(R.id.main_date_btn).setOnClickListener(this);
+        findViewById(R.id.main_hour_btn).setOnClickListener(this);
+        findViewById(R.id.main_minute_btn).setOnClickListener(this);
+        findViewById(R.id.main_time_btn).setOnClickListener(this);
 
         dialog = new MainDialog(this);
     }
 
     @Override
     public void onClick(View v) {
+        int padding5x = padding * 5;
         switch (v.getId()) {
-            case R.id.btn_straight:
-                picker.setStyle(WheelPicker.STRAIGHT);
+            case R.id.main_obtain_straight_btn:
+                Toast.makeText(this, dataStraight, Toast.LENGTH_SHORT).show();
                 break;
-            case R.id.btn_obtain:
-                Toast.makeText(this, data, Toast.LENGTH_SHORT).show();
+            case R.id.main_obtain_curved_btn:
+                Toast.makeText(this, dataCurved, Toast.LENGTH_SHORT).show();
                 break;
-            case R.id.btn_curved:
-                picker.setStyle(WheelPicker.CURVED);
-                break;
-            case R.id.main_btn_date:
-                WheelDatePicker wheelDatePicker = new WheelDatePicker(this);
-                wheelDatePicker.setBackgroundColor(0xFFF0DF98);
-                wheelDatePicker.setTextColor(0xFF3F96C3);
-                wheelDatePicker.setLabelColor(0xFF94A0B6);
-                dialog.setContentView(wheelDatePicker);
-                dialog.show();
-                break;
-            case R.id.main_btn_year:
+//            case R.id.btn_curved:
+//                pickerHour.setStyle(WheelPicker.CURVED);
+//                break;
+            case R.id.main_year_btn:
                 WheelYearPicker wheelYearPicker = new WheelYearPicker(this);
-                wheelYearPicker.setBackgroundColor(0xFFF3F0E6);
-                wheelYearPicker.setTextColor(0xFFAFB0CB);
-                wheelYearPicker.setTextSize(getResources()
-                        .getDimensionPixelSize(R.dimen.TextSizeLarge));
-                wheelYearPicker.setItemSpace(getResources()
-                        .getDimensionPixelOffset(R.dimen.ItemSpaceLarge));
-                wheelYearPicker.setItemCount(11);
+                wheelYearPicker.setPadding(padding5x, 0, padding5x, 0);
+                wheelYearPicker.setTextSize(textSize);
+                wheelYearPicker.setItemSpace(itemSpace);
+                wheelYearPicker.setBackgroundColor(0xFFF0DF98);
+                wheelYearPicker.setCurrentTextColor(0xFF0B456B);
+                wheelYearPicker.setTextColor(0xFF3F96C3);
+                wheelYearPicker.setYearRange(2000, 3000);
+                wheelYearPicker.setCurrentYear(2100);
+//                wheelDatePicker.setLabelColor(0xFF94A0B6);
                 dialog.setContentView(wheelYearPicker);
                 dialog.show();
                 break;
-            case R.id.main_btn_month:
-                dialog.setContentView(new WheelMonthPicker(this));
+            case R.id.main_month_btn:
+                WheelMonthPicker wheelMonthPicker = new WheelMonthPicker(this);
+                wheelMonthPicker.setPadding(padding5x, 0, padding5x, 0);
+                wheelMonthPicker.setBackgroundColor(0xFFF3F0E6);
+                wheelMonthPicker.setTextColor(0xFFAFB0CB);
+                wheelMonthPicker.setTextSize(textSize);
+                wheelMonthPicker.setItemSpace(itemSpace);
+                wheelMonthPicker.setItemCount(11);
+                wheelMonthPicker.setCurrentMonth(5);
+                wheelMonthPicker.setCurrentTextColor(0xFF7787C5);
+                dialog.setContentView(wheelMonthPicker);
                 dialog.show();
                 break;
-            case R.id.main_btn_day:
-                dialog.setContentView(new WheelDayPicker(this));
+            case R.id.main_day_btn:
+                WheelDayPicker wheelDayPicker = new WheelDayPicker(this);
+                wheelDayPicker.setPadding(padding5x, 0, padding5x, 0);
+                wheelDayPicker.setBackgroundColor(0xFFDFF2D8);
+                wheelDayPicker.setTextColor(0xFFC3DB51);
+                wheelDayPicker.setCurrentTextColor(0xFF9BB120);
+                wheelDayPicker.setTextSize(textSize);
+                wheelDayPicker.setItemSpace(itemSpace);
+                wheelDayPicker.setCurrentMonth(2);
+                wheelDayPicker.setCurrentYear(2015);
+                wheelDayPicker.setCurrentDay(28);
+                wheelDayPicker.setItemCount(9);
+                dialog.setContentView(wheelDayPicker);
                 dialog.show();
                 break;
-            case R.id.main_btn_zodiac:
-                WheelZodiacPicker wheelZodiacPicker = new WheelZodiacPicker(this);
-                wheelZodiacPicker.setBackgroundColor(0xFFF7B983);
-                wheelZodiacPicker.setTextColor(0xFF7774B7);
-                dialog.setContentView(wheelZodiacPicker);
+            case R.id.main_date_btn:
+                WheelDatePicker wheelDatePicker = new WheelDatePicker(this);
+                wheelDatePicker.setPadding(padding, 0, padding, 0);
+                wheelDatePicker.setBackgroundColor(0xFFF7B983);
+                wheelDatePicker.setTextColor(0xFF7787C5);
+                wheelDatePicker.setCurrentTextColor(0xFF7774B7);
+                wheelDatePicker.setLabelColor(0xFF7774B7);
+                wheelDatePicker.setTextSize(textSize);
+                wheelDatePicker.setItemSpace(itemSpace);
+                wheelDatePicker.setCurrentDate(2015, 12, 20);
+                dialog.setContentView(wheelDatePicker);
                 dialog.show();
                 break;
-            case R.id.main_btn_constellation:
-                WheelConstellationPicker wheelConstellationPicker = new WheelConstellationPicker(this);
-                wheelConstellationPicker.setBackgroundColor(0xFFE4DDCC);
-                wheelConstellationPicker.setItemSpace(getResources()
-                        .getDimensionPixelOffset(R.dimen.ItemSpaceLarge));
-                wheelConstellationPicker.setTextColor(0xFF47474A);
-                dialog.setContentView(wheelConstellationPicker);
+            case R.id.main_hour_btn:
+                WheelHourPicker wheelHourPicker = new WheelHourPicker(this);
+                wheelHourPicker.setPadding(padding5x, 0, padding5x, 0);
+                wheelHourPicker.setTextSize(textSize);
+                wheelHourPicker.setDigitType(1);
+                wheelHourPicker.setItemSpace(itemSpace);
+                wheelHourPicker.setBackgroundColor(0xFFF0DF98);
+                wheelHourPicker.setCurrentTextColor(0xFF0B456B);
+                wheelHourPicker.setTextColor(0xFF3F96C3);
+                dialog.setContentView(wheelHourPicker);
                 dialog.show();
                 break;
-            case R.id.main_btn_province:
-                dialog.setContentView(new WheelDatePicker(this));
+            case R.id.main_minute_btn:
+                WheelMinutePicker wheelMinutePicker = new WheelMinutePicker(this);
+                wheelMinutePicker.setPadding(padding5x, 0, padding5x, 0);
+                wheelMinutePicker.setBackgroundColor(0xFFF3F0E6);
+                wheelMinutePicker.setTextColor(0xFFAFB0CB);
+                wheelMinutePicker.setDigitType(2);
+                wheelMinutePicker.setCurrentTextColor(0xFF7787C5);
+                wheelMinutePicker.setTextSize(textSize);
+                wheelMinutePicker.setItemSpace(itemSpace);
+                dialog.setContentView(wheelMinutePicker);
                 dialog.show();
                 break;
-            case R.id.main_btn_city:
-                dialog.setContentView(new WheelDatePicker(this));
-                dialog.show();
-                break;
-            case R.id.main_btn_districts:
-                dialog.setContentView(new WheelDatePicker(this));
-                dialog.show();
-                break;
-            case R.id.main_btn_hour:
-                dialog.setContentView(new WheelDatePicker(this));
-                dialog.show();
-                break;
-            case R.id.main_btn_time:
-                dialog.setContentView(new WheelDatePicker(this));
-                dialog.show();
-                break;
-            case R.id.main_btn_sex:
-                dialog.setContentView(new WheelDatePicker(this));
+            case R.id.main_time_btn:
+                WheelTimePicker wheelTimePicker = new WheelTimePicker(this);
+                wheelTimePicker.setPadding(padding, 0, padding, 0);
+                wheelTimePicker.setBackgroundColor(0xFFDFF2D8);
+                wheelTimePicker.setTextColor(0xFFC3DB51);
+                wheelTimePicker.setCurrentTextColor(0xFF9BB120);
+                wheelTimePicker.setLabelColor(0xFF9BB120);
+                wheelTimePicker.setTextSize(textSize);
+                wheelTimePicker.setDigitType(2);
+                wheelTimePicker.setItemSpace(itemSpace);
+                dialog.setContentView(wheelTimePicker);
                 dialog.show();
                 break;
         }

@@ -1,160 +1,203 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aigestudio="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent"
+    android:background="#FFF"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="Previews"
+        android:textColor="#AAA"
+        android:textSize="24sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#FFF"
-        android:gravity="center_horizontal"
-        android:orientation="vertical">
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="PREVIEW"
-            android:textSize="24sp" />
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
 
-        <com.aigestudio.wheelpicker.view.WheelPicker
-            android:id="@+id/main_wheel_picker"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:background="#fc724c"
-            android:padding="@dimen/WheelPadding1x"
-            app:wheel_item_index="2"
-            app:wheel_text_color="#FFF" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="WheelStraightPicker"
+                android:textColor="#AAA"
+                android:textSize="12sp" />
 
-        <include
-            layout="@layout/include_style_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="WIDGET"
-            android:textSize="24sp" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            <com.aigestudio.wheelpicker.view.WheelStraightPicker
+                android:id="@+id/main_wheel_straight"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
             <Button
-                android:id="@+id/main_btn_center"
+                android:id="@+id/main_obtain_straight_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:text="DatePicker"
-                android:visibility="invisible" />
+                android:layout_marginTop="5dp"
+                android:background="@drawable/bg_btn"
+                android:padding="5dp"
+                android:text="Obtain"
+                android:textColor="#999"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="WheelCurvedPicker"
+                android:textColor="#AAA"
+                android:textSize="12sp" />
+
+            <com.aigestudio.wheelpicker.view.WheelCurvedPicker
+                android:id="@+id/main_wheel_curved"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="#FFFDD6"
+                aigestudio:wheel_item_index="8"
+                aigestudio:wheel_text_color="#A0A27A"
+                aigestudio:wheel_text_color_current="#79744E" />
 
             <Button
-                android:id="@+id/main_btn_date"
+                android:id="@+id/main_obtain_curved_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/main_btn_center"
-                android:layout_centerHorizontal="true"
-                android:text="DatePicker" />
-
-            <Button
-                android:id="@+id/main_btn_year"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toLeftOf="@id/main_btn_center"
-                android:text="YearPicker " />
-
-            <Button
-                android:id="@+id/main_btn_month"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/main_btn_center"
-                android:text="MonthPicker" />
-
-            <Button
-                android:id="@+id/main_btn_day"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/main_btn_year"
-                android:text=" DayPicker " />
-
-            <Button
-                android:id="@+id/main_btn_zodiac"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_below="@id/main_btn_year"
-                android:text="ZodiaPicker " />
-
-            <Button
-                android:id="@+id/main_btn_constellation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/main_btn_date"
-                android:layout_marginLeft="20dp"
-                android:text="ConstPicker" />
-
-            <Button
-                android:id="@+id/main_btn_province"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_below="@id/main_btn_date"
-                android:layout_marginRight="20dp"
-                android:enabled="false"
-                android:text="ProviPicker" />
-
-            <Button
-                android:id="@+id/main_btn_city"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/main_btn_constellation"
-                android:layout_marginLeft="40dp"
-                android:enabled="false"
-                android:text=" CityPicker" />
-
-            <Button
-                android:id="@+id/main_btn_districts"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_below="@id/main_btn_province"
-                android:layout_marginRight="40dp"
-                android:enabled="false"
-                android:text="DistrPicker" />
-
-            <Button
-                android:id="@+id/main_btn_hour"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/main_btn_city"
-                android:layout_marginLeft="60dp"
-                android:enabled="false"
-                android:text=" HourPicker" />
-
-            <Button
-                android:id="@+id/main_btn_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_below="@id/main_btn_districts"
-                android:layout_marginRight="60dp"
-                android:enabled="false"
-                android:text=" TimePicker" />
-
-            <Button
-                android:id="@+id/main_btn_sex"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/main_btn_time"
-                android:layout_centerHorizontal="true"
-                android:enabled="false"
-                android:text=" SexPicker " />
-
-        </RelativeLayout>
+                android:layout_marginTop="5dp"
+                android:background="@drawable/bg_btn"
+                android:padding="5dp"
+                android:text="Obtain"
+                android:textColor="#999"
+                android:textSize="12sp" />
+        </LinearLayout>
     </LinearLayout>
-</ScrollView>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="Widgets"
+        android:textColor="#AAA"
+        android:textSize="24sp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/main_year_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_btn"
+            android:padding="5dp"
+            android:text="WheelYearPicker"
+            android:textColor="#999"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/main_month_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/bg_btn"
+            android:padding="5dp"
+            android:text="WheelMonthPicker"
+            android:textColor="#999"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/main_day_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_below="@id/main_month_btn"
+            android:background="@drawable/bg_btn"
+            android:padding="5dp"
+            android:text="WheelDayPicker"
+            android:textColor="#999"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/main_date_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_below="@id/main_month_btn"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/bg_btn"
+            android:padding="5dp"
+            android:text="WheelDatePicker"
+            android:textColor="#999"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/main_hour_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_below="@id/main_day_btn"
+            android:background="@drawable/bg_btn"
+            android:padding="5dp"
+            android:text="WheelHourPicker"
+            android:textColor="#999"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/main_minute_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_below="@id/main_date_btn"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/bg_btn"
+            android:padding="5dp"
+            android:text="WheelMinutePicker"
+            android:textColor="#999"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/main_time_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_below="@id/main_hour_btn"
+            android:background="@drawable/bg_btn"
+            android:padding="5dp"
+            android:text="WheelTimePicker"
+            android:textColor="#999"
+            android:textSize="16sp" />
+
+        <!--<Button-->
+            <!--android:id="@+id/main_minute_btn"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginTop="5dp"-->
+            <!--android:layout_below="@id/main_minute_btn"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:background="@drawable/bg_btn"-->
+            <!--android:padding="5dp"-->
+            <!--android:text="WheelMinutePicker"-->
+            <!--android:textColor="#999"-->
+            <!--android:textSize="16sp" />-->
+    </RelativeLayout>
+</LinearLayout>

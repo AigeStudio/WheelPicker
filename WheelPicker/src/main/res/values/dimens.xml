@@ -3,9 +3,8 @@
     <!--通用尺寸-->
     <!--General sizes-->
     <dimen name="WheelItemSpace">8dp</dimen>
-    <dimen name="WheelPadding1x">8dp</dimen>
-    <dimen name="WheelPadding2x">16dp</dimen>
-    <dimen name="WheelTextSize">24sp</dimen>
+    <dimen name="WheelPadding">8dp</dimen>
+    <dimen name="WheelTextSize">20sp</dimen>
 
     <dimen name="WheelLabelTextSize">12sp</dimen>
 </resources>

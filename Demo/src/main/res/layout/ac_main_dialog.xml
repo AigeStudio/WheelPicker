@@ -3,18 +3,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFF"
-    android:padding="10dp"
     android:gravity="center_horizontal"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="10dp">
 
     <FrameLayout
         android:id="@+id/main_dialog_container"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-    <include
-        layout="@layout/include_style_btn"
-        android:layout_width="match_parent"
+    <Button
+        android:id="@+id/btn_obtain"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp" />
+        android:layout_marginTop="10dp"
+        android:background="@drawable/bg_btn"
+        android:padding="5dp"
+        android:text="Obtain"
+        android:textColor="#999"
+        android:textSize="16sp" />
 </LinearLayout>

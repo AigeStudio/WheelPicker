@@ -1,9 +1,9 @@
-package com.aigestudio.wheelpicker.widget;
+package com.aigestudio.wheelpicker.widget.curved;
 
 import android.content.Context;
 import android.util.AttributeSet;
 
-import com.aigestudio.wheelpicker.view.WheelPicker;
+import com.aigestudio.wheelpicker.view.WheelCurvedPicker;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -16,9 +16,10 @@ import java.util.List;
  *
  * @author AigeStudio 2015-12-03
  * @author AigeStudio 2015-12-08
+ * @author AigeStudio 2015-12-12
  * @version 1.0.0 beta
  */
-public class WheelDayPicker extends WheelPicker {
+public class WheelDayPicker extends WheelCurvedPicker {
     private static final HashMap<Integer, List<String>> DAYS = new HashMap<>();
 
     private static final Calendar C = Calendar.getInstance();
@@ -30,15 +31,16 @@ public class WheelDayPicker extends WheelPicker {
     private int maxDay;
 
     public WheelDayPicker(Context context) {
-        this(context, null);
+        super(context);
+        init();
     }
 
     public WheelDayPicker(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
+        super(context, attrs);
+        init();
     }
 
-    public WheelDayPicker(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
+    private void init() {
         initData();
         setCurrentDay();
     }
@@ -103,5 +105,6 @@ public class WheelDayPicker extends WheelPicker {
         setYear(year);
         setMonth(month);
         initData();
+        checkScrollState();
     }
 }

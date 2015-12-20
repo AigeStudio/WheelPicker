@@ -1,9 +1,9 @@
-package com.aigestudio.wheelpicker.widget;
+package com.aigestudio.wheelpicker.widget.curved;
 
 import android.content.Context;
 import android.util.AttributeSet;
 
-import com.aigestudio.wheelpicker.view.WheelPicker;
+import com.aigestudio.wheelpicker.view.WheelCurvedPicker;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -15,9 +15,10 @@ import java.util.List;
  *
  * @author AigeStudio 2015-12-03
  * @author AigeStudio 2015-12-08
+ * @author AigeStudio 2015-12-12
  * @version 1.0.0 beta
  */
-public class WheelMonthPicker extends WheelPicker {
+public class WheelMonthPicker extends WheelCurvedPicker {
     private static final List<String> MONTHS = new ArrayList<>();
 
     static {
@@ -29,15 +30,16 @@ public class WheelMonthPicker extends WheelPicker {
     private int month;
 
     public WheelMonthPicker(Context context) {
-        this(context, null);
+        super(context);
+        init();
     }
 
     public WheelMonthPicker(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
+        super(context, attrs);
+        init();
     }
 
-    public WheelMonthPicker(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
+    private void init() {
         super.setData(months);
         setCurrentMonth(Calendar.getInstance().get(Calendar.MONTH) + 1);
     }
