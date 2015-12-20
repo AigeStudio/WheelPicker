@@ -1,11 +1,15 @@
 package com.aigestudio.wheelpicker.demo;
 
 import android.app.Activity;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.aigestudio.wheelpicker.core.AbstractWheelDecor;
 import com.aigestudio.wheelpicker.core.AbstractWheelPicker;
 import com.aigestudio.wheelpicker.view.WheelCrossPicker;
 import com.aigestudio.wheelpicker.widget.curved.WheelDatePicker;
@@ -61,11 +65,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
             }
         });
         WheelCrossPicker curvedPicker = (WheelCrossPicker) findViewById(R.id.main_wheel_curved);
-        List<String> data = new ArrayList<>();
-        for (int i = 1900; i <= 2100; i++) {
-            data.add(String.valueOf(i));
-        }
-        curvedPicker.setData(data);
         curvedPicker.setOnWheelChangeListener(new AbstractWheelPicker.SimpleWheelChangeListener() {
             @Override
             public void onWheelScrollStateChanged(int state) {

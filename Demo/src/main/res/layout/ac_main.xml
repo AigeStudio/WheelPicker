@@ -73,6 +73,7 @@
                 android:id="@+id/main_wheel_curved"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
+                android:padding="10dp"
                 android:layout_weight="1"
                 android:background="#FFFDD6"
                 aigestudio:wheel_item_index="8"
