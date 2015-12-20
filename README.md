@@ -1,4 +1,6 @@
 # WheelPicker
+For more help please read [wiki](https://github.com/AigeStudio/WheelPicker/wiki)
+
 ## Android API Require
 **API 1**
 
@@ -13,25 +15,21 @@
 
 ![](https://github.com/AigeStudio/WheelPicker/blob/master/Previews/CurvedStyle.gif)
 
+**In Horizontal Orientation**
+
+![](https://github.com/AigeStudio/WheelPicker/blob/master/Previews/WheelPickerHor.gif)
+
 ### Widgets
 **WheelDatePicker**
 
 ![](https://github.com/AigeStudio/WheelPicker/blob/master/Previews/WheelDatePicker.gif)
 
-**WheelConstellationPicker**
+**WheelTimePicker**
 
-![](https://github.com/AigeStudio/WheelPicker/blob/master/Previews/WheelConstellationPicker.gif)
-
-**WheelYearPicker**
-
-![](https://github.com/AigeStudio/WheelPicker/blob/master/Previews/WheelYearPicker.gif)
-
-**WheelZodiacPicker**
-
-![](https://github.com/AigeStudio/WheelPicker/blob/master/Previews/WheelZodiacPicker.gif)
+![](https://github.com/AigeStudio/WheelPicker/blob/master/Previews/WheelTimePicker.gif)
 
 ## Versions
-### 1.0.0 preview
+### 1.0.0 beta
 * Preview for WheelPicker and support few function.
 
 ***
