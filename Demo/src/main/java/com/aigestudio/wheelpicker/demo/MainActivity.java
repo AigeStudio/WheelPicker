@@ -16,6 +16,9 @@ import com.aigestudio.wheelpicker.widget.curved.WheelMonthPicker;
 import com.aigestudio.wheelpicker.widget.curved.WheelTimePicker;
 import com.aigestudio.wheelpicker.widget.curved.WheelYearPicker;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author AigeStudio 2015-12-06
  */
@@ -58,6 +61,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
             }
         });
         WheelCrossPicker curvedPicker = (WheelCrossPicker) findViewById(R.id.main_wheel_curved);
+        List<String> data = new ArrayList<>();
+        for (int i = 1900; i <= 2100; i++) {
+            data.add(String.valueOf(i));
+        }
+        curvedPicker.setData(data);
         curvedPicker.setOnWheelChangeListener(new AbstractWheelPicker.SimpleWheelChangeListener() {
             @Override
             public void onWheelScrollStateChanged(int state) {
