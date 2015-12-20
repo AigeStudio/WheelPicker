@@ -15,7 +15,7 @@ For more help please read [wiki](https://github.com/AigeStudio/WheelPicker/wiki)
 
 ![](https://github.com/AigeStudio/WheelPicker/blob/master/Previews/CurvedStyle.gif)
 
-**In Horizontal Orientation**
+**In Horizontal Orientation** 
 
 ![](https://github.com/AigeStudio/WheelPicker/blob/master/Previews/WheelPickerHor.gif)
 
