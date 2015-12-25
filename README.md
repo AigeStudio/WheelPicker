@@ -32,6 +32,9 @@ For more help please read [wiki](https://github.com/AigeStudio/WheelPicker/wiki)
 ### 1.0.0 beta
 * Preview for WheelPicker and support few function.
 
+### 1.0.1 beta
+* BugFix:Cache in WheelCuredPicker can not clean...a stupid mistake.
+
 ***
 
 # LICENSE
