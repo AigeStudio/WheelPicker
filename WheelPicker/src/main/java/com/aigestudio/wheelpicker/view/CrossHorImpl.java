@@ -12,7 +12,7 @@ import com.aigestudio.wheelpicker.core.WheelScroller;
 import java.util.HashMap;
 
 class CrossHorImpl implements ICrossOrientation {
-    private static final HashMap<Integer, Integer> DEGREE = new HashMap<>();
+    private final HashMap<Integer, Integer> DEGREE = new HashMap<>();
 
     @Override
     public int getUnitDeltaTotal(WheelScroller scroller) {

@@ -11,8 +11,8 @@ import android.view.MotionEvent;
 import java.util.HashMap;
 
 public class WheelCurvedPicker extends WheelCrossPicker {
-    private static final HashMap<Integer, Integer> SPACE = new HashMap<>();
-    private static final HashMap<Integer, Integer> DEPTH = new HashMap<>();
+    private final HashMap<Integer, Integer> SPACE = new HashMap<>();
+    private final HashMap<Integer, Integer> DEPTH = new HashMap<>();
 
     private final Camera camera = new Camera();
     private final Matrix matrixRotate = new Matrix(), matrixDepth = new Matrix();
