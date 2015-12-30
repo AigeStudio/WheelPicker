@@ -123,4 +123,9 @@ class CrossHorImpl implements ICrossOrientation {
         rectLast.set(rect.left, 0, rect.right, top);
         rectNext.set(rect.left, rect.bottom - bottom, rect.right, rect.bottom);
     }
+
+    @Override
+    public int obtainCurrentDis(int moveX, int moveY) {
+        return moveX;
+    }
 }

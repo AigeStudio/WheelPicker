@@ -123,4 +123,9 @@ class CrossVerImpl implements ICrossOrientation {
         rectLast.set(0, rect.top, left, rect.bottom);
         rectNext.set(rect.right - right, rect.top, rect.right, rect.bottom);
     }
+
+    @Override
+    public int obtainCurrentDis(int moveX, int moveY) {
+        return moveY;
+    }
 }

@@ -19,6 +19,7 @@ public class WheelCurvedPicker extends WheelCrossPicker {
 
     private int radius;
     private int degreeSingleDelta;
+    private int degreeIndex, degreeUnitDelta;
 
     public WheelCurvedPicker(Context context) {
         super(context);
@@ -51,9 +52,8 @@ public class WheelCurvedPicker extends WheelCrossPicker {
         for (int i = -itemIndex; i < data.size() - itemIndex; i++) {
             int curUnit = unit * i;
             curUnit += (unitDeltaTotal + degreeSingleDelta);
-            if (curUnit > 90 || curUnit < -90) {
-                continue;
-            }
+            if (curUnit > unitDisplayMax || curUnit < unitDisplayMin) continue;
+
             int space = computeSpace(curUnit);
             if (space == 0) curUnit = 1;
             int depth = computeDepth(curUnit);
@@ -112,7 +112,20 @@ public class WheelCurvedPicker extends WheelCrossPicker {
 
     @Override
     protected void onTouchMove(MotionEvent event) {
-        degreeSingleDelta = mOrientation.computeDegreeSingleDelta(diSingleMoveX, diSingleMoveY, radius);
+        degreeUnitDelta = mOrientation.computeDegreeSingleDelta(diSingleMoveX, diSingleMoveY, radius);
+        int curDis = mOrientation.obtainCurrentDis(diSingleMoveX, diSingleMoveY);
+        if (Math.abs(curDis) >= radius) {
+            if (curDis >= 0)
+                degreeIndex++;
+            else
+                degreeIndex--;
+            diSingleMoveX = 0;
+            diSingleMoveY = 0;
+            degreeUnitDelta = 0;
+        }
+        degreeSingleDelta = (degreeIndex * 80) + degreeUnitDelta;
+//        Log.d("AigeStudio", degreeSingleDelta + ":" + degreeUnitDelta + ":" + degreeIndex + ":" + diSingleMoveY + ":" + radius);
+//        degreeSingleDelta = mOrientation.computeDegreeSingleDelta(diSingleMoveX, diSingleMoveY, radius);
         super.onTouchMove(event);
     }
 
@@ -120,6 +133,8 @@ public class WheelCurvedPicker extends WheelCrossPicker {
     protected void onTouchUp(MotionEvent event) {
         unitDeltaTotal += degreeSingleDelta;
         degreeSingleDelta = 0;
+        degreeUnitDelta = 0;
+        degreeIndex = 0;
         super.onTouchUp(event);
     }
 

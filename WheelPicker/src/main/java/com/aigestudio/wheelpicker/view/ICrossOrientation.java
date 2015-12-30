@@ -50,4 +50,6 @@ interface ICrossOrientation {
     void removePadding(Rect rect, int left, int top, int right, int bottom);
 
     void computeRectPadding(Rect rectLast, Rect rectNext, Rect rect, int left, int top, int right, int bottom);
+
+    int obtainCurrentDis(int moveX, int moveY);
 }
