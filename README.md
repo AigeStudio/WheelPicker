@@ -35,6 +35,9 @@ For more help please read [wiki](https://github.com/AigeStudio/WheelPicker/wiki)
 ### 1.0.1 beta
 * BugFix:Cache in WheelCuredPicker can not clean...a stupid mistake.
 
+### 1.0.2 beta
+* BugFix:MotionEvent lost when point outside of view in WheelCurvedPicker
+
 ***
 
 # LICENSE
