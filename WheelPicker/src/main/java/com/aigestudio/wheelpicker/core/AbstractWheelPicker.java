@@ -180,6 +180,8 @@ public abstract class AbstractWheelPicker extends View implements IWheelPicker {
     }
 
     protected void computeWheelSizes() {
+        disTotalMoveX = 0;
+        disTotalMoveY = 0;
         maxTextWidth = 0;
         maxTextHeight = 0;
         if (hasSameSize) {
