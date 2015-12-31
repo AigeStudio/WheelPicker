@@ -38,6 +38,9 @@ For more help please read [wiki](https://github.com/AigeStudio/WheelPicker/wiki)
 ### 1.0.2 beta
 * BugFix:MotionEvent lost when point outside of view in WheelCurvedPicker
 
+### 1.0.3 beta
+* BugFix:Error parameter after scroll using setXXX method
+
 ***
 
 # LICENSE
