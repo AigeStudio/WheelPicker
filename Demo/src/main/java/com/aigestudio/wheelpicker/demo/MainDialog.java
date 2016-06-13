@@ -59,8 +59,8 @@ public class MainDialog extends Dialog implements View.OnClickListener {
                 }
 
                 @Override
-                public void onWheelSelected(int index, String data) {
-                    MainDialog.this.data = data;
+                public void onWheelSelected(int index, Object data) {
+                    MainDialog.this.data = data.toString();
                 }
             });
         }

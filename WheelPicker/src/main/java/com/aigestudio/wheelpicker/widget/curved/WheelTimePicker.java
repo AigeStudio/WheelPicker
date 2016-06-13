@@ -93,9 +93,9 @@ public class WheelTimePicker extends LinearLayout implements IWheelPicker, IDigi
             }
 
             @Override
-            public void onWheelSelected(int index, String data) {
-                if (type == 0) hour = data;
-                if (type == 1) minute = data;
+            public void onWheelSelected(int index, Object data) {
+                if (type == 0) hour = data.toString();
+                if (type == 1) minute = data.toString();
                 if (isValidDate()) {
                     if (null != listener)
                         listener.onWheelSelected(-1, hour + ":" + minute);
@@ -122,7 +122,7 @@ public class WheelTimePicker extends LinearLayout implements IWheelPicker, IDigi
     }
 
     @Override
-    public void setData(List<String> data) {
+    public void setData(List<? extends Object> data) {
         throw new RuntimeException("Set data will not allow here!");
     }
 

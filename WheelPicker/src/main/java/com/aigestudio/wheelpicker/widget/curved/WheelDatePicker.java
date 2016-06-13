@@ -2,7 +2,6 @@ package com.aigestudio.wheelpicker.widget.curved;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.text.TextUtils;
@@ -103,10 +102,10 @@ public class WheelDatePicker extends LinearLayout implements IWheelPicker {
             }
 
             @Override
-            public void onWheelSelected(int index, String data) {
-                if (type == 0) year = data;
-                if (type == 1) month = data;
-                if (type == 2) day = data;
+            public void onWheelSelected(int index, Object data) {
+                if (type == 0) year = data.toString();
+                if (type == 1) month = data.toString();
+                if (type == 2) day = data.toString();
                 if (isValidDate()) {
                     if (type == 0 || type == 1)
                         pickerDay.setCurrentYearAndMonth(Integer.valueOf(year),
@@ -137,7 +136,7 @@ public class WheelDatePicker extends LinearLayout implements IWheelPicker {
     }
 
     @Override
-    public void setData(List<String> data) {
+    public void setData(List<? extends Object> data) {
         throw new RuntimeException("Set data will not allow here!");
     }
 

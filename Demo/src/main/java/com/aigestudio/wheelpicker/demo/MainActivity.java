@@ -1,15 +1,11 @@
 package com.aigestudio.wheelpicker.demo;
 
 import android.app.Activity;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.aigestudio.wheelpicker.core.AbstractWheelDecor;
 import com.aigestudio.wheelpicker.core.AbstractWheelPicker;
 import com.aigestudio.wheelpicker.view.WheelCrossPicker;
 import com.aigestudio.wheelpicker.widget.curved.WheelDatePicker;
@@ -19,9 +15,6 @@ import com.aigestudio.wheelpicker.widget.curved.WheelMinutePicker;
 import com.aigestudio.wheelpicker.widget.curved.WheelMonthPicker;
 import com.aigestudio.wheelpicker.widget.curved.WheelTimePicker;
 import com.aigestudio.wheelpicker.widget.curved.WheelYearPicker;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author AigeStudio 2015-12-06
@@ -60,8 +53,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
             }
 
             @Override
-            public void onWheelSelected(int index, String data) {
-                dataStraight = data;
+            public void onWheelSelected(int index, Object data) {
+                dataStraight = data.toString();
             }
         });
         WheelCrossPicker curvedPicker = (WheelCrossPicker) findViewById(R.id.main_wheel_curved);
@@ -76,8 +69,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
             }
 
             @Override
-            public void onWheelSelected(int index, String data) {
-                dataCurved = data;
+            public void onWheelSelected(int index, Object data) {
+                dataCurved = data.toString();
             }
         });
 
