@@ -45,7 +45,7 @@ public class WheelMonthPicker extends WheelCurvedPicker {
     }
 
     @Override
-    public void setData(List<String> data) {
+    public void setData(List<? extends Object> data) {
         throw new RuntimeException("Set data will not allow here!");
     }
 

@@ -2,7 +2,6 @@ package com.aigestudio.wheelpicker.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -10,7 +9,6 @@ import android.view.MotionEvent;
 import com.aigestudio.wheelpicker.core.AbstractWheelDecor;
 import com.aigestudio.wheelpicker.core.AbstractWheelPicker;
 
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -141,7 +139,7 @@ public abstract class WheelCrossPicker extends AbstractWheelPicker
         int curIndex = itemIndex - unitDeltaTotal / unit;
         curIndex = Math.max(0, curIndex);
         curIndex = Math.min(data.size() - 1, curIndex);
-        String curData = data.get(curIndex);
+        String curData = data.get(curIndex).toString();
         if (!this.curData.equals(curData)) {
             this.curData = curData;
             onWheelSelected(curIndex, curData);
@@ -211,7 +209,7 @@ public abstract class WheelCrossPicker extends AbstractWheelPicker
     }
 
     @Override
-    public void setData(List<String> data) {
+    public void setData(List<? extends Object> data) {
         super.setData(data);
         clearCache();
     }

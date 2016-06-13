@@ -21,7 +21,7 @@ public interface IWheelPicker {
      * @param data 显示数据
      *             Display data set
      */
-    void setData(List<String> data);
+    void setData(List<? extends Object> data);
 
     /**
      * 设置滚动监听

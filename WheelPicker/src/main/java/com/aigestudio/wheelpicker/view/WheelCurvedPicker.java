@@ -75,14 +75,14 @@ public class WheelCurvedPicker extends WheelCrossPicker {
             canvas.clipRect(rectCurItem, Region.Op.DIFFERENCE);
             mTextPaint.setColor(textColor);
             mTextPaint.setAlpha(255 - 255 * Math.abs(curUnit) / unitDisplayMax);
-            mOrientation.draw(canvas, mTextPaint, data.get(i + itemIndex), space, wheelCenterX,
+            mOrientation.draw(canvas, mTextPaint, data.get(i + itemIndex).toString(), space, wheelCenterX,
                     wheelCenterTextY);
             canvas.restore();
 
             canvas.save();
             canvas.clipRect(rectCurItem);
             mTextPaint.setColor(curTextColor);
-            mOrientation.draw(canvas, mTextPaint, data.get(i + itemIndex), space, wheelCenterX,
+            mOrientation.draw(canvas, mTextPaint, data.get(i + itemIndex).toString(), space, wheelCenterX,
                     wheelCenterTextY);
             canvas.restore();
         }

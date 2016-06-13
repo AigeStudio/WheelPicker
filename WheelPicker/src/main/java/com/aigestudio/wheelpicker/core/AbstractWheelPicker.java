@@ -3,7 +3,6 @@ package com.aigestudio.wheelpicker.core;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Build;
@@ -38,7 +37,7 @@ public abstract class AbstractWheelPicker extends View implements IWheelPicker {
     protected OnWheelChangeListener mListener;
     protected AbstractWheelDecor mWheelDecor;
 
-    protected List<String> data;
+    protected List<? extends Object> data;
 
     protected String curData;
 
@@ -67,7 +66,7 @@ public abstract class AbstractWheelPicker extends View implements IWheelPicker {
     public interface OnWheelChangeListener {
         void onWheelScrolling(float deltaX, float deltaY);
 
-        void onWheelSelected(int index, String data);
+        void onWheelSelected(int index, Object data);
 
         void onWheelScrollStateChanged(int state);
     }
@@ -79,7 +78,7 @@ public abstract class AbstractWheelPicker extends View implements IWheelPicker {
         }
 
         @Override
-        public void onWheelSelected(int index, String data) {
+        public void onWheelSelected(int index, Object data) {
 
         }
 
@@ -141,7 +140,7 @@ public abstract class AbstractWheelPicker extends View implements IWheelPicker {
 
             a.recycle();
         } else {
-            data = Arrays.asList(getContext().getResources().getStringArray(defDataID));
+            data = Arrays.asList((Object)getContext().getResources().getStringArray(defDataID));
 
             itemIndex = defItemIndex;
             itemCount = defItemCount;
@@ -185,13 +184,13 @@ public abstract class AbstractWheelPicker extends View implements IWheelPicker {
         maxTextWidth = 0;
         maxTextHeight = 0;
         if (hasSameSize) {
-            String text = data.get(0);
+            String text = data.get(0).toString();
             mTextPaint.getTextBounds(text, 0, text.length(), mTextBound);
             maxTextWidth = Math.max(maxTextWidth, mTextBound.width());
             maxTextHeight = Math.max(maxTextHeight, mTextBound.height());
         } else {
-            for (String text : data) {
-                mTextPaint.getTextBounds(text, 0, text.length(), mTextBound);
+            for (Object text : data) {
+                mTextPaint.getTextBounds(text.toString(), 0, text.toString().length(), mTextBound);
                 maxTextWidth = Math.max(maxTextWidth, mTextBound.width());
                 maxTextHeight = Math.max(maxTextHeight, mTextBound.height());
             }
@@ -231,7 +230,7 @@ public abstract class AbstractWheelPicker extends View implements IWheelPicker {
 
     @Override
     protected void onSizeChanged(int w, int h, int oldW, int oldH) {
-        onWheelSelected(itemIndex, data.get(itemIndex));
+        onWheelSelected(itemIndex, data.get(itemIndex).toString());
 
         mDrawBound.set(getPaddingLeft(), getPaddingTop(), w - getPaddingRight(),
                 h - getPaddingBottom());
@@ -340,7 +339,7 @@ public abstract class AbstractWheelPicker extends View implements IWheelPicker {
     }
 
     @Override
-    public void setData(List<String> data) {
+    public void setData(List<? extends Object> data) {
         this.data = data;
         computeWheelSizes();
         requestLayout();

@@ -50,14 +50,14 @@ public class WheelStraightPicker extends WheelCrossPicker {
             canvas.clipRect(rectCurItem, Region.Op.DIFFERENCE);
             mTextPaint.setColor(textColor);
             mTextPaint.setAlpha(255 - 255 * Math.abs(curDis) / unitDisplayMax);
-            mOrientation.draw(canvas, mTextPaint, data.get(i + itemIndex), curDis, wheelCenterX,
+            mOrientation.draw(canvas, mTextPaint, data.get(i + itemIndex).toString(), curDis, wheelCenterX,
                     wheelCenterTextY);
             canvas.restore();
 
             canvas.save();
             canvas.clipRect(rectCurItem);
             mTextPaint.setColor(curTextColor);
-            mOrientation.draw(canvas, mTextPaint, data.get(i + itemIndex), curDis, wheelCenterX,
+            mOrientation.draw(canvas, mTextPaint, data.get(i + itemIndex).toString(), curDis, wheelCenterX,
                     wheelCenterTextY);
             canvas.restore();
         }
