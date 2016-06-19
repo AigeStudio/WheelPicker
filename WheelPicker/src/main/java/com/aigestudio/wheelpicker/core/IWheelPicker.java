@@ -17,15 +17,16 @@ import java.util.List;
  */
 public interface IWheelPicker {
     /**
-     * 设置数据源
-     * 数据源可以是任意类型，但是需要注意的是WheelPicker在绘制数据源的时候会将数据源转换成String类型
+     * 设置数据列表
+     * 数据源可以是任意类型，但是需要注意的是WheelPicker在绘制数据的时候会将数据转换成String类型
+     * 在没有设置数据源的情况下滚轮选择器会设置一个默认的数据源作为展示
      *
-     * @param data 数据源类型
+     * @param data 数据列表
      */
     void setData(List data);
 
     /**
-     * 获取数据源
+     * 获取数据列表
      *
      * @return ...
      */
@@ -64,16 +65,16 @@ public interface IWheelPicker {
      * 设置Item有相同大小可以大幅提升滚动选择器运行效率
      * Item有相同大小分为两种情况，当滚轮为垂直时相同Item大小表示所有的Item宽度相同，当滚轮为水平时相同Item大小表示所有的Item高度相同
      *
-     * @param hasSameItemSize ...
+     * @param hasSameSize ...
      */
-    void setHasSameItemSize(boolean hasSameItemSize);
+    void setHasSameSize(boolean hasSameSize);
 
     /**
      * Item是否有相同大小
      *
      * @return ...
      */
-    boolean hasSameItemSize();
+    boolean hasSameSize();
 
     void setItemTextSize(int dp);
 
@@ -83,9 +84,9 @@ public interface IWheelPicker {
 
     Typeface getItemTextTypeface();
 
-    void setNormalItemTextColor(int color);
+    void setItemTextColor(int color);
 
-    int getNormalItemTextColor();
+    int getItemTextColor();
 
     void setCurrentItemTextColor(int color);
 
