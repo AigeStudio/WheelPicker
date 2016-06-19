@@ -1,17 +1,12 @@
 package com.aigestudio.wheelpicker.demo;
 
 import android.app.Activity;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.aigestudio.wheelpicker.core.AbstractWheelDecor;
 import com.aigestudio.wheelpicker.core.AbstractWheelPicker;
-import com.aigestudio.wheelpicker.view.WheelCrossPicker;
 import com.aigestudio.wheelpicker.widget.curved.WheelDatePicker;
 import com.aigestudio.wheelpicker.widget.curved.WheelDayPicker;
 import com.aigestudio.wheelpicker.widget.curved.WheelHourPicker;
@@ -19,9 +14,6 @@ import com.aigestudio.wheelpicker.widget.curved.WheelMinutePicker;
 import com.aigestudio.wheelpicker.widget.curved.WheelMonthPicker;
 import com.aigestudio.wheelpicker.widget.curved.WheelTimePicker;
 import com.aigestudio.wheelpicker.widget.curved.WheelYearPicker;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author AigeStudio 2015-12-06
