@@ -1,6 +1,6 @@
-package com.aigestudio.wheelpicker.core;
+package com.aigestudio.wheelpicker;
 
-public interface WheelScroller {
+interface WheelScroller {
     void abortAnimation();
 
     boolean computeScrollOffset();

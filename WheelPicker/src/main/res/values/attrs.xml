@@ -8,8 +8,5 @@
         <attr name="wheel_item_text_color" format="color" />
         <attr name="wheel_current_item_text_color" format="color" />
         <attr name="wheel_same_size" format="boolean" />
-
-
-        <attr name="wheel_item_space" format="dimension" />
     </declare-styleable>
 </resources>

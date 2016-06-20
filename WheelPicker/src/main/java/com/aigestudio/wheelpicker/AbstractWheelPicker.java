@@ -1,14 +1,13 @@
-package com.aigestudio.wheelpicker.core;
+package com.aigestudio.wheelpicker;
 
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.View;
-
-import com.aigestudio.wheelpicker.R;
 
 import java.util.Arrays;
 import java.util.List;
@@ -54,14 +53,12 @@ public abstract class AbstractWheelPicker extends View implements IWheelPicker {
     }
 
     protected void init(AttributeSet attrs) {
-        mPaint = new Paint();
-
         TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.WheelPicker);
         int idData = a.getResourceId(R.styleable.WheelPicker_wheel_data, 0);
         if (idData == 0)
-            setData(Arrays.asList(getResources().getStringArray(R.array.WheelArrayDefault)));
+            mData = Arrays.asList(getResources().getStringArray(R.array.WheelArrayDefault));
         else
-            setData(Arrays.asList(getResources().getStringArray(idData)));
+            mData = Arrays.asList(getResources().getStringArray(idData));
         mCurrentItemPosition = a.getInt(R.styleable.WheelPicker_wheel_current_item_position, 0);
         mItemCount = a.getInt(R.styleable.WheelPicker_wheel_item_count, 5);
         mItemTextSize = a.getDimensionPixelSize(
@@ -72,6 +69,9 @@ public abstract class AbstractWheelPicker extends View implements IWheelPicker {
                 (R.styleable.WheelPicker_wheel_current_item_position, 0xFF000000);
         hasSameSize = a.getBoolean(R.styleable.WheelPicker_wheel_same_size, false);
         a.recycle();
+
+        mPaint = new Paint();
+        mPaint.setColor(Color.WHITE);
     }
 
     @Override
@@ -81,16 +81,85 @@ public abstract class AbstractWheelPicker extends View implements IWheelPicker {
     protected abstract void onDraw(Canvas canvas);
 
     @Override
+    public List getData() {
+        return mData;
+    }
+
+    @Override
     public void setData(List data) {
+        if (null == data)
+            throw new RuntimeException("Wheel's data can not be null!");
         mData = data;
-        computeWheelSize();
         requestLayout();
     }
 
-    protected abstract void computeWheelSize();
+    @Override
+    public void setOnItemSelectListener(OnItemSelectListener listener) {
+
+    }
 
     @Override
-    public List getData() {
-        return mData;
+    public void setOnWheelChangeListener(OnItemSelectListener listener) {
+
+    }
+
+    @Override
+    public int getCurrentItem() {
+        return 0;
+    }
+
+    @Override
+    public void setCurrentItem(int position) {
+
+    }
+
+    @Override
+    public void setHasSameSize(boolean hasSameSize) {
+
+    }
+
+    @Override
+    public boolean hasSameSize() {
+        return false;
+    }
+
+    @Override
+    public int getItemTextSize() {
+        return 0;
+    }
+
+    @Override
+    public void setItemTextSize(int dp) {
+
+    }
+
+    @Override
+    public Typeface getItemTextTypeface() {
+        return null;
+    }
+
+    @Override
+    public void setItemTextTypeface(Typeface typeface) {
+
+    }
+
+    @Override
+    public int getItemTextColor() {
+        return 0;
+    }
+
+    @Override
+    public void setItemTextColor(int color) {
+
+    }
+
+    @Override
+    public int getCurrentItemTextColor() {
+        return 0;
+    }
+
+    @Override
+    public void setCurrentItemTextColor(int color) {
+
     }
 }

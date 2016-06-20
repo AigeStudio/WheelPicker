@@ -1,4 +1,6 @@
-package com.aigestudio.wheelpicker.core;
+package com.aigestudio.wheelpicker.cross;
+
+import com.aigestudio.wheelpicker.IWheelPicker;
 
 /**
  * 垂直与水平滚轮选择器方法接口
@@ -193,12 +195,12 @@ interface IWheelCrossPicker extends IWheelPicker {
      *                    {@link WheelCrossPicker#ORI_VER}
      *                    {@link WheelCrossPicker#ORI_HOR}
      */
-    void setOrientation(int orientation);
+    void setDirection(int orientation);
 
     /**
      * 获取滚轮选择器滚动方向
      *
      * @return ...
      */
-    int getOrientation();
+    int getDirection();
 }

@@ -1,4 +1,4 @@
-package com.aigestudio.wheelpicker.core;
+package com.aigestudio.wheelpicker;
 
 /**
  * 滚轮选择器Item项被选中时监听接口
