@@ -6,7 +6,6 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 
 import com.aigestudio.wheelpicker.R;
@@ -38,12 +37,14 @@ public class WheelCrossPicker extends WheelPicker implements IWheelCrossPicker {
 
     private int mDirection;
     private int mItemSpace;
+    private int mVisibleItemCount;
     private int mItemCount;
     private int mIndicatorSize;
     private int mWheelCenterX, mWheelCenterY;
     private int mFlingMin, mFlingMax;
 
     private boolean hasIndicator;
+    private boolean isCyclic;
 
     public WheelCrossPicker(Context context) {
         super(context);
@@ -59,11 +60,18 @@ public class WheelCrossPicker extends WheelPicker implements IWheelCrossPicker {
 
         TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.WheelPicker);
         mDirection = a.getInt(R.styleable.WheelPicker_wheel_direction, DIR_VER);
-        mItemCount = a.getInt(R.styleable.WheelPicker_wheel_item_count, 5);
+        mVisibleItemCount = a.getInt(R.styleable.WheelPicker_wheel_visible_item_count, 5);
         a.recycle();
 
+        if (isCyclic) {
+            mItemCount = Integer.MAX_VALUE;
+        } else {
+            mItemCount = mVisibleItemCount;
+        }
+
+
         mWheelCenterX = mTextMaxWidth / 2;
-        mWheelCenterY = (int) (mTextMaxHeight * mItemCount / 2 -
+        mWheelCenterY = (int) (mTextMaxHeight * mVisibleItemCount / 2 -
                 ((mPaint.ascent() + mPaint.descent()) / 2));
 
         mFlingMin = -mTextMaxHeight * (mData.size() - mCurrentItemPosition - 1);
@@ -111,7 +119,7 @@ public class WheelCrossPicker extends WheelPicker implements IWheelCrossPicker {
             canvas.drawRect(0, (i + mCurrentItemPosition) * mTextMaxHeight, mTextMaxWidth, (i + 1 + mCurrentItemPosition) * mTextMaxHeight, mPaint);
             canvas.drawText(String.valueOf(mData.get(i + mCurrentItemPosition)), mWheelCenterX, mWheelCenterY + (i * mTextMaxHeight) + mMoveTotalY + mMoveSingleY, mPaint);
         }
-        Log.e("wheel", mMoveTotalY + ":" + mMoveSingleY);
+//        Log.e("wheel", mMoveTotalY + ":" + mMoveSingleY);
     }
 
     @Override
@@ -126,9 +134,9 @@ public class WheelCrossPicker extends WheelPicker implements IWheelCrossPicker {
 
     @Override
     protected void onTouchUp(MotionEvent event) {
-        Log.e("wheel", mTracker.getYVelocity() + "");
+//        Log.e("wheel", mTracker.getYVelocity() + "");
         mScroller.fling(0, mMoveTotalY, 0, (int) mTracker.getYVelocity(), 0, 0, mFlingMin, mFlingMax);
-        Log.e("wheel", mMoveTotalY + ":" + mScroller.getFinalY());
+//        Log.e("wheel", mMoveTotalY + ":" + mScroller.getFinalY());
         int remainder = mScroller.getFinalY() % mTextMaxHeight;
         mScroller.setFinalY(mScroller.getFinalY() - remainder);
         mHandler.post(this);
@@ -137,7 +145,7 @@ public class WheelCrossPicker extends WheelPicker implements IWheelCrossPicker {
     @Override
     public void run() {
         if (mScroller.isFinished()) {
-            Log.e("Wheel", (mMoveTotalY / mTextMaxHeight) + "");
+//            Log.e("Wheel", (mMoveTotalY / mTextMaxHeight) + "");
 //            int remainder = mMoveTotalY % mTextMaxHeight;
 //            Log.e("Wheel", remainder + "");
 //            mScroller.startScroll(0, mMoveTotalY, 0, -remainder);
@@ -161,14 +169,14 @@ public class WheelCrossPicker extends WheelPicker implements IWheelCrossPicker {
 
     @Override
     public int getItemCount() {
-        return mItemCount;
+        return mVisibleItemCount;
     }
 
     @Override
     public void setItemCount(int count) {
         if (count < 2)
             throw new RuntimeException("Wheel's item count can not be less than 2!");
-        mItemCount = count;
+        mVisibleItemCount = count;
         requestLayout();
     }
 

@@ -12,6 +12,6 @@
             <enum name="vertical" value="0" />
             <enum name="horizontal" value="1" />
         </attr>
-        <attr name="wheel_item_count" format="integer" />
+        <attr name="wheel_visible_item_count" format="integer" />
     </declare-styleable>
 </resources>
