@@ -1,11 +1,16 @@
 package com.aigestudio.wheelpicker.cross;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.view.MotionEvent;
 
-import com.aigestudio.wheelpicker.AbstractWheelPicker;
+import com.aigestudio.wheelpicker.R;
+import com.aigestudio.wheelpicker.WheelPicker;
 
 /**
  * 垂直与水平滚动选择器抽象父类
@@ -14,7 +19,7 @@ import com.aigestudio.wheelpicker.AbstractWheelPicker;
  * @author AigeStudio
  * @since 2016-06-17
  */
-public class WheelCrossPicker extends AbstractWheelPicker implements IWheelCrossPicker {
+public class WheelCrossPicker extends WheelPicker implements IWheelCrossPicker {
     // 滚轮Item对齐方式
     public static final int
             ALIGN_CENTER = 0,// 居中对齐 该对齐方式对垂直和水平滚动器均有效
@@ -24,8 +29,8 @@ public class WheelCrossPicker extends AbstractWheelPicker implements IWheelCross
             ALIGN_BOTTOM = 4;// 置底对齐 该对齐方式仅对水平滚动器有效
     // 滚轮方向常量值
     public static final int
-            ORI_VER = 0,// 垂直滚动
-            ORI_HOR = 1;// 水平滚动
+            DIR_VER = 0,// 垂直滚动
+            DIR_HOR = 1;// 水平滚动
 
     private WheelDirection mWheelDirection;
 
@@ -35,6 +40,8 @@ public class WheelCrossPicker extends AbstractWheelPicker implements IWheelCross
     private int mItemSpace;
     private int mItemCount;
     private int mIndicatorSize;
+    private int mWheelCenterX, mWheelCenterY;
+    private int mFlingMin, mFlingMax;
 
     private boolean hasIndicator;
 
@@ -49,6 +56,19 @@ public class WheelCrossPicker extends AbstractWheelPicker implements IWheelCross
     @Override
     protected void init(AttributeSet attrs) {
         super.init(attrs);
+
+        TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.WheelPicker);
+        mDirection = a.getInt(R.styleable.WheelPicker_wheel_direction, DIR_VER);
+        mItemCount = a.getInt(R.styleable.WheelPicker_wheel_item_count, 5);
+        a.recycle();
+
+        mWheelCenterX = mTextMaxWidth / 2;
+        mWheelCenterY = (int) (mTextMaxHeight * mItemCount / 2 -
+                ((mPaint.ascent() + mPaint.descent()) / 2));
+
+        mFlingMin = -mTextMaxHeight * (mData.size() - mCurrentItemPosition - 1);
+        mFlingMax = mTextMaxHeight * mCurrentItemPosition;
+
         mWheelDirection = WheelCrossHelper.getWheelCrossDirection(this);
     }
 
@@ -60,8 +80,8 @@ public class WheelCrossPicker extends AbstractWheelPicker implements IWheelCross
         int sizeWidth = MeasureSpec.getSize(widthMeasureSpec);
         int sizeHeight = MeasureSpec.getSize(heightMeasureSpec);
 
-        int resultWidth = mWheelDirection.computeWidth(mPaint, mData, mItemCount, hasSameSize);
-        int resultHeight = mWheelDirection.computeHeight(mPaint, mData, mItemCount, hasSameSize);
+        int resultWidth = mWheelDirection.computeWidth();
+        int resultHeight = mWheelDirection.computeHeight();
 
         resultWidth += (getPaddingLeft() + getPaddingRight());
         resultHeight += (getPaddingTop() + getPaddingBottom());
@@ -86,8 +106,46 @@ public class WheelCrossPicker extends AbstractWheelPicker implements IWheelCross
 
     @Override
     protected void onDraw(Canvas canvas) {
-        for (int i = 0; i < mData.size(); i++) {
-            canvas.drawText(String.valueOf(mData.get(i)), 0, 10 * i, mPaint);
+        mPaint.setStyle(Paint.Style.STROKE);
+        for (int i = -mCurrentItemPosition; i < mData.size() - mCurrentItemPosition; i++) {
+            canvas.drawRect(0, (i + mCurrentItemPosition) * mTextMaxHeight, mTextMaxWidth, (i + 1 + mCurrentItemPosition) * mTextMaxHeight, mPaint);
+            canvas.drawText(String.valueOf(mData.get(i + mCurrentItemPosition)), mWheelCenterX, mWheelCenterY + (i * mTextMaxHeight) + mMoveTotalY + mMoveSingleY, mPaint);
+        }
+        Log.e("wheel", mMoveTotalY + ":" + mMoveSingleY);
+    }
+
+    @Override
+    protected void onTouchDown(MotionEvent event) {
+        // Do nothing...
+    }
+
+    @Override
+    protected void onTouchMove(MotionEvent event) {
+        invalidate();
+    }
+
+    @Override
+    protected void onTouchUp(MotionEvent event) {
+        Log.e("wheel", mTracker.getYVelocity() + "");
+        mScroller.fling(0, mMoveTotalY, 0, (int) mTracker.getYVelocity(), 0, 0, mFlingMin, mFlingMax);
+        Log.e("wheel", mMoveTotalY + ":" + mScroller.getFinalY());
+        int remainder = mScroller.getFinalY() % mTextMaxHeight;
+        mScroller.setFinalY(mScroller.getFinalY() - remainder);
+        mHandler.post(this);
+    }
+
+    @Override
+    public void run() {
+        if (mScroller.isFinished()) {
+            Log.e("Wheel", (mMoveTotalY / mTextMaxHeight) + "");
+//            int remainder = mMoveTotalY % mTextMaxHeight;
+//            Log.e("Wheel", remainder + "");
+//            mScroller.startScroll(0, mMoveTotalY, 0, -remainder);
+        }
+        if (mScroller.computeScrollOffset()) {
+            mMoveTotalY = mScroller.getCurrY();
+            postInvalidate();
+            mHandler.postDelayed(this, 16);
         }
     }
 

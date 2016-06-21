@@ -17,6 +17,13 @@ import java.util.List;
  */
 public interface IWheelPicker {
     /**
+     * 获取数据列表
+     *
+     * @return ...
+     */
+    List getData();
+
+    /**
      * 设置数据列表
      * 数据源可以是任意类型，但是需要注意的是WheelPicker在绘制数据的时候会将数据转换成String类型
      * 在没有设置数据源的情况下滚轮选择器会设置一个默认的数据源作为展示
@@ -24,13 +31,6 @@ public interface IWheelPicker {
      * @param data 数据列表
      */
     void setData(List data);
-
-    /**
-     * 获取数据列表
-     *
-     * @return ...
-     */
-    List getData();
 
     /**
      * 设置滚轮Item选中监听器
@@ -47,13 +47,6 @@ public interface IWheelPicker {
     void setOnWheelChangeListener(OnItemSelectListener listener);
 
     /**
-     * 设置当前被选中的Item所显示的数据在数据源中的位置
-     *
-     * @param position 当前被选中的Item所显示的数据在数据源中的位置
-     */
-    void setCurrentItem(int position);
-
-    /**
      * 获取当前被选中的Item所显示的数据在数据源中的位置
      *
      * @return 当前被选中的Item所显示的数据在数据源中的位置
@@ -61,9 +54,17 @@ public interface IWheelPicker {
     int getCurrentItem();
 
     /**
+     * 设置当前被选中的Item所显示的数据在数据源中的位置
+     *
+     * @param position 当前被选中的Item所显示的数据在数据源中的位置
+     */
+    void setCurrentItem(int position);
+
+    /**
      * 设置Item是否有相同的大小
      * 设置Item有相同大小可以大幅提升滚动选择器运行效率
      * Item有相同大小分为两种情况，当滚轮为垂直时相同Item大小表示所有的Item宽度相同，当滚轮为水平时相同Item大小表示所有的Item高度相同
+     * 实际情况下为水平滚动选择器设置该值并无意义
      *
      * @param hasSameSize ...
      */
@@ -76,19 +77,23 @@ public interface IWheelPicker {
      */
     boolean hasSameSize();
 
-    void setItemTextSize(int dp);
-
     int getItemTextSize();
 
-    void setItemTextTypeface(Typeface typeface);
+    void setItemTextSize(int dp);
 
     Typeface getItemTextTypeface();
 
-    void setItemTextColor(int color);
+    void setItemTextTypeface(Typeface typeface);
 
     int getItemTextColor();
 
-    void setCurrentItemTextColor(int color);
+    void setItemTextColor(int color);
 
     int getCurrentItemTextColor();
+
+    void setCurrentItemTextColor(int color);
+
+    int getTextMaxWidth();
+
+    int getTextMaxHeight();
 }

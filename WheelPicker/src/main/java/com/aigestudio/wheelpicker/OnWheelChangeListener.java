@@ -26,9 +26,9 @@ public interface OnWheelChangeListener {
      * 当滚轮选择器滚动状态改变时回调该方法
      *
      * @param state 滚轮选择器滚动状态，其值仅可能为下列之一
-     *              {@link AbstractWheelPicker#SCROLL_STATE_IDLE}
-     *              {@link AbstractWheelPicker#SCROLL_STATE_DRAGGING}
-     *              {@link AbstractWheelPicker#SCROLL_STATE_SCROLLING}
+     *              {@link WheelPicker#SCROLL_STATE_IDLE}
+     *              {@link WheelPicker#SCROLL_STATE_DRAGGING}
+     *              {@link WheelPicker#SCROLL_STATE_SCROLLING}
      */
     void onWheelScrollStateChanged(int state);
 }

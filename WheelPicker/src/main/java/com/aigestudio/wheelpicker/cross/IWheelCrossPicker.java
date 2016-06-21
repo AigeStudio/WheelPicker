@@ -192,8 +192,8 @@ interface IWheelCrossPicker extends IWheelPicker {
      * 设置滚轮选择器滚动方向
      *
      * @param orientation 滚动方向标识值，仅能是下列值之一：
-     *                    {@link WheelCrossPicker#ORI_VER}
-     *                    {@link WheelCrossPicker#ORI_HOR}
+     *                    {@link WheelCrossPicker#DIR_VER}
+     *                    {@link WheelCrossPicker#DIR_HOR}
      */
     void setDirection(int orientation);
 
