@@ -49,7 +49,7 @@ public class WheelCrossPicker extends AbstractWheelPicker implements IWheelCross
     @Override
     protected void init(AttributeSet attrs) {
         super.init(attrs);
-        mWheelDirection = WheelCrossHelper.getWheelCrossDirection(mDirection);
+        mWheelDirection = WheelCrossHelper.getWheelCrossDirection(this);
     }
 
     @Override

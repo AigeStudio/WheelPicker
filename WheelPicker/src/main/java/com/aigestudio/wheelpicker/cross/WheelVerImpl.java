@@ -8,6 +8,10 @@ import java.util.List;
  * Created by Administrator on 2016/6/20.
  */
 class WheelVerImpl extends WheelDirection {
+    public WheelVerImpl(WheelCrossPicker picker) {
+        super(picker);
+    }
+
     @Override
     int computeWidth(Paint paint, List data, int count, boolean hasSameSize) {
         int size = 0;

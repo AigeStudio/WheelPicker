@@ -8,12 +8,12 @@ package com.aigestudio.wheelpicker.cross;
  * @since 2016-06-20
  */
 final class WheelCrossHelper {
-    static WheelDirection getWheelCrossDirection(int direction) {
-        switch (direction) {
+    static WheelDirection getWheelCrossDirection(WheelCrossPicker picker) {
+        switch (picker.getDirection()) {
             case WheelCrossPicker.ORI_HOR:
-                return new WheelHorImpl();
+                return new WheelHorImpl(picker);
             case WheelCrossPicker.ORI_VER:
-                return new WheelVerImpl();
+                return new WheelVerImpl(picker);
         }
         return null;
     }

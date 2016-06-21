@@ -11,6 +11,12 @@ import java.util.List;
 abstract class WheelDirection {
     protected final Rect mTextBounds = new Rect();
 
+    protected final WheelCrossPicker mPicker;
+
+    public WheelDirection(WheelCrossPicker picker) {
+        mPicker = picker;
+    }
+
     abstract int computeWidth(Paint paint, List data, int count, boolean hasSameSize);
 
     protected int computeTextWidth(Paint paint, Object obj) {
