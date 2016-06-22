@@ -42,6 +42,7 @@ public class WheelCrossPicker extends WheelPicker implements IWheelCrossPicker {
     private int mIndicatorSize;
     private int mWheelCenterX, mWheelCenterY;
     private int mFlingMin, mFlingMax;
+    private int mIterationStart, mIterationEnd;
 
     private boolean hasIndicator;
     private boolean isCyclic;
@@ -115,9 +116,10 @@ public class WheelCrossPicker extends WheelPicker implements IWheelCrossPicker {
     @Override
     protected void onDraw(Canvas canvas) {
         mPaint.setStyle(Paint.Style.STROKE);
-        for (int i = -mCurrentItemPosition; i < mData.size() - mCurrentItemPosition; i++) {
-            canvas.drawRect(0, (i + mCurrentItemPosition) * mTextMaxHeight, mTextMaxWidth, (i + 1 + mCurrentItemPosition) * mTextMaxHeight, mPaint);
-            canvas.drawText(String.valueOf(mData.get(i + mCurrentItemPosition)), mWheelCenterX, mWheelCenterY + (i * mTextMaxHeight) + mMoveTotalY + mMoveSingleY, mPaint);
+        for (int i = -1000; i < 1000; i++) {
+//            if (i > 24) continue;
+            canvas.drawRect(0, i * mTextMaxHeight, mTextMaxWidth, (i + 1) * mTextMaxHeight, mPaint);
+            canvas.drawText(String.valueOf(mData.get(Math.abs(i % mVisibleItemCount))), mWheelCenterX, mWheelCenterY + (i * mTextMaxHeight) + mMoveTotalY + mMoveSingleY, mPaint);
         }
 //        Log.e("wheel", mMoveTotalY + ":" + mMoveSingleY);
     }
@@ -135,7 +137,7 @@ public class WheelCrossPicker extends WheelPicker implements IWheelCrossPicker {
     @Override
     protected void onTouchUp(MotionEvent event) {
 //        Log.e("wheel", mTracker.getYVelocity() + "");
-        mScroller.fling(0, mMoveTotalY, 0, (int) mTracker.getYVelocity(), 0, 0, mFlingMin, mFlingMax);
+        mScroller.fling(0, mMoveTotalY, 0, (int) mTracker.getYVelocity(), 0, 0, -100000, 100000);
 //        Log.e("wheel", mMoveTotalY + ":" + mScroller.getFinalY());
         int remainder = mScroller.getFinalY() % mTextMaxHeight;
         mScroller.setFinalY(mScroller.getFinalY() - remainder);
