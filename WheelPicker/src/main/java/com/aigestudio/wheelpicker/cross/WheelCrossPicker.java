@@ -6,10 +6,14 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 
 import com.aigestudio.wheelpicker.R;
 import com.aigestudio.wheelpicker.WheelPicker;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 垂直与水平滚动选择器抽象父类
@@ -115,11 +119,23 @@ public class WheelCrossPicker extends WheelPicker implements IWheelCrossPicker {
 
     @Override
     protected void onDraw(Canvas canvas) {
+        int offset = ((mMoveTotalY + mMoveSingleY) / mTextMaxHeight);
+        Log.e("wheel", offset + "");
         mPaint.setStyle(Paint.Style.STROKE);
+
+        List<String> draw = new ArrayList<>();
+
+        int index = 0;
+        for (int i = 0 - 2 - offset; i < 7 - 2 - offset; i++) {
+            index = i;
+            if (i < 0) index = mData.size() + (i % mData.size());
+            draw.add(String.valueOf(mData.get(index % mData.size())));
+        }
+
         for (int i = 0; i < 5; i++) {
 //            if (i > 24) continue;
             canvas.drawRect(0, i * mTextMaxHeight, mTextMaxWidth, (i + 1) * mTextMaxHeight, mPaint);
-            canvas.drawText(String.valueOf(mData.get(Math.abs(i % mData.size()))), mWheelCenterX, mWheelCenterY + (i * mTextMaxHeight) + mMoveTotalY + mMoveSingleY, mPaint);
+            canvas.drawText(String.valueOf(mData.get(i)), mWheelCenterX, (mTextMaxHeight / 2 - ((mPaint.ascent() + mPaint.descent()) / 2)) + (i * mTextMaxHeight) + mMoveTotalY + mMoveSingleY, mPaint);
         }
 //        Log.e("wheel", mMoveTotalY + ":" + mMoveSingleY);
     }
@@ -131,6 +147,7 @@ public class WheelCrossPicker extends WheelPicker implements IWheelCrossPicker {
 
     @Override
     protected void onTouchMove(MotionEvent event) {
+
         invalidate();
     }
 
