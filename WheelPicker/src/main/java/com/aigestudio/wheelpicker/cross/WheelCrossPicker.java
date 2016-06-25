@@ -135,7 +135,11 @@ public class WheelCrossPicker extends WheelPicker implements IWheelCrossPicker {
         for (int i = 0; i < 5; i++) {
 //            if (i > 24) continue;
             canvas.drawRect(0, i * mTextMaxHeight, mTextMaxWidth, (i + 1) * mTextMaxHeight, mPaint);
-            canvas.drawText(String.valueOf(mData.get(i)), mWheelCenterX, (mTextMaxHeight / 2 - ((mPaint.ascent() + mPaint.descent()) / 2)) + (i * mTextMaxHeight) + mMoveTotalY + mMoveSingleY, mPaint);
+            canvas.drawText(
+                    String.valueOf(mData.get(i)),
+                    mWheelCenterX,
+                    (mTextMaxHeight / 2 - ((mPaint.ascent() + mPaint.descent()) / 2)) + (i * mTextMaxHeight) + mMoveTotalY + mMoveSingleY - offset * mTextMaxHeight,
+                    mPaint);
         }
 //        Log.e("wheel", mMoveTotalY + ":" + mMoveSingleY);
     }
