@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.OverScroller;
+import android.widget.Scroller;
 
 import java.util.Arrays;
 import java.util.List;
@@ -41,7 +42,7 @@ public class WheelView extends View {
 //    private Shader shader;              //遮罩渐变
     private float lastY, downY;          //上次操作的坐标以及按下时候的坐标
     private long downTime;              //按下时的时间
-    private OverScroller mScroller;
+    private Scroller mScroller;
 
     private List<String> data;
 
@@ -61,7 +62,7 @@ public class WheelView extends View {
     private void init() {
         data = Arrays.asList(getResources().getStringArray(R.array.WheelArrayDefault));
         dataSize = data.size();
-        mScroller = new OverScroller(getContext());
+        mScroller = new Scroller(getContext());
 //        data = new ArrayList<>();
         paint = new Paint();
         paint.setAntiAlias(true);
@@ -298,8 +299,8 @@ public class WheelView extends View {
                 lastY = y;
                 break;
             case MotionEvent.ACTION_UP:
-                checkStateAndPosition();
-                invalidate();
+//                checkStateAndPosition();
+//                invalidate();
                 break;
         }
         return true;
@@ -312,42 +313,42 @@ public class WheelView extends View {
         return realHeight;
     }
 
-    private void checkStateAndPosition() {
-        //上拉超出
-        if (!isCircle && scrollY < -(getRealHeight() - (itemCount + 1) / 2 * itemHeight)) {
-            mScroller.startScroll(0, (int) scrollY, 0, (itemCount + 1) / 2 * itemHeight - getRealHeight() - (int) scrollY, 400);
-//            mScroller.springBack(0,(int)scrollY,0,0,minScrollY,maxScrollY);
-        } else if (!isCircle && scrollY > (itemCount - 1) / 2 * itemHeight) {  //下拉超出
-            mScroller.startScroll(0, (int) scrollY, 0, (itemCount - 1) / 2 * itemHeight - (int) scrollY, 400);
-//            mScroller.springBack(0,(int)scrollY,0,0,minScrollY,maxScrollY);
-        } else {
-            long endTime = System.currentTimeMillis();
-            //超出滑动时间或者不足滑动距离
-            if (endTime - downTime > 250 || Math.abs(lastY - downY) < itemHeight / 2) {
-                int dy = (int) scrollY % itemHeight;         //不足一个Item高度的部分
-                if (Math.abs(dy) > itemHeight / 2) {          //如果偏移大于item的一半，
-                    if (scrollY < 0) {
-                        mScroller.startScroll(0, (int) scrollY, 0, -itemHeight - dy);
-                    } else {
-                        mScroller.startScroll(0, (int) scrollY, 0, itemHeight - dy);
-                    }
-                } else {
-                    mScroller.startScroll(0, (int) scrollY, 0, -dy);
-                }
-            } else {
-                //滑动距离，和手指滑动距离成正比，和滑动时间成反比
-                int finalY = (int) ((scrollY + rate * (lastY - downY) / (endTime - downTime))) / itemHeight * itemHeight;
-                if (!isCircle) {
-                    if (finalY < minScrollY) {
-                        finalY = minScrollY;
-                    } else if (finalY > maxScrollY) {
-                        finalY = maxScrollY;
-                    }
-                }
-                mScroller.startScroll(0, (int) scrollY, 0, (int) (finalY - scrollY), 400);
-            }
-        }
-    }
+//    private void checkStateAndPosition() {
+//        //上拉超出
+//        if (!isCircle && scrollY < -(getRealHeight() - (itemCount + 1) / 2 * itemHeight)) {
+//            mScroller.startScroll(0, (int) scrollY, 0, (itemCount + 1) / 2 * itemHeight - getRealHeight() - (int) scrollY, 400);
+////            mScroller.springBack(0,(int)scrollY,0,0,minScrollY,maxScrollY);
+//        } else if (!isCircle && scrollY > (itemCount - 1) / 2 * itemHeight) {  //下拉超出
+//            mScroller.startScroll(0, (int) scrollY, 0, (itemCount - 1) / 2 * itemHeight - (int) scrollY, 400);
+////            mScroller.springBack(0,(int)scrollY,0,0,minScrollY,maxScrollY);
+//        } else {
+//            long endTime = System.currentTimeMillis();
+//            //超出滑动时间或者不足滑动距离
+//            if (endTime - downTime > 250 || Math.abs(lastY - downY) < itemHeight / 2) {
+//                int dy = (int) scrollY % itemHeight;         //不足一个Item高度的部分
+//                if (Math.abs(dy) > itemHeight / 2) {          //如果偏移大于item的一半，
+//                    if (scrollY < 0) {
+//                        mScroller.startScroll(0, (int) scrollY, 0, -itemHeight - dy);
+//                    } else {
+//                        mScroller.startScroll(0, (int) scrollY, 0, itemHeight - dy);
+//                    }
+//                } else {
+//                    mScroller.startScroll(0, (int) scrollY, 0, -dy);
+//                }
+//            } else {
+//                //滑动距离，和手指滑动距离成正比，和滑动时间成反比
+//                int finalY = (int) ((scrollY + rate * (lastY - downY) / (endTime - downTime))) / itemHeight * itemHeight;
+//                if (!isCircle) {
+//                    if (finalY < minScrollY) {
+//                        finalY = minScrollY;
+//                    } else if (finalY > maxScrollY) {
+//                        finalY = maxScrollY;
+//                    }
+//                }
+//                mScroller.startScroll(0, (int) scrollY, 0, (int) (finalY - scrollY), 400);
+//            }
+//        }
+//    }
 
     private void pretendScrollY(float dy) {
         scrollY += dy;
