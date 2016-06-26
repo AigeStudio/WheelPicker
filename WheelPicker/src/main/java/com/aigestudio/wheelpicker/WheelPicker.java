@@ -24,41 +24,30 @@ import java.util.List;
  *         更新项目结构
  * @version 1.1.0 beta
  */
-public abstract class WheelPicker extends View implements IWheelPicker, Runnable {
+public class WheelPicker extends View {
     // 滚轮选择器滚动状态标识值
     public static final int
             SCROLL_STATE_IDLE = 0,// 滚动停止时
             SCROLL_STATE_DRAGGING = 1,// 拖拽时
             SCROLL_STATE_SCROLLING = 2;// 滚动时
 
-    protected final Handler mHandler = new Handler();
+    private Paint mPaint;
+    private Scroller mScroller;
 
-    protected OnItemSelectListener mItemSelectListener;
-    protected OnWheelChangeListener mWheelChangeListener;
+    private List mData;// 数据源
 
-    protected Paint mPaint;
-    protected Scroller mScroller;
-    protected VelocityTracker mTracker;
-    protected Typeface mItemTextTypeface;
+    private int mVisibleItemCount;// 滚轮选择器中可见的Item数量
 
-    protected List mData;// 数据列表
+    private int mItemTextSize;// Item文本大小
+    private int mTextMaxWidth, mTextMaxHeight;
+    private int mItemWidth, mItemHeight;
+    private int mCurrentItemPosition;
+    private int mCenterOffsetY;
 
-    protected int mWheelActualWidth, mWheelActualHeight;
-    protected int mCurrentItemPosition;
-    protected int mItemTextSize;
-    protected int mItemTextColor, mCurrentItemTextColor;
-    protected int mTextMaxWidth, mTextMaxHeight;
-    protected int mMinimumVelocity, mMaximumVelocity;
-    protected int mTouchSlop;
+    private int mItemCenterX, mItemCenterY;// Item文本绘制中心X坐标
+    private int mScrollY;
 
-    protected boolean hasSameSize;
-    protected int mMoveSingleX, mMoveSingleY;
-    protected int mMoveTotalX, mMoveTotalY;
-
-    private int mLastX, mLastY;
-
-    private boolean isMoving;
-    private boolean isScroll;
+    private boolean isCyclic;
 
     public WheelPicker(Context context) {
         this(context, null);
@@ -69,34 +58,18 @@ public abstract class WheelPicker extends View implements IWheelPicker, Runnable
         init(attrs);
     }
 
-    protected void init(AttributeSet attrs) {
-        TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.WheelPicker);
-        int idData = a.getResourceId(R.styleable.WheelPicker_wheel_data, 0);
-        if (idData == 0)
-            mData = Arrays.asList(getResources().getStringArray(R.array.WheelArrayDefault));
-        else
-            mData = Arrays.asList(getResources().getStringArray(idData));
-        mCurrentItemPosition = a.getInt(R.styleable.WheelPicker_wheel_current_item_position, 0);
-        mItemTextSize = a.getDimensionPixelSize(
-                R.styleable.WheelPicker_wheel_item_text_size,
-                getResources().getDimensionPixelSize(R.dimen.WheelItemTextSize));
-        mItemTextColor = a.getColor(R.styleable.WheelPicker_wheel_item_text_color, 0xFF888888);
-        mCurrentItemTextColor = a.getColor
-                (R.styleable.WheelPicker_wheel_current_item_position, 0xFF333333);
-        hasSameSize = a.getBoolean(R.styleable.WheelPicker_wheel_same_size, false);
-        a.recycle();
+    private void init(AttributeSet attrs) {
+        mData = Arrays.asList(getResources().getStringArray(R.array.WheelArrayDefault));
+        mItemTextSize = 32;
 
-        ViewConfiguration conf = ViewConfiguration.get(getContext());
-        mTouchSlop = conf.getScaledTouchSlop();
-        mMinimumVelocity = conf.getScaledMinimumFlingVelocity();
-        mMaximumVelocity = conf.getScaledMaximumFlingVelocity();
+        // 确保滚轮选择器可见Item数量为奇数
+        if (mVisibleItemCount % 2 == 0)
+            mVisibleItemCount += 1;
 
-        mPaint = new Paint();
-        mPaint.setTextAlign(Paint.Align.CENTER);
-        mPaint.setColor(mItemTextColor);
+        mPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG | Paint.LINEAR_TEXT_FLAG);
+        mPaint.setColor(0xFFFFFFFF);
         mPaint.setTextSize(mItemTextSize);
-
-        mScroller = new Scroller(getContext());
+        mPaint.setTextAlign(Paint.Align.CENTER);
 
         for (Object obj : mData) {
             String text = String.valueOf(obj);
@@ -108,166 +81,65 @@ public abstract class WheelPicker extends View implements IWheelPicker, Runnable
             int height = (int) (metrics.bottom - metrics.top);
             mTextMaxHeight = Math.max(mTextMaxHeight, height);
         }
+        mScroller = new Scroller(getContext());
+
+        mScrollY = (1 - (mCurrentItemPosition - (mVisibleItemCount - 1) / 2)) * mTextMaxHeight;
+
+        mCenterOffsetY = (int) (mTextMaxHeight / 2 - ((mPaint.ascent() + mPaint.descent()) / 2));
     }
 
     @Override
-    protected abstract void onMeasure(int widthMeasureSpec, int heightMeasureSpec);
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+
+    }
 
     @Override
-    protected abstract void onDraw(Canvas canvas);
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        mItemCenterX = getWidth() / 2;
+        mItemHeight = getHeight() / mVisibleItemCount;
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        int start = -mScrollY / mTextMaxHeight;
+        for (int pos = start, index = -1; pos < start + mVisibleItemCount + 2; pos++, index++) {
+            float centerY = index * mTextMaxHeight + mScrollY % mTextMaxHeight + mCenterOffsetY;
+            if (isPosIntraArea(pos)) {
+                canvas.drawText(String.valueOf(mData.get(pos)), mItemCenterX, centerY, mPaint);
+            } else {
+                if (isCyclic) {
+                    int newPos = pos % mData.size();
+                    newPos = newPos < 0 ? newPos + mData.size() : newPos;
+                    canvas.drawText(String.valueOf(mData.get(newPos)), mItemCenterX, centerY, mPaint);
+                }
+            }
+        }
+    }
+
+    private boolean isPosIntraArea(int position) {
+        return position >= 0 && position < mData.size();
+    }
+
+    @Override
+    public void computeScroll() {
+        if (mScroller.computeScrollOffset()) {
+            mScrollY = mScroller.getCurrY();
+            invalidate();
+        }
+    }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                getParent().requestDisallowInterceptTouchEvent(true);
-                if (null == mTracker)
-                    mTracker = VelocityTracker.obtain();
-                else
-                    mTracker.clear();
-                mTracker.addMovement(event);
-                if (!mScroller.isFinished())
-                    mScroller.abortAnimation();
-                mLastX = (int) event.getX();
-                mLastY = (int) event.getY();
-                onTouchDown(event);
                 break;
             case MotionEvent.ACTION_MOVE:
-                if (!isMoving && Math.abs(event.getY() - mLastY) < mTouchSlop) {
-                    isScroll = false;
-                    break;
-                }
-                isMoving = true;
-                isScroll = true;
-                mMoveSingleX += (event.getX() - mLastX);
-                mMoveSingleY += (event.getY() - mLastY);
-                mTracker.addMovement(event);
-                mLastX = (int) event.getX();
-                mLastY = (int) event.getY();
-                onTouchMove(event);
                 break;
             case MotionEvent.ACTION_UP:
-                isMoving = false;
-                if (isScroll) {
-                    mTracker.addMovement(event);
-                    mMoveTotalX += mMoveSingleX;
-                    mMoveTotalY += mMoveSingleY;
-                    mMoveSingleX = 0;
-                    mMoveSingleY = 0;
-                    mTracker.computeCurrentVelocity(750, mMaximumVelocity);
-                    onTouchUp(event);
-                }
-                mTracker.recycle();
-                mTracker = null;
-                getParent().requestDisallowInterceptTouchEvent(false);
                 break;
             case MotionEvent.ACTION_CANCEL:
-                isMoving = false;
-                getParent().requestDisallowInterceptTouchEvent(false);
-                mScroller.abortAnimation();
-                mTracker.recycle();
-                mTracker = null;
                 break;
         }
         return true;
-    }
-
-    protected abstract void onTouchDown(MotionEvent event);
-
-    protected abstract void onTouchMove(MotionEvent event);
-
-    protected abstract void onTouchUp(MotionEvent event);
-
-    @Override
-    public List getData() {
-        return mData;
-    }
-
-    @Override
-    public void setData(List data) {
-        if (null == data)
-            throw new RuntimeException("Wheel's data can not be null!");
-        mData = data;
-        requestLayout();
-    }
-
-    @Override
-    public void setOnItemSelectListener(OnItemSelectListener listener) {
-
-    }
-
-    @Override
-    public void setOnWheelChangeListener(OnItemSelectListener listener) {
-
-    }
-
-    @Override
-    public int getCurrentItem() {
-        return 0;
-    }
-
-    @Override
-    public void setCurrentItem(int position) {
-
-    }
-
-    @Override
-    public void setHasSameSize(boolean hasSameSize) {
-
-    }
-
-    @Override
-    public boolean hasSameSize() {
-        return false;
-    }
-
-    @Override
-    public int getItemTextSize() {
-        return 0;
-    }
-
-    @Override
-    public void setItemTextSize(int dp) {
-
-    }
-
-    @Override
-    public Typeface getItemTextTypeface() {
-        return null;
-    }
-
-    @Override
-    public void setItemTextTypeface(Typeface typeface) {
-
-    }
-
-    @Override
-    public int getItemTextColor() {
-        return 0;
-    }
-
-    @Override
-    public void setItemTextColor(int color) {
-
-    }
-
-    @Override
-    public int getCurrentItemTextColor() {
-        return 0;
-    }
-
-    @Override
-    public void setCurrentItemTextColor(int color) {
-
-    }
-
-    @Override
-    public int getTextMaxWidth() {
-        return mTextMaxWidth;
-    }
-
-    @Override
-    public int getTextMaxHeight() {
-        return mTextMaxHeight;
     }
 }

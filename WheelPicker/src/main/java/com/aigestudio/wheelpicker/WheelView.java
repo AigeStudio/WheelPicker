@@ -16,32 +16,32 @@ import java.util.List;
 public class WheelView extends View {
     public boolean isStart = true;
     private float scrollY = 0;
-    private int scrollX = 0;
+    //    private int scrollX = 0;
     private int itemCount = 5;             //展示Item的个数
-    private float textSize = 16;          //文字的大小
+    //    private float textSize = 16;          //文字的大小
     private boolean isCircle = true;     //是否为环形
-    private int rate = 120;               //惯性滑动比率，rate越大，速率越快
+    //    private int rate = 120;               //惯性滑动比率，rate越大，速率越快
     private int textColor = 0xFF888888;   //文字颜色
-    private int lineColor = 0x00000000;   //线条的颜色
-    private int currentItemPosition = -1;        //预设当前item的位置，负数表示不设定
-    private int currentItem = -1;         //当前item位置
-    private int width;                  //view的宽度
-    private int height;                 //view的高度
+    //    private int lineColor = 0x00000000;   //线条的颜色
+    private int currentItemPosition = 0;        //预设当前item的位置，负数表示不设定
+    //    private int currentItem = -1;         //当前item位置
+//    private int width;                  //view的宽度
+//    private int height;                 //view的高度
     private int itemHeight;             //item的高度
     private int itemX;                  //item的X位置
-    private float centerItemTop;        //中心Item的上边距位置
-    private float centerItemBottom;     //中心Item的下边距位置
-    private float centerItemHeight;     //中心Item的高度
-    private int realHeight;             //内容的实际高度
-    private int minScrollY;             //最小滚动高度
-    private int maxScrollY;             //最大滚动高度
+    //    private float centerItemTop;        //中心Item的上边距位置
+//    private float centerItemBottom;     //中心Item的下边距位置
+//    private float centerItemHeight;     //中心Item的高度
+//    private int realHeight;             //内容的实际高度
+//    private int minScrollY;             //最小滚动高度
+//    private int maxScrollY;             //最大滚动高度
     //    private ArrayList<HashBean> data;   //数据集合
-    private int dataSize = 0;
+//    private int dataSize = 0;
     private Paint paint;
     //    private Paint coverPaint;           //遮罩paint
 //    private Shader shader;              //遮罩渐变
     private float lastY, downY;          //上次操作的坐标以及按下时候的坐标
-    private long downTime;              //按下时的时间
+    //    private long downTime;              //按下时的时间
     private Scroller mScroller;
 
     private List<String> data;
@@ -61,12 +61,12 @@ public class WheelView extends View {
 
     private void init() {
         data = Arrays.asList(getResources().getStringArray(R.array.WheelArrayDefault));
-        dataSize = data.size();
+//        dataSize = data.size();
         mScroller = new Scroller(getContext());
 //        data = new ArrayList<>();
         paint = new Paint();
         paint.setAntiAlias(true);
-        paint.setTextSize(dp2px(textSize));
+        paint.setTextSize(32);
         paint.setTextAlign(Paint.Align.CENTER);
 //        coverPaint = new Paint();
         if (itemCount % 2 == 0) {
@@ -118,10 +118,10 @@ public class WheelView extends View {
 //        invalidate();
 //    }
 
-    public int dp2px(float dpValue) {
-        final float scale = getResources().getDisplayMetrics().density;
-        return (int) (dpValue * scale + 0.5f);
-    }
+//    public int dp2px(float dpValue) {
+//        final float scale = getResources().getDisplayMetrics().density;
+//        return (int) (dpValue * scale + 0.5f);
+//    }
 
 //    public void setRate(int rate) {
 //        this.rate = rate;
@@ -134,16 +134,16 @@ public class WheelView extends View {
 
     private void measureData() {
         if (isStart) {
-            width = getWidth();
-            itemX = width / 2;
-            height = getHeight();
-            itemHeight = (height - getPaddingTop() - getPaddingBottom()) / itemCount;
-            realHeight = dataSize * itemHeight;
-            minScrollY = -(getRealHeight() - (itemCount + 1) / 2 * itemHeight);
-            maxScrollY = (itemCount - 1) / 2 * itemHeight;
-            centerItemHeight = itemHeight;
-            centerItemTop = (height - getPaddingTop() - getPaddingBottom()) / 2 + getPaddingTop() - centerItemHeight / 2;
-            centerItemBottom = (height - getPaddingTop() - getPaddingBottom()) / 2 + getPaddingTop() + centerItemHeight / 2;
+//            width = getWidth();
+            itemX = getWidth() / 2;
+//            height = getHeight();
+            itemHeight = (getHeight() - getPaddingTop() - getPaddingBottom()) / itemCount;
+//            realHeight = data.size() * itemHeight;
+//            minScrollY = -(getRealHeight() - (itemCount + 1) / 2 * itemHeight);
+//            maxScrollY = (itemCount - 1) / 2 * itemHeight;
+//            centerItemHeight = itemHeight;
+//            centerItemTop = (getHeight() - getPaddingTop() - getPaddingBottom()) / 2 + getPaddingTop() - centerItemHeight / 2;
+//            centerItemBottom = (getHeight() - getPaddingTop() - getPaddingBottom()) / 2 + getPaddingTop() + centerItemHeight / 2;
 //            shader = new LinearGradient(0, 0, 0, height, new int[]{
 //                    0xFFFFFFFF, 0xAAFFFFFF, 0x00FFFFFF, 0x00FFFFFF, 0xAAFFFFFF, 0xFFFFFFFF
 //            }, new float[]{
@@ -170,21 +170,21 @@ public class WheelView extends View {
         measureData();
         //如果设置了当前选中
         if (currentItemPosition >= 0) {
-            scrollY = -(currentItemPosition - (itemCount - 1) / 2) * itemHeight;
+            scrollY = (1 - (currentItemPosition - (itemCount - 1) / 2)) * itemHeight;
             currentItemPosition = -1;
         }
-        int startItemPos = (int) -scrollY / itemHeight;      //绘制的数据的起始位置
+        int startPosition = (int) -scrollY / itemHeight;      //绘制的数据的起始位置
         paint.setColor(textColor);
-        for (int i = startItemPos, j = 0; i < startItemPos + itemCount + 2; j++, i++) {
-            float topY = j * itemHeight + scrollY % itemHeight;
-            Log.e("WheelView", i + ":" + j + ":" + (itemCount + 2));
-            if (i >= 0 && i < dataSize) {
-                canvas.drawText(data.get(i), itemX, getBaseLine(paint, topY, itemHeight), paint);
+        for (int position = startPosition, index = -1; position < startPosition + itemCount + 2; index++, position++) {
+            float centerY = index * itemHeight + itemHeight / 2 - ((paint.ascent() + paint.descent()) / 2) + scrollY % itemHeight;
+//            Log.e("WheelView", position + ":" + index + ":" + (itemCount + 2));
+            Log.e("WheelView", centerY + ":" + centerY);
+            if (position >= 0 && position < data.size()) {
+                canvas.drawText(data.get(position), itemX, centerY, paint);
             } else {
                 if (isCircle) {
-                    int pos = i % dataSize;
-                    canvas.drawText(data.get(pos < 0 ? pos + dataSize : pos), itemX,
-                            getBaseLine(paint, topY, itemHeight), paint);
+                    int pos = position % data.size();
+                    canvas.drawText(data.get(pos < 0 ? pos + data.size() : pos), itemX, centerY, paint);
                 }
             }
         }
@@ -196,6 +196,11 @@ public class WheelView extends View {
 //        coverPaint.setShader(shader);
 //        canvas.drawRect(0, 0, width, height, coverPaint);
     }
+
+//    private float getBaseLine(float top) {
+//        Paint.FontMetricsInt fontMetrics = paint.getFontMetricsInt();
+//        return (2 * top + itemHeight - fontMetrics.bottom - fontMetrics.top) / 2;
+//    }
 
 //    /**
 //     * 获取数据集合的大小
@@ -288,14 +293,16 @@ public class WheelView extends View {
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                downTime = System.currentTimeMillis();
-                downY = event.getRawY();
+//                downTime = System.currentTimeMillis();
+                downY = event.getY();
                 lastY = downY;
                 break;
             case MotionEvent.ACTION_MOVE:
-                float y = event.getRawY();
+                float y = event.getY();
                 float dy = y - lastY;
-                pretendScrollY(dy);
+                scrollY += dy;
+                invalidate();
+//                pretendScrollY(dy);
                 lastY = y;
                 break;
             case MotionEvent.ACTION_UP:
@@ -306,12 +313,12 @@ public class WheelView extends View {
         return true;
     }
 
-    private int getRealHeight() {
-        if (realHeight == 0) {
-            realHeight = dataSize * itemHeight;
-        }
-        return realHeight;
-    }
+//    private int getRealHeight() {
+//        if (realHeight == 0) {
+//            realHeight = data.size() * itemHeight;
+//        }
+//        return realHeight;
+//    }
 
 //    private void checkStateAndPosition() {
 //        //上拉超出
@@ -350,15 +357,10 @@ public class WheelView extends View {
 //        }
 //    }
 
-    private void pretendScrollY(float dy) {
-        scrollY += dy;
-        invalidate();
-    }
-
-    private float getBaseLine(Paint paint, float top, float height) {
-        Paint.FontMetricsInt fontMetrics = paint.getFontMetricsInt();
-        return (2 * top + height - fontMetrics.bottom - fontMetrics.top) / 2;
-    }
+//    private void pretendScrollY(float dy) {
+//        scrollY += dy;
+//        invalidate();
+//    }
 
 //    private float getBaseLine(int position) {
 //        return getBaseLine(paint, itemHeight * position, itemHeight);
