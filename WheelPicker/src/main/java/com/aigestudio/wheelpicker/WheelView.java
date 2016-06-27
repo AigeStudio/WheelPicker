@@ -7,28 +7,26 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.OverScroller;
-import android.widget.Scroller;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class WheelView extends View {
     public boolean isStart = true;
-    private float scrollY = 0;
+    private float mScrollY = 0;
     //    private int scrollX = 0;
-    private int itemCount = 5;             //展示Item的个数
+    private int mVisibleItemCount = 5;             //展示Item的个数
     //    private float textSize = 16;          //文字的大小
     private boolean isCircle = true;     //是否为环形
     //    private int rate = 120;               //惯性滑动比率，rate越大，速率越快
     private int textColor = 0xFF888888;   //文字颜色
     //    private int lineColor = 0x00000000;   //线条的颜色
-    private int currentItemPosition = 0;        //预设当前item的位置，负数表示不设定
+    private int mCurrentItemPosition = 0;        //预设当前item的位置，负数表示不设定
     //    private int currentItem = -1;         //当前item位置
 //    private int width;                  //view的宽度
 //    private int height;                 //view的高度
-    private int itemHeight;             //item的高度
-    private int itemX;                  //item的X位置
+    private int mItemHeight;             //item的高度
+    private int mItemCenterX;                  //item的X位置
     //    private float centerItemTop;        //中心Item的上边距位置
 //    private float centerItemBottom;     //中心Item的下边距位置
 //    private float centerItemHeight;     //中心Item的高度
@@ -37,12 +35,14 @@ public class WheelView extends View {
 //    private int maxScrollY;             //最大滚动高度
     //    private ArrayList<HashBean> data;   //数据集合
 //    private int dataSize = 0;
-    private Paint paint;
+    private Paint mPaint;
     //    private Paint coverPaint;           //遮罩paint
 //    private Shader shader;              //遮罩渐变
-    private float lastY, downY;          //上次操作的坐标以及按下时候的坐标
+    private int lastY;          //上次操作的坐标以及按下时候的坐标
+    //    private float lastY, downY;          //上次操作的坐标以及按下时候的坐标
     //    private long downTime;              //按下时的时间
-    private Scroller mScroller;
+//    private Scroller mScroller;
+    private int mCenterOffsetY;
 
     private List<String> data;
 
@@ -62,15 +62,15 @@ public class WheelView extends View {
     private void init() {
         data = Arrays.asList(getResources().getStringArray(R.array.WheelArrayDefault));
 //        dataSize = data.size();
-        mScroller = new Scroller(getContext());
+//        mScroller = new Scroller(getContext());
 //        data = new ArrayList<>();
-        paint = new Paint();
-        paint.setAntiAlias(true);
-        paint.setTextSize(32);
-        paint.setTextAlign(Paint.Align.CENTER);
+        mPaint = new Paint();
+        mPaint.setAntiAlias(true);
+        mPaint.setTextSize(32);
+        mPaint.setTextAlign(Paint.Align.CENTER);
 //        coverPaint = new Paint();
-        if (itemCount % 2 == 0) {
-            itemCount += 1;
+        if (mVisibleItemCount % 2 == 0) {
+            mVisibleItemCount += 1;
         }
     }
 
@@ -132,59 +132,67 @@ public class WheelView extends View {
 //        invalidate();
 //    }
 
-    private void measureData() {
-        if (isStart) {
-//            width = getWidth();
-            itemX = getWidth() / 2;
-//            height = getHeight();
-            itemHeight = (getHeight() - getPaddingTop() - getPaddingBottom()) / itemCount;
-//            realHeight = data.size() * itemHeight;
-//            minScrollY = -(getRealHeight() - (itemCount + 1) / 2 * itemHeight);
-//            maxScrollY = (itemCount - 1) / 2 * itemHeight;
-//            centerItemHeight = itemHeight;
-//            centerItemTop = (getHeight() - getPaddingTop() - getPaddingBottom()) / 2 + getPaddingTop() - centerItemHeight / 2;
-//            centerItemBottom = (getHeight() - getPaddingTop() - getPaddingBottom()) / 2 + getPaddingTop() + centerItemHeight / 2;
-//            shader = new LinearGradient(0, 0, 0, height, new int[]{
-//                    0xFFFFFFFF, 0xAAFFFFFF, 0x00FFFFFF, 0x00FFFFFF, 0xAAFFFFFF, 0xFFFFFFFF
-//            }, new float[]{
-//                    0.0f, centerItemTop / height, centerItemTop / height, centerItemBottom / height, centerItemBottom / height, 1.0f
-//            }, Shader.TileMode.REPEAT);
-//            coverPaint.setShader(shader);
-            isStart = false;
-        }
-    }
+//    private void measureData() {
+//        if (isStart) {
+////            width = getWidth();
+//            mItemCenterX = getWidth() / 2;
+////            height = getHeight();
+//            itemHeight = getHeight() / itemCount;
+////            realHeight = data.size() * itemHeight;
+////            minScrollY = -(getRealHeight() - (itemCount + 1) / 2 * itemHeight);
+////            maxScrollY = (itemCount - 1) / 2 * itemHeight;
+////            centerItemHeight = itemHeight;
+////            centerItemTop = (getHeight() - getPaddingTop() - getPaddingBottom()) / 2 + getPaddingTop() - centerItemHeight / 2;
+////            centerItemBottom = (getHeight() - getPaddingTop() - getPaddingBottom()) / 2 + getPaddingTop() + centerItemHeight / 2;
+////            shader = new LinearGradient(0, 0, 0, height, new int[]{
+////                    0xFFFFFFFF, 0xAAFFFFFF, 0x00FFFFFF, 0x00FFFFFF, 0xAAFFFFFF, 0xFFFFFFFF
+////            }, new float[]{
+////                    0.0f, centerItemTop / height, centerItemTop / height, centerItemBottom / height, centerItemBottom / height, 1.0f
+////            }, Shader.TileMode.REPEAT);
+////            coverPaint.setShader(shader);
+//            isStart = false;
+//        }
+//    }
+
+//    @Override
+//    public void computeScroll() {
+//        //scroller的滚动是否完成
+//        if (mScroller.computeScrollOffset()) {
+//            scrollY = mScroller.getCurrY();
+//            invalidate();
+//        }
+//        super.computeScroll();
+//    }
 
     @Override
-    public void computeScroll() {
-        //scroller的滚动是否完成
-        if (mScroller.computeScrollOffset()) {
-            scrollY = mScroller.getCurrY();
-            invalidate();
-        }
-        super.computeScroll();
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        mItemCenterX = getWidth() / 2;
+        mItemHeight = getHeight() / mVisibleItemCount;
+        mScrollY = (1 - (mCurrentItemPosition - (mVisibleItemCount - 1) / 2)) * mItemHeight;
+        mCenterOffsetY = (int) (mItemHeight / 2 - ((mPaint.ascent() + mPaint.descent()) / 2));
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        measureData();
+//        measureData();
         //如果设置了当前选中
-        if (currentItemPosition >= 0) {
-            scrollY = (1 - (currentItemPosition - (itemCount - 1) / 2)) * itemHeight;
-            currentItemPosition = -1;
-        }
-        int startPosition = (int) -scrollY / itemHeight;      //绘制的数据的起始位置
-        paint.setColor(textColor);
-        for (int position = startPosition, index = -1; position < startPosition + itemCount + 2; index++, position++) {
-            float centerY = index * itemHeight + itemHeight / 2 - ((paint.ascent() + paint.descent()) / 2) + scrollY % itemHeight;
+//        if (mCurrentItemPosition >= 0) {
+//            mScrollY = (1 - (mCurrentItemPosition - (mVisibleItemCount - 1) / 2)) * mItemHeight;
+//            mCurrentItemPosition = -1;
+//        }
+        int startPosition = (int) -mScrollY / mItemHeight;      //绘制的数据的起始位置
+        mPaint.setColor(textColor);
+        for (int position = startPosition, index = -1; position < startPosition + mVisibleItemCount + 2; index++, position++) {
+            float centerY = index * mItemHeight + mCenterOffsetY + mScrollY % mItemHeight;
 //            Log.e("WheelView", position + ":" + index + ":" + (itemCount + 2));
             Log.e("WheelView", centerY + ":" + centerY);
             if (position >= 0 && position < data.size()) {
-                canvas.drawText(data.get(position), itemX, centerY, paint);
+                canvas.drawText(data.get(position), mItemCenterX, centerY, mPaint);
             } else {
                 if (isCircle) {
                     int pos = position % data.size();
-                    canvas.drawText(data.get(pos < 0 ? pos + data.size() : pos), itemX, centerY, paint);
+                    canvas.drawText(data.get(pos < 0 ? pos + data.size() : pos), mItemCenterX, centerY, mPaint);
                 }
             }
         }
@@ -294,16 +302,14 @@ public class WheelView extends View {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
 //                downTime = System.currentTimeMillis();
-                downY = event.getY();
-                lastY = downY;
+//                downY = event.getY();
+                lastY = (int) event.getY();
                 break;
             case MotionEvent.ACTION_MOVE:
-                float y = event.getY();
-                float dy = y - lastY;
-                scrollY += dy;
+                mScrollY += (event.getY() - lastY);
                 invalidate();
 //                pretendScrollY(dy);
-                lastY = y;
+                lastY = (int) event.getY();
                 break;
             case MotionEvent.ACTION_UP:
 //                checkStateAndPosition();
