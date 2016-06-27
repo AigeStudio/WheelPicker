@@ -6,6 +6,7 @@ import android.graphics.Paint;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -155,10 +156,14 @@ public class WheelPicker extends View implements Runnable {
                 break;
             case MotionEvent.ACTION_MOVE:
                 mTracker.addMovement(event);
+
+                // 判断滚动方向
                 if (event.getY() > lastY)
                     mCurrentScrollDirection = SCROLL_DIRECTION_DOWN;
                 else if (event.getY() < lastY)
                     mCurrentScrollDirection = SCROLL_DIRECTION_UP;
+
+                // 滚动内容
                 mScrollY += (event.getY() - lastY);
                 invalidate();
                 lastY = (int) event.getY();
@@ -166,16 +171,13 @@ public class WheelPicker extends View implements Runnable {
             case MotionEvent.ACTION_UP:
                 mTracker.addMovement(event);
                 mTracker.computeCurrentVelocity(1000, mMaximumVelocity);
+
+                // 根据速度判断是该滚动还是滑动
                 int velocity = (int) mTracker.getYVelocity();
                 if (Math.abs(velocity) >= mMinimumVelocity)
                     slideToLocation();
                 else
                     scrollToLocation();
-//                int remainder = mScroller.getFinalY() % mItemHeight;
-//                if (mCurrentScrollDirection == SCROLL_DIRECTION_UP)
-//                    mScroller.setFinalY(mScroller.getFinalY() - remainder);
-//                else if (mCurrentScrollDirection == SCROLL_DIRECTION_DOWN)
-//                    mScroller.setFinalY(mScroller.getFinalY() + (mItemHeight - remainder));
                 if (null != mTracker) {
                     mTracker.recycle();
                     mTracker = null;
@@ -188,12 +190,52 @@ public class WheelPicker extends View implements Runnable {
         return true;
     }
 
+    /**
+     * 滑动到指定位置
+     */
     private void slideToLocation() {
-        mScroller.fling(0, mScrollY, 0, (int) mTracker.getYVelocity(), 0, 0, Integer.MIN_VALUE, Integer.MAX_VALUE);
+        mScroller.fling(0, mScrollY, 0, (int) mTracker.getYVelocity(), 0, 0,
+                Integer.MIN_VALUE, Integer.MAX_VALUE);
+        int remainder = mScroller.getFinalY() % mItemHeight;
+        Log.e("WheelDebug", remainder + ":" + mScroller.getFinalY() + ":" + mItemHeight);
+        if (Math.abs(remainder) > mItemRockSplit) {
+            if (mScrollY < 0) {
+                mScroller.setFinalY(mScroller.getFinalY() - mItemHeight - remainder);
+            } else {
+                mScroller.setFinalY(mScroller.getFinalY() + mItemHeight - remainder);
+            }
+        } else {
+            mScroller.setFinalY(mScroller.getFinalY() - remainder);
+        }
+//        if (remainder != 0) {
+//            if (remainder >= mItemRockSplit) {
+//                correctSlide(remainder - mItemHeight, mItemHeight - remainder);
+////                mScroller.setFinalY(mScroller.getFinalY() - remainder);
+//            } else {
+//                correctSlide(remainder, -remainder);
+////                mScroller.setFinalY(mScroller.getFinalY() - remainder);
+//            }
+//        }
+//        if (mCurrentScrollDirection == SCROLL_DIRECTION_DOWN) {
+//            if ()
+//        } else if (mCurrentScrollDirection == SCROLL_DIRECTION_UP) {
+//        }
     }
 
+    /**
+     * 滚动到指定位置
+     */
     private void scrollToLocation() {
-        mScroller.startScroll(0,mScrollY,0,);
+        int remainder = mScrollY % mItemHeight;
+        if (Math.abs(remainder) > mItemRockSplit) {
+            if (mScrollY < 0) {
+                mScroller.startScroll(0, mScrollY, 0, -mItemHeight - remainder);
+            } else {
+                mScroller.startScroll(0, mScrollY, 0, mItemHeight - remainder);
+            }
+        } else {
+            mScroller.startScroll(0, mScrollY, 0, -remainder);
+        }
     }
 
     @Override
