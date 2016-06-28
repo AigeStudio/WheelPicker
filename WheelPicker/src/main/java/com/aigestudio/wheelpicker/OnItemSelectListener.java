@@ -17,5 +17,5 @@ public interface OnItemSelectListener {
      * @param data     当前位于滚轮中心显示的数据
      * @param position 当前位于滚轮中心显示的数据在数据列表中的位置
      */
-    <T extends WheelPicker> void onItemSelected(T picker, Object data, int position);
+    void onItemSelected(WheelPicker picker, Object data, int position);
 }

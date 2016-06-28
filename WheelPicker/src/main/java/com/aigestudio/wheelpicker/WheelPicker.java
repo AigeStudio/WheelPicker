@@ -3,6 +3,7 @@ package com.aigestudio.wheelpicker;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.os.Build;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -30,30 +31,34 @@ public class WheelPicker extends View implements Runnable {
             SCROLL_STATE_IDLE = 0,// 滚动停止时
             SCROLL_STATE_DRAGGING = 1,// 拖拽时
             SCROLL_STATE_SCROLLING = 2;// 滚动时
-    // 滚轮选择器当前滚动方向标识值
-    private static final int
-            SCROLL_DIRECTION_LEFT = 0,// 向左滚动时
-            SCROLL_DIRECTION_UP = 1,// 向上滚动时
-            SCROLL_DIRECTION_RIGHT = 2,// 向右滚动时
-            SCROLL_DIRECTION_DOWN = 3;// 向下滚动时
+//    // 滚轮选择器当前滚动方向标识值
+//    private static final int
+//            SCROLL_DIRECTION_LEFT = 0,// 向左滚动时
+//            SCROLL_DIRECTION_UP = 1,// 向上滚动时
+//            SCROLL_DIRECTION_RIGHT = 2,// 向右滚动时
+//            SCROLL_DIRECTION_DOWN = 3;// 向下滚动时
 
     private final Handler mHandler = new Handler();
     private Paint mPaint;
     private Scroller mScroller;
     private VelocityTracker mTracker;
+    private OnItemSelectListener mOnItemSelectListener;
+    private OnWheelChangeListener mOnWheelChangeListener;
 
     private List mData;// 数据源
 
-    private int mVisibleItemCount = 5;// 滚轮选择器中可见的Item数量
-
+    private int mVisibleItemCount = 7;// 滚轮选择器中可见的Item数量
+    private int mDrawnItemCount;
     private int mItemTextSize;// Item文本大小
     private int mTextMaxWidth, mTextMaxHeight;
     private int mItemWidth, mItemHeight;
-    private int mCurrentItemPosition;
+    private int mCurrentItemPosition = 0;
     private int mTextDrawnOffset;// 文本绘制坐标偏移
-    private int mMinimumVelocity, mMaximumVelocity;
-    private int mTouchSlop;
-    private int mCurrentScrollDirection = -1;
+    private int mItemPositionOffset;// Item位置偏移
+    private int mMinimumVelocity = 50, mMaximumVelocity = 8000;
+    private int mMinimumFlingDistance, mMaximumFlingDistance;
+    private int mTouchSlop = 8;
+    //    private int mCurrentScrollDirection = -1;
     private int mItemRockSplit;
 
     private int mItemCenterX, mItemCenterY;// Item中心坐标
@@ -75,14 +80,20 @@ public class WheelPicker extends View implements Runnable {
         mData = Arrays.asList(getResources().getStringArray(R.array.WheelArrayDefault));
         mItemTextSize = 32;
 
-        ViewConfiguration conf = ViewConfiguration.get(getContext());
-        mTouchSlop = conf.getScaledTouchSlop();
-        mMinimumVelocity = conf.getScaledMinimumFlingVelocity();
-        mMaximumVelocity = conf.getScaledMaximumFlingVelocity();
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.DONUT) {
+            ViewConfiguration conf = ViewConfiguration.get(getContext());
+            mTouchSlop = conf.getScaledTouchSlop();
+            mMinimumVelocity = conf.getScaledMinimumFlingVelocity();
+            mMaximumVelocity = conf.getScaledMaximumFlingVelocity();
+        }
         // 确保滚轮选择器可见Item数量为奇数
         if (mVisibleItemCount % 2 == 0)
             mVisibleItemCount += 1;
+
+        mDrawnItemCount = isCyclic ? mVisibleItemCount + 2 : mVisibleItemCount;
+
+        // 根据滚轮选择器可见Item数量计算Item位置偏移
+        mItemPositionOffset = (mVisibleItemCount / 2) + 1;
 
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG | Paint.LINEAR_TEXT_FLAG);
         mPaint.setColor(0xFFFFFFFF);
@@ -112,14 +123,23 @@ public class WheelPicker extends View implements Runnable {
         mItemCenterX = getWidth() / 2;
         mItemHeight = getHeight() / mVisibleItemCount;
         mItemRockSplit = mItemHeight / 2;
-        mScrollY = (1 - (mCurrentItemPosition - (mVisibleItemCount - 1) / 2)) * mItemHeight;
+        if (isCyclic) {
+            mScrollY = (1 - (mCurrentItemPosition - (mVisibleItemCount - 1) / 2)) * mItemHeight;
+            mMinimumFlingDistance = Integer.MIN_VALUE;
+            mMaximumFlingDistance = Integer.MAX_VALUE;
+        } else {
+            mScrollY = (mCurrentItemPosition + (mVisibleItemCount - 1) / 2) * mItemHeight;
+            mMinimumFlingDistance = mItemHeight * (mVisibleItemCount / 2 + 1);
+            mMaximumFlingDistance = mMinimumFlingDistance + mItemHeight * mData.size();
+        }
+        Log.i("WheelPicker", mScrollY + ":");
         mTextDrawnOffset = (int) (mItemHeight / 2 - ((mPaint.ascent() + mPaint.descent()) / 2));
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         int start = -mScrollY / mItemHeight;
-        for (int pos = start, index = -1; pos < start + mVisibleItemCount + 2; pos++, index++) {
+        for (int pos = start, index = isCyclic ? -1 : 0; pos < start + mDrawnItemCount; pos++, index++) {
             float centerY = index * mItemHeight + mTextDrawnOffset + mScrollY % mItemHeight;
             String data = "";
             if (isPosIntraArea(pos)) {
@@ -157,11 +177,11 @@ public class WheelPicker extends View implements Runnable {
             case MotionEvent.ACTION_MOVE:
                 mTracker.addMovement(event);
 
-                // 判断滚动方向
-                if (event.getY() > lastY)
-                    mCurrentScrollDirection = SCROLL_DIRECTION_DOWN;
-                else if (event.getY() < lastY)
-                    mCurrentScrollDirection = SCROLL_DIRECTION_UP;
+//                // 判断滚动方向
+//                if (event.getY() > lastY)
+//                    mCurrentScrollDirection = SCROLL_DIRECTION_DOWN;
+//                else if (event.getY() < lastY)
+//                    mCurrentScrollDirection = SCROLL_DIRECTION_UP;
 
                 // 滚动内容
                 mScrollY += (event.getY() - lastY);
@@ -170,14 +190,23 @@ public class WheelPicker extends View implements Runnable {
                 break;
             case MotionEvent.ACTION_UP:
                 mTracker.addMovement(event);
-                mTracker.computeCurrentVelocity(1000, mMaximumVelocity);
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.DONUT)
+                    mTracker.computeCurrentVelocity(1000, mMaximumVelocity);
+                else
+                    mTracker.computeCurrentVelocity(1000);
 
                 // 根据速度判断是该滚动还是滑动
                 int velocity = (int) mTracker.getYVelocity();
-                if (Math.abs(velocity) >= mMinimumVelocity)
-                    slideToLocation();
-                else
-                    scrollToLocation();
+                if (Math.abs(velocity) >= mMinimumVelocity) {
+                    mScroller.fling(0, mScrollY, 0, (int) mTracker.getYVelocity(), 0, 0,
+                            mMinimumFlingDistance, mMaximumFlingDistance);
+                    mScroller.setFinalY(mScroller.getFinalY() +
+                            computeDistanceToEndPoint(mScroller.getFinalY() % mItemHeight));
+                } else {
+                    mScroller.startScroll(0, mScrollY, 0,
+                            computeDistanceToEndPoint(mScrollY % mItemHeight));
+                }
                 if (null != mTracker) {
                     mTracker.recycle();
                     mTracker = null;
@@ -190,58 +219,21 @@ public class WheelPicker extends View implements Runnable {
         return true;
     }
 
-    /**
-     * 滑动到指定位置
-     */
-    private void slideToLocation() {
-        mScroller.fling(0, mScrollY, 0, (int) mTracker.getYVelocity(), 0, 0,
-                Integer.MIN_VALUE, Integer.MAX_VALUE);
-        int remainder = mScroller.getFinalY() % mItemHeight;
-        Log.e("WheelDebug", remainder + ":" + mScroller.getFinalY() + ":" + mItemHeight);
-        if (Math.abs(remainder) > mItemRockSplit) {
-            if (mScrollY < 0) {
-                mScroller.setFinalY(mScroller.getFinalY() - mItemHeight - remainder);
-            } else {
-                mScroller.setFinalY(mScroller.getFinalY() + mItemHeight - remainder);
-            }
-        } else {
-            mScroller.setFinalY(mScroller.getFinalY() - remainder);
-        }
-//        if (remainder != 0) {
-//            if (remainder >= mItemRockSplit) {
-//                correctSlide(remainder - mItemHeight, mItemHeight - remainder);
-////                mScroller.setFinalY(mScroller.getFinalY() - remainder);
-//            } else {
-//                correctSlide(remainder, -remainder);
-////                mScroller.setFinalY(mScroller.getFinalY() - remainder);
-//            }
-//        }
-//        if (mCurrentScrollDirection == SCROLL_DIRECTION_DOWN) {
-//            if ()
-//        } else if (mCurrentScrollDirection == SCROLL_DIRECTION_UP) {
-//        }
-    }
-
-    /**
-     * 滚动到指定位置
-     */
-    private void scrollToLocation() {
-        int remainder = mScrollY % mItemHeight;
-        if (Math.abs(remainder) > mItemRockSplit) {
-            if (mScrollY < 0) {
-                mScroller.startScroll(0, mScrollY, 0, -mItemHeight - remainder);
-            } else {
-                mScroller.startScroll(0, mScrollY, 0, mItemHeight - remainder);
-            }
-        } else {
-            mScroller.startScroll(0, mScrollY, 0, -remainder);
-        }
+    private int computeDistanceToEndPoint(int remainder) {
+        if (Math.abs(remainder) > mItemRockSplit)
+            if (mScrollY < 0)
+                return -mItemHeight - remainder;
+            else
+                return mItemHeight - remainder;
+        else
+            return -remainder;
     }
 
     @Override
     public void run() {
         if (mScroller.isFinished()) {
-            mCurrentScrollDirection = -1;
+            int result = Math.abs(mScrollY / mItemHeight - mItemPositionOffset) % mData.size();
+            Log.i("WheelPicker", result + ":" + mData.get(result) + ":" + mScrollY);
         }
         if (mScroller.computeScrollOffset()) {
             mScrollY = mScroller.getCurrY();
