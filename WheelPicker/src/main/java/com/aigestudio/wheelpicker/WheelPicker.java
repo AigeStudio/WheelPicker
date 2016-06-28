@@ -25,7 +25,7 @@ import java.util.List;
  *         更新项目结构
  * @version 1.1.0 beta
  */
-public class WheelPicker extends View implements Runnable {
+public class WheelPicker extends View {
     // 滚轮选择器滚动状态标识值
     public static final int
             SCROLL_STATE_IDLE = 0,// 滚动停止时
@@ -63,9 +63,11 @@ public class WheelPicker extends View implements Runnable {
 
     private int mItemCenterX, mItemCenterY;// Item中心坐标
     private int mScrollY;
-    private int lastY;
+    private int mLastY;
 
-    private boolean isCyclic = false;
+    private int mDrawnCenterY;
+
+    private boolean isCyclic = true;
 
     public WheelPicker(Context context) {
         this(context, null);
@@ -123,38 +125,47 @@ public class WheelPicker extends View implements Runnable {
         mItemCenterX = getWidth() / 2;
         mItemHeight = getHeight() / mVisibleItemCount;
         mItemRockSplit = mItemHeight / 2;
-        if (isCyclic) {
-            mScrollY = (1 - (mCurrentItemPosition - (mVisibleItemCount - 1) / 2)) * mItemHeight;
-            mMinimumFlingDistance = Integer.MIN_VALUE;
-            mMaximumFlingDistance = Integer.MAX_VALUE;
-        } else {
-            mScrollY = (mCurrentItemPosition + (mVisibleItemCount - 1) / 2) * mItemHeight;
-            mMinimumFlingDistance = mItemHeight * (mVisibleItemCount / 2 + 1);
-            mMaximumFlingDistance = mMinimumFlingDistance + mItemHeight * mData.size();
-        }
-        Log.i("WheelPicker", mScrollY + ":");
+//        if (isCyclic) {
+//            mScrollY = (1 - (mCurrentItemPosition - (mVisibleItemCount - 1) / 2)) * mItemHeight;
+//            mMinimumFlingDistance = Integer.MIN_VALUE;
+//            mMaximumFlingDistance = Integer.MAX_VALUE;
+//        } else {
+//            mScrollY = (mCurrentItemPosition + (mVisibleItemCount - 1) / 2) * mItemHeight;
+//            mMaximumFlingDistance = mItemHeight * mVisibleItemCount / 2 - mItemRockSplit;
+//            mMinimumFlingDistance = mMaximumFlingDistance - mItemHeight * mData.size() + mItemHeight;
+//        }
         mTextDrawnOffset = (int) (mItemHeight / 2 - ((mPaint.ascent() + mPaint.descent()) / 2));
+
+        mDrawnCenterY = (int) (getHeight() / 2 - ((mPaint.ascent() + mPaint.descent()) / 2));
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        int start = -mScrollY / mItemHeight;
-        for (int pos = start, index = isCyclic ? -1 : 0; pos < start + mDrawnItemCount; pos++, index++) {
-            float centerY = index * mItemHeight + mTextDrawnOffset + mScrollY % mItemHeight;
-            String data = "";
-            if (isPosIntraArea(pos)) {
-                data = String.valueOf(mData.get(pos));
-            } else {
-                if (isCyclic) {
-                    int newPos = pos % mData.size();
-                    newPos = newPos < 0 ? (newPos + mData.size()) : newPos;
-                    data = String.valueOf(mData.get(newPos));
-                }
-            }
-            if (!TextUtils.isEmpty(data)) canvas.drawText(data, mItemCenterX, centerY, mPaint);
-            mPaint.setStyle(Paint.Style.STROKE);
-            canvas.drawRect(0, mItemHeight * index, getWidth(), mItemHeight * (1 + index), mPaint);
+        int position = -mScrollY / mItemHeight;
+        for (int i = position - 3, j = -3; i < position-3 + 7; i++, j++) {
+            int newPos = i % mData.size();
+            newPos = newPos < 0 ? (newPos + mData.size()) : newPos;
+            String data = String.valueOf(mData.get(newPos));
+            canvas.drawText(data, mItemCenterX, mDrawnCenterY + (j * mItemHeight) + mScrollY % mItemHeight, mPaint);
         }
+//        Log.i("WheelPicker", mScrollY + ":");
+//        int start = -mScrollY / mItemHeight;
+//        for (int pos = start, index = isCyclic ? -1 : 0; pos < start + mDrawnItemCount; pos++, index++) {
+//            float centerY = index * mItemHeight + mTextDrawnOffset + mScrollY % mItemHeight;
+//            String data = "";
+//            if (isPosIntraArea(pos)) {
+//                data = String.valueOf(mData.get(pos));
+//            } else {
+//                if (isCyclic) {
+//                    int newPos = pos % mData.size();
+//                    newPos = newPos < 0 ? (newPos + mData.size()) : newPos;
+//                    data = String.valueOf(mData.get(newPos));
+//                }
+//            }
+//            if (!TextUtils.isEmpty(data)) canvas.drawText(data, mItemCenterX, centerY, mPaint);
+//            mPaint.setStyle(Paint.Style.STROKE);
+//            canvas.drawRect(0, mItemHeight * index, getWidth(), mItemHeight * (1 + index), mPaint);
+//        }
     }
 
     private boolean isPosIntraArea(int position) {
@@ -172,46 +183,54 @@ public class WheelPicker extends View implements Runnable {
                 mTracker.addMovement(event);
                 if (!mScroller.isFinished())
                     mScroller.abortAnimation();
-                lastY = (int) event.getY();
+                mLastY = (int) event.getY();
                 break;
             case MotionEvent.ACTION_MOVE:
                 mTracker.addMovement(event);
 
 //                // 判断滚动方向
-//                if (event.getY() > lastY)
+//                if (event.getY() > mLastY)
 //                    mCurrentScrollDirection = SCROLL_DIRECTION_DOWN;
-//                else if (event.getY() < lastY)
+//                else if (event.getY() < mLastY)
 //                    mCurrentScrollDirection = SCROLL_DIRECTION_UP;
 
                 // 滚动内容
-                mScrollY += (event.getY() - lastY);
+                mScrollY += (event.getY() - mLastY);
                 invalidate();
-                lastY = (int) event.getY();
+                mLastY = (int) event.getY();
                 break;
             case MotionEvent.ACTION_UP:
-                mTracker.addMovement(event);
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.DONUT)
-                    mTracker.computeCurrentVelocity(1000, mMaximumVelocity);
-                else
-                    mTracker.computeCurrentVelocity(1000);
-
-                // 根据速度判断是该滚动还是滑动
-                int velocity = (int) mTracker.getYVelocity();
-                if (Math.abs(velocity) >= mMinimumVelocity) {
-                    mScroller.fling(0, mScrollY, 0, (int) mTracker.getYVelocity(), 0, 0,
-                            mMinimumFlingDistance, mMaximumFlingDistance);
-                    mScroller.setFinalY(mScroller.getFinalY() +
-                            computeDistanceToEndPoint(mScroller.getFinalY() % mItemHeight));
-                } else {
-                    mScroller.startScroll(0, mScrollY, 0,
-                            computeDistanceToEndPoint(mScrollY % mItemHeight));
-                }
-                if (null != mTracker) {
-                    mTracker.recycle();
-                    mTracker = null;
-                }
-                mHandler.post(this);
+//                mTracker.addMovement(event);
+//
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.DONUT)
+//                    mTracker.computeCurrentVelocity(1000, mMaximumVelocity);
+//                else
+//                    mTracker.computeCurrentVelocity(1000);
+//
+//                // 根据速度判断是该滚动还是滑动
+//                int velocity = (int) mTracker.getYVelocity();
+//                if (Math.abs(velocity) >= mMinimumVelocity) {
+//                    mScroller.fling(0, mScrollY, 0, (int) mTracker.getYVelocity(), 0, 0,
+////                            mMinimumFlingDistance, mMaximumFlingDistance);
+//                            Integer.MIN_VALUE, Integer.MAX_VALUE);
+//                    if (isCyclic) {
+//                        mScroller.setFinalY(mScroller.getFinalY() +
+//                                computeDistanceToEndPoint(mScroller.getFinalY() % mItemHeight));
+//                    } else {
+//                        if (mScroller.getFinalY() > mMaximumFlingDistance)
+//                            mScroller.setFinalY(mMaximumFlingDistance);
+//                        else if (mScroller.getFinalY() < mMinimumFlingDistance)
+//                            mScroller.setFinalY(mMinimumFlingDistance);
+//                    }
+//                } else {
+//                    mScroller.startScroll(0, mScrollY, 0,
+//                            computeDistanceToEndPoint(mScrollY % mItemHeight));
+//                }
+//                if (null != mTracker) {
+//                    mTracker.recycle();
+//                    mTracker = null;
+//                }
+//                mHandler.post(this);
                 break;
             case MotionEvent.ACTION_CANCEL:
                 break;
@@ -219,26 +238,27 @@ public class WheelPicker extends View implements Runnable {
         return true;
     }
 
-    private int computeDistanceToEndPoint(int remainder) {
-        if (Math.abs(remainder) > mItemRockSplit)
-            if (mScrollY < 0)
-                return -mItemHeight - remainder;
-            else
-                return mItemHeight - remainder;
-        else
-            return -remainder;
-    }
+//    private int computeDistanceToEndPoint(int remainder) {
+//        if (Math.abs(remainder) > mItemRockSplit)
+//            if (mScrollY < 0)
+//                return -mItemHeight - remainder;
+//            else
+//                return mItemHeight - remainder;
+//        else
+//            return -remainder;
+//    }
 
-    @Override
-    public void run() {
-        if (mScroller.isFinished()) {
-            int result = Math.abs(mScrollY / mItemHeight - mItemPositionOffset) % mData.size();
-            Log.i("WheelPicker", result + ":" + mData.get(result) + ":" + mScrollY);
-        }
-        if (mScroller.computeScrollOffset()) {
-            mScrollY = mScroller.getCurrY();
-            postInvalidate();
-            mHandler.postDelayed(this, 16);
-        }
-    }
+//    @Override
+//    public void run() {
+//        if (mScroller.isFinished()) {
+//            int result = (mScrollY / mItemHeight - mItemPositionOffset) % mData.size();
+//            result = result < 0 ? result + mData.size() : result;
+//            Log.i("WheelPicker", result + ":" + mData.get(result) + ":" + mScrollY);
+//        }
+//        if (mScroller.computeScrollOffset()) {
+//            mScrollY = mScroller.getCurrY();
+//            postInvalidate();
+//            mHandler.postDelayed(this, 16);
+//        }
+//    }
 }
