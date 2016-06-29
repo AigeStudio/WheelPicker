@@ -2,7 +2,9 @@ package com.aigestudio.wheelpicker.demo;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
 
+import com.aigestudio.wheelpicker.WheelPicker;
 import com.aigestudio.wheelpicker.WheelView;
 
 /**
@@ -13,5 +15,15 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ac_main);
+
+        final WheelPicker picker = (WheelPicker) findViewById(R.id.main_wheel);
+        picker.setDebug(true);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                picker.setVisibleItemCount(5);
+            }
+        }, 3000);
     }
 }

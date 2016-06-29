@@ -11,9 +11,9 @@ final class WheelCrossHelper {
     static WheelDirection getWheelCrossDirection(WheelCrossPicker picker) {
         switch (picker.getDirection()) {
             case WheelCrossPicker.DIR_HOR:
-                return new WheelHorImpl(picker);
+//                return new WheelHorImpl(picker);
             case WheelCrossPicker.DIR_VER:
-                return new WheelVerImpl(picker);
+//                return new WheelVerImpl(picker);
         }
         return null;
     }
