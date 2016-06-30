@@ -20,6 +20,32 @@ public interface IWheelPicker {
     void setVisibleItemCount(int count);
 
     int getVisibleItemCount();
+
+    void setCyclic(boolean isCyclic);
+
+    boolean isCyclic();
+
+    /**
+     * 设置滚轮Item选中监听器
+     *
+     * @param listener 滚轮Item选中监听器{@link OnItemSelectListener}
+     */
+    void setOnItemSelectListener(OnItemSelectListener listener);
+
+    /**
+     * 设置当前被选中的Item所显示的数据在数据源中的位置
+     *
+     * @param position 当前被选中的Item所显示的数据在数据源中的位置
+     */
+    void setCurrentItem(int position);
+
+    /**
+     * 获取当前被选中的Item所显示的数据在数据源中的位置
+     *
+     * @return 当前被选中的Item所显示的数据在数据源中的位置
+     */
+    int getCurrentItem();
+
 //    /**
 //     * 获取数据列表
 //     *
@@ -37,33 +63,12 @@ public interface IWheelPicker {
 //    void setData(List data);
 //
 //    /**
-//     * 设置滚轮Item选中监听器
-//     *
-//     * @param listener 滚轮Item选中监听器{@link OnItemSelectListener}
-//     */
-//    void setOnItemSelectListener(OnItemSelectListener listener);
-//
-//    /**
 //     * 设置滚轮滚动监听器
 //     *
 //     * @param listener ...
 //     */
 //    void setOnWheelChangeListener(OnItemSelectListener listener);
-//
-//    /**
-//     * 获取当前被选中的Item所显示的数据在数据源中的位置
-//     *
-//     * @return 当前被选中的Item所显示的数据在数据源中的位置
-//     */
-//    int getCurrentItem();
-//
-//    /**
-//     * 设置当前被选中的Item所显示的数据在数据源中的位置
-//     *
-//     * @param position 当前被选中的Item所显示的数据在数据源中的位置
-//     */
-//    void setCurrentItem(int position);
-//
+
 //    /**
 //     * 设置Item是否有相同的大小
 //     * 设置Item有相同大小可以大幅提升滚动选择器运行效率

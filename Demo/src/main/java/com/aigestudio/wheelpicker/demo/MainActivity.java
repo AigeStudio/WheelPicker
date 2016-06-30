@@ -18,12 +18,14 @@ public class MainActivity extends Activity {
 
         final WheelPicker picker = (WheelPicker) findViewById(R.id.main_wheel);
         picker.setDebug(true);
+        picker.setCyclic(true);
+        picker.setCurrentItem(3);
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                picker.setVisibleItemCount(5);
-            }
-        }, 3000);
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                picker.setVisibleItemCount(5);
+//            }
+//        }, 3000);
     }
 }
