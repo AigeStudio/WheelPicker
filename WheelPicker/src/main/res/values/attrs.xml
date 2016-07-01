@@ -6,8 +6,9 @@
         <attr name="wheel_item_text_size" format="dimension" />
         <attr name="wheel_item_text_color" format="color" />
         <attr name="wheel_current_item_text_color" format="color" />
-        <attr name="wheel_same_size" format="boolean" />
-
+        <attr name="wheel_same_width" format="boolean" />
+        <attr name="wheel_maximum_width_text" format="string" />
+        <attr name="wheel_maximum_width_text_position" format="integer" />
         <attr name="wheel_direction" format="enum">
             <enum name="vertical" value="0" />
             <enum name="horizontal" value="1" />

@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import com.aigestudio.wheelpicker.WheelPicker;
-import com.aigestudio.wheelpicker.WheelView;
 
 /**
  * @author AigeStudio 2015-12-06
@@ -21,11 +20,11 @@ public class MainActivity extends Activity {
         picker.setCyclic(true);
         picker.setCurrentItem(3);
 
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                picker.setVisibleItemCount(5);
-//            }
-//        }, 3000);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                picker.setHasSameWidth(true);
+            }
+        }, 3000);
     }
 }
