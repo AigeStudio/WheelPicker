@@ -509,15 +509,15 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
         return hasSameWidth;
     }
 
-    @Override
-    public int getDirection() {
-        return mDirection;
-    }
-
-    @Override
-    public void setDirection(int orientation) {
-        // TODO Direction
-    }
+//    @Override
+//    public int getDirection() {
+//        return mDirection;
+//    }
+//
+//    @Override
+//    public void setDirection(int orientation) {
+//        // TODO Direction
+//    }
 
     @Override
     public void setOnWheelChangeListener(OnWheelChangeListener listener) {
