@@ -68,7 +68,7 @@ interface IWheelPicker {
      *
      * @param hasSameSize ...
      */
-    void setHasSameWidth(boolean hasSameSize);
+    void setSameWidth(boolean hasSameSize);
 
     /**
      * Item是否有相同大小
@@ -142,53 +142,104 @@ interface IWheelPicker {
      */
     void setCurrentItemTextColor(int color);
 
-//    int getItemTextSize();
-//
-//    void setItemTextSize(int dp);
-//
-//    Typeface getItemTextTypeface();
-//
-//    void setItemTextTypeface(Typeface typeface);
-//
-//    int getItemTextColor();
-//
-//    void setItemTextColor(int color);
-//
+    int getItemTextColor();
 
-//
-//    int getTextMaxWidth();
-//
-//    int getTextMaxHeight();
-//
-//    /**
-//     * 设置滚轮当前显示的Item数量
-//     * 滚轮显示的Item不能小于2
-//     *
-//     * @param count 显示的Item数量
-//     */
-//    void setItemCount(int count);
-//
-//    /**
-//     * 获取滚轮当前显示的Item数量
-//     *
-//     * @return ...
-//     */
-//    int getItemCount();
-//
-//    /**
-//     * 设置滚轮Item间距
-//     *
-//     * @param space Item间距dp值
-//     */
-//    void setItemSpace(int space);
-//
-//    /**
-//     * 获取滚轮Item间距
-//     *
-//     * @return ...
-//     */
-//    int getItemSpace();
-//
+    void setItemTextColor(int color);
+
+    int getItemTextSize();
+
+    void setItemTextSize(int size);
+
+    /**
+     * 获取滚轮Item间距
+     *
+     * @return ...
+     */
+    int getItemSpace();
+
+    /**
+     * 设置滚轮Item间距
+     *
+     * @param space Item间距dp值
+     */
+    void setItemSpace(int space);
+
+    /**
+     * 设置滚轮是否显示指示器
+     * 如果设置滚轮显示指示器，那么将会在滚轮的当前项上下(垂直)/左右(水平)显示两根分割线
+     * 需要注意的是指示器的尺寸并不计入滚轮选择器的尺寸，
+     *
+     * @param hasIndicator 是否有指示器
+     */
+    void setIndicator(boolean hasIndicator);
+
+    /**
+     * 是否有指示器
+     *
+     * @return ...
+     */
+    boolean hasIndicator();
+
+    /**
+     * 获取指示器尺寸
+     * 当滚轮滚动方向为垂直时指示器尺寸将返回指示器高度
+     * 当滚轮滚动方向为水平时指示器尺寸将返回指示器宽度
+     *
+     * @return 根据当前滚轮滚动方向返回的指示器尺寸
+     */
+    int getIndicatorSize();
+
+    /**
+     * 设置指示器尺寸
+     * 设置指示器分割线的高度(垂直)/宽度(水平)
+     *
+     * @param size 指示器尺寸值，单位dp
+     */
+    void setIndicatorSize(int size);
+
+    /**
+     * 获取指示器颜色
+     *
+     * @return 16位颜色值
+     */
+    int getIndicatorColor();
+
+    /**
+     * 设置指示器颜色
+     *
+     * @param color 16位指示器颜色
+     */
+    void setIndicatorColor(int color);
+
+    /**
+     * 设置滚轮是否显示幕布
+     * 设置滚轮显示幕布的话将会在当前Item项上方绘制一个与当前Item项大小一致的矩形区域并填充指定颜色
+     *
+     * @param hasCurtain 是否显示幕布
+     */
+    void setCurtain(boolean hasCurtain);
+
+    /**
+     * 是否显示幕布
+     *
+     * @return ...
+     */
+    boolean hasCurtain();
+
+    /**
+     * 获取幕布颜色
+     *
+     * @return 16位颜色值
+     */
+    int getCurtainColor();
+
+    /**
+     * 设置滚轮幕布颜色
+     *
+     * @param color 16位颜色值
+     */
+    void setCurtainColor(int color);
+
 //    /**
 //     * 设置Item在水平或垂直滚动器上的对齐方式
 //     * 滚动选择器默认的Item对齐方式为居中对齐{@link WheelCrossPicker#ALIGN_CENTER}
@@ -217,95 +268,6 @@ interface IWheelPicker {
 //     * @return Item对齐方式
 //     */
 //    int getItemAlign();
-//
-//    /**
-//     * 设置滚轮是否有指示器
-//     * 如果设置滚轮有指示器，那么将会在滚轮的当前项上下(垂直)/左右(水平)显示两根分割线
-//     *
-//     * @param hasIndicator 是否有指示器
-//     */
-//    void setIndicator(boolean hasIndicator);
-//
-//    /**
-//     * 是否有指示器
-//     *
-//     * @return ...
-//     */
-//    boolean hasIndicator();
-//
-//    /**
-//     * 设置指示器尺寸
-//     * 设置指示器分割线的高度(垂直)/宽度(水平)
-//     *
-//     * @param size 指示器尺寸值，单位dp
-//     */
-//    void setIndicatorSize(int size);
-//
-//    /**
-//     * 获取指示器尺寸
-//     * 当滚轮滚动方向为垂直时指示器尺寸将返回指示器高度
-//     * 当滚轮滚动方向为水平时指示器尺寸将返回指示器宽度
-//     *
-//     * @return 根据当前滚轮滚动方向返回的指示器尺寸
-//     */
-//    int getIndicatorSize();
-//
-//    /**
-//     * 设置指示器颜色
-//     *
-//     * @param color 16位指示器颜色
-//     */
-//    void setIndicatorColor(int color);
-//
-//    /**
-//     * 获取指示器颜色
-//     *
-//     * @return 16位颜色值
-//     */
-//    int getIndicatorColor();
-//
-//    /**
-//     * 设置滚轮是否显示幕布
-//     * 设置滚轮显示幕布的话将会在当前Item项上方绘制一个与当前Item项大小一致的矩形区域并填充指定颜色
-//     *
-//     * @param hasCurtain 是否显示幕布
-//     */
-//    void setCurtain(boolean hasCurtain);
-//
-//    /**
-//     * 是否显示幕布
-//     *
-//     * @return ...
-//     */
-//    boolean hasCurtain();
-//
-//    /**
-//     * 设置滚轮幕布颜色
-//     *
-//     * @param color 16位颜色值
-//     */
-//    void setCurtainColor(int color);
-//
-//    /**
-//     * 获取幕布颜色
-//     *
-//     * @return 16位颜色值
-//     */
-//    int getCurtainColor();
-//
-//    /**
-//     * 设置是否循环展示数据
-//     *
-//     * @param isCyclic 是否循环展示数据
-//     */
-//    void setCyclic(boolean isCyclic);
-//
-//    /**
-//     * 是否为循环展示数据
-//     *
-//     * @return ...
-//     */
-//    boolean isCyclic();
 //
 //    /**
 //     * 设置滚轮是否为透视状态

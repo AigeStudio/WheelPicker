@@ -6,6 +6,8 @@ import android.os.Handler;
 
 import com.aigestudio.wheelpicker.WheelPicker;
 
+import java.util.Arrays;
+
 /**
  * @author AigeStudio 2015-12-06
  */
@@ -17,13 +19,20 @@ public class MainActivity extends Activity {
 
         final WheelPicker picker = (WheelPicker) findViewById(R.id.main_wheel);
         picker.setDebug(true);
-        picker.setCyclic(true);
-        picker.setCurrentItem(3);
 
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                picker.setHasSameWidth(true);
+//                picker.setData(Arrays.asList(getResources().getStringArray(R.array.WheelArrayWeek)));
+//                picker.setItemTextSize(64);
+//                picker.setIndicatorSize(128);
+//                picker.setIndicatorColor(0xFF3333EE);
+//                picker.setIndicator(true);
+//                picker.setCurtain(true);
+//                picker.setCyclic(true);
+//                picker.setCurrentItem(3);
+//                picker.setIndicator(true);
+//                picker.setCurtainColor(0x88EE3333);
             }
         }, 3000);
     }
