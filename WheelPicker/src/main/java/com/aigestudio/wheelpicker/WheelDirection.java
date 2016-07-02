@@ -11,12 +11,12 @@ abstract class WheelDirection {
     }
 
     static WheelDirection getWheelDirection(WheelPicker picker) {
-        switch (picker.getDirection()) {
-            case WheelPicker.DIR_HOR:
-                return new WheelHorImpl(picker);
-            case WheelPicker.DIR_VER:
-                return new WheelVerImpl(picker);
-        }
+//        switch (picker.getDirection()) {
+//            case WheelPicker.DIR_HOR:
+//                return new WheelHorImpl(picker);
+//            case WheelPicker.DIR_VER:
+//                return new WheelVerImpl(picker);
+//        }
         return null;
     }
 }
