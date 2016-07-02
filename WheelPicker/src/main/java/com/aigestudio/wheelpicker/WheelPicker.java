@@ -262,16 +262,20 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
         mHalfItemHeight = mItemHeight / 2;
 
         // 初始化滑动最大坐标
-        int currentItemOffset = mCurrentItemPosition * mItemHeight;
-        mMinFlingY = isCyclic ? Integer.MIN_VALUE :
-                -mItemHeight * (mData.size() - 1) + currentItemOffset;
-        mMaxFlingY = isCyclic ? Integer.MAX_VALUE : currentItemOffset;
+        computeFlingLimitY();
 
         // 计算指示器绘制区域
         computeIndicatorRect();
 
         // 计算幕布绘制区域
         computeCurtainRect();
+    }
+
+    private void computeFlingLimitY() {
+        int currentItemOffset = mCurrentItemPosition * mItemHeight;
+        mMinFlingY = isCyclic ? Integer.MIN_VALUE :
+                -mItemHeight * (mData.size() - 1) + currentItemOffset;
+        mMaxFlingY = isCyclic ? Integer.MAX_VALUE : currentItemOffset;
     }
 
     private void computeIndicatorRect() {
@@ -376,20 +380,18 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
                 int velocity = (int) mTracker.getYVelocity();
                 if (Math.abs(velocity) > mMinimumVelocity) {
                     mScroller.fling(0, mScrollOffsetY, 0, velocity, 0, 0, mMinFlingY, mMaxFlingY);
-
-                    // 校正坐标
                     mScroller.setFinalY(mScroller.getFinalY() +
                             computeDistanceToEndPoint(mScroller.getFinalY() % mItemHeight));
-                    if (!isCyclic) {
-                        if (mScroller.getFinalY() > mMaxFlingY)
-                            mScroller.setFinalY(mMaxFlingY);
-                        else if (mScroller.getFinalY() < mMinFlingY)
-                            mScroller.setFinalY(mMinFlingY);
-                    }
                 } else {
                     mScroller.startScroll(0, mScrollOffsetY, 0,
                             computeDistanceToEndPoint(mScrollOffsetY % mItemHeight));
                 }
+                // 校正坐标
+                if (!isCyclic)
+                    if (mScroller.getFinalY() > mMaxFlingY)
+                        mScroller.setFinalY(mMaxFlingY);
+                    else if (mScroller.getFinalY() < mMinFlingY)
+                        mScroller.setFinalY(mMinFlingY);
                 mHandler.post(this);
                 if (null != mTracker) {
                     mTracker.recycle();
@@ -456,7 +458,7 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
     @Override
     public void setCyclic(boolean isCyclic) {
         this.isCyclic = isCyclic;
-        requestLayout();
+        computeFlingLimitY();
         invalidate();
     }
 
