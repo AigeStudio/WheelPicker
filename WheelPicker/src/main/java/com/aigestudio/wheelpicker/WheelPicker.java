@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.Region;
 import android.os.Build;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -46,7 +47,7 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
     private OnItemSelectListener mOnItemSelectListener;
     private OnWheelChangeListener mOnWheelChangeListener;
     private Rect mRectIndicatorHead, mRectIndicatorFoot;
-    private Rect mRectCurtain;
+    private Rect mRectCurrentItem;
 
     /**
      *
@@ -154,7 +155,7 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
                 a.getInt(R.styleable.WheelPicker_wheel_maximum_width_text_position, -1);
         mMaxWidthText = a.getString(R.styleable.WheelPicker_wheel_maximum_width_text);
         mCurrentItemTextColor = a.getColor
-                (R.styleable.WheelPicker_wheel_current_item_text_color, 0xFF888888);
+                (R.styleable.WheelPicker_wheel_current_item_text_color, -1);
         mItemTextColor = a.getColor(R.styleable.WheelPicker_wheel_item_text_color, 0xFF888888);
         mItemSpace = a.getDimensionPixelSize(R.styleable.WheelPicker_wheel_item_space,
                 getResources().getDimensionPixelSize(R.dimen.WheelItemSpace));
@@ -191,7 +192,7 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
         mRectIndicatorHead = new Rect();
         mRectIndicatorFoot = new Rect();
 
-        mRectCurtain = new Rect();
+        mRectCurrentItem = new Rect();
     }
 
     private void updateVisibleItemCount() {
@@ -269,8 +270,8 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
         // 计算指示器绘制区域
         computeIndicatorRect();
 
-        // 计算幕布绘制区域
-        computeCurtainRect();
+        // 计算当前Item区域
+        computeCurrentItemRect();
     }
 
     private void computeFlingLimitY() {
@@ -293,9 +294,9 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
                 indicatorFootCenterY + halfIndicatorSize);
     }
 
-    private void computeCurtainRect() {
-        if (!hasCurtain) return;
-        mRectCurtain.set(0, mWheelCenterY - mHalfItemHeight, getWidth(),
+    private void computeCurrentItemRect() {
+        if (!hasCurtain && mCurrentItemTextColor == -1) return;
+        mRectCurrentItem.set(0, mWheelCenterY - mHalfItemHeight, getWidth(),
                 mWheelCenterY + mHalfItemHeight);
     }
 
@@ -329,8 +330,26 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
                 alpha = alpha < 0 ? 0 : alpha;
                 mPaint.setAlpha(alpha);
             }
-            canvas.drawText(data, mDrawnCenterX, mDrawnItemCenterY, mPaint);
+            if (isDebug)
+                Log.i(TAG, "Current Item color is " + mCurrentItemTextColor);
 
+            // 判断是否需要为当前Item绘制不同颜色
+            if (mCurrentItemTextColor != -1) {
+                if (isDebug)
+                    Log.d(TAG, "Drawing different item color.");
+                canvas.save();
+                canvas.clipRect(mRectCurrentItem, Region.Op.DIFFERENCE);
+                canvas.drawText(data, mDrawnCenterX, mDrawnItemCenterY, mPaint);
+                canvas.restore();
+
+                mPaint.setColor(mCurrentItemTextColor);
+                canvas.save();
+                canvas.clipRect(mRectCurrentItem);
+                canvas.drawText(data, mDrawnCenterX, mDrawnItemCenterY, mPaint);
+                canvas.restore();
+            } else {
+                canvas.drawText(data, mDrawnCenterX, mDrawnItemCenterY, mPaint);
+            }
             if (isDebug) {
                 mPaint.setColor(0xFFEE3333);
                 int centerY = mWheelCenterY + (drawnOffsetPos * mItemHeight);
@@ -344,7 +363,7 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
         if (hasCurtain) {
             mPaint.setColor(mCurtainColor);
             mPaint.setStyle(Paint.Style.FILL);
-            canvas.drawRect(mRectCurtain, mPaint);
+            canvas.drawRect(mRectCurrentItem, mPaint);
         }
         // 是否需要绘制指示器
         if (hasIndicator) {
@@ -574,7 +593,8 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
 
     @Override
     public void setCurrentItemTextColor(int color) {
-        mCurrentItemPosition = color;
+        mCurrentItemTextColor = color;
+        computeCurrentItemRect();
         invalidate();
     }
 
@@ -653,7 +673,7 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
     @Override
     public void setCurtain(boolean hasCurtain) {
         this.hasCurtain = hasCurtain;
-        computeCurtainRect();
+        computeCurrentItemRect();
         invalidate();
     }
 

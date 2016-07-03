@@ -18,7 +18,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.ac_main);
 
         final WheelPicker picker = (WheelPicker) findViewById(R.id.main_wheel);
-        picker.setDebug(true);
+        picker.setDebug(false);
 
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -34,6 +34,7 @@ public class MainActivity extends Activity {
 //                picker.setIndicator(true);
 //                picker.setCurtainColor(0x88EE3333);
 //                picker.setAtmospheric(true);
+//                picker.setCurrentItemTextColor(0xFF3333EE);
             }
         }, 3000);
     }
