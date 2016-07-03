@@ -129,6 +129,7 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
     private boolean hasSameWidth;
     private boolean hasIndicator;
     private boolean hasCurtain;
+    private boolean hasAtmospheric = true;
     private boolean isCyclic;
     private boolean isDebug;
 
@@ -161,7 +162,7 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
         mIndicatorColor = a.getColor(R.styleable.WheelPicker_wheel_indicator_color, 0xFFEE3333);
         mIndicatorSize = a.getDimensionPixelSize(R.styleable.WheelPicker_wheel_indicator_size,
                 getResources().getDimensionPixelSize(R.dimen.WheelIndicatorSize));
-        hasCurtain = a.getBoolean(R.styleable.WheelPicker_wheel_curtain, true);
+        hasCurtain = a.getBoolean(R.styleable.WheelPicker_wheel_curtain, false);
         mCurtainColor = a.getColor(R.styleable.WheelPicker_wheel_curtain_color, 0x88FFFFFF);
         a.recycle();
 
@@ -315,9 +316,19 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
             }
             mPaint.setColor(mItemTextColor);
             mPaint.setStyle(Paint.Style.FILL);
-            int mDrawnItemCenterY = mDrawnCenterY + (drawnOffsetPos * mItemHeight);
-            canvas.drawText(data, mDrawnCenterX,
-                    mDrawnItemCenterY + mScrollOffsetY % mItemHeight, mPaint);
+            int mDrawnItemCenterY = mDrawnCenterY + (drawnOffsetPos * mItemHeight) +
+                    mScrollOffsetY % mItemHeight;
+            if (isDebug)
+                Log.i(TAG, "Item " + drawnOffsetPos + "'s draw centerY is" + mDrawnItemCenterY);
+            if (hasAtmospheric) {
+                int alpha = (int) ((mDrawnCenterY - Math.abs(mDrawnCenterY - mDrawnItemCenterY)) *
+                        1.0F / mDrawnCenterY * 255);
+                if (isDebug)
+                    Log.i(TAG, "Item " + drawnOffsetPos + "'s draw alpha is" + alpha);
+                alpha = alpha < 0 ? 0 : alpha;
+                mPaint.setAlpha(alpha);
+            }
+            canvas.drawText(data, mDrawnCenterX, mDrawnItemCenterY, mPaint);
 
             if (isDebug) {
                 mPaint.setColor(0xFFEE3333);
@@ -659,6 +670,17 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
     public void setCurtainColor(int color) {
         mCurtainColor = color;
         invalidate();
+    }
+
+    @Override
+    public void setAtmospheric(boolean hasAtmospheric) {
+        this.hasAtmospheric = hasAtmospheric;
+        invalidate();
+    }
+
+    @Override
+    public boolean hasAtmospheric() {
+        return hasAtmospheric;
     }
 
     /**

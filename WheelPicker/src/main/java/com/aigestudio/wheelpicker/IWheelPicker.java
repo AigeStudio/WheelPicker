@@ -240,6 +240,21 @@ interface IWheelPicker {
      */
     void setCurtainColor(int color);
 
+    /**
+     * 设置滚轮是否有空气感
+     * 开启空气感的滚轮将呈现中间不透明逐渐向两端透明过度的渐变效果
+     * 注意如果调用{@link #setCurrentItemTextColor(int)}为当前Item设置颜色，那么当前Item的空气感效果将会被设定的颜色值所覆盖
+     *
+     * @param hasAtmospheric 是否有空气感
+     */
+    void setAtmospheric(boolean hasAtmospheric);
+
+    /**
+     * 是否有空气感
+     *
+     * @return ...
+     */
+    boolean hasAtmospheric();
 //    /**
 //     * 设置Item在水平或垂直滚动器上的对齐方式
 //     * 滚动选择器默认的Item对齐方式为居中对齐{@link WheelCrossPicker#ALIGN_CENTER}
@@ -284,20 +299,4 @@ interface IWheelPicker {
 //     */
 //    boolean isPerspective();
 //
-//    /**
-//     * 设置滚轮是否有空气感
-//     * 开启空气感的滚轮将呈现中间不透明逐渐向两端透明过度的渐变效果
-//     * 注意如果调用{@link #setCurrentItemTextColor(int)}为当前Item设置颜色，那么当前Item的空气感效果将会被设定的颜色值所覆盖
-//     *
-//     * @param hasAtmospheric 是否有空气感
-//     */
-//    void setAtmospheric(boolean hasAtmospheric);
-//
-//    /**
-//     * 是否有空气感
-//     *
-//     * @return ...
-//     */
-//    boolean isAtmospheric();
-
 }

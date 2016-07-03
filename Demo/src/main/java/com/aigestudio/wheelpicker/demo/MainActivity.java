@@ -29,7 +29,7 @@ public class MainActivity extends Activity {
 //                picker.setIndicatorColor(0xFF3333EE);
 //                picker.setIndicator(true);
 //                picker.setCurtain(true);
-                picker.setCyclic(true);
+//                picker.setCyclic(true);
 //                picker.setCurrentItem(3);
 //                picker.setIndicator(true);
 //                picker.setCurtainColor(0x88EE3333);
