@@ -33,6 +33,7 @@ public class MainActivity extends Activity {
 //                picker.setCurrentItem(3);
 //                picker.setIndicator(true);
 //                picker.setCurtainColor(0x88EE3333);
+//                picker.setAtmospheric(true);
             }
         }, 3000);
     }

@@ -20,5 +20,6 @@
         <attr name="wheel_indicator_size" format="dimension" />
         <attr name="wheel_curtain" format="boolean" />
         <attr name="wheel_curtain_color" format="color" />
+        <attr name="wheel_atmospheric" format="boolean" />
     </declare-styleable>
 </resources>

@@ -129,7 +129,7 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
     private boolean hasSameWidth;
     private boolean hasIndicator;
     private boolean hasCurtain;
-    private boolean hasAtmospheric = true;
+    private boolean hasAtmospheric;
     private boolean isCyclic;
     private boolean isDebug;
 
@@ -164,6 +164,7 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
                 getResources().getDimensionPixelSize(R.dimen.WheelIndicatorSize));
         hasCurtain = a.getBoolean(R.styleable.WheelPicker_wheel_curtain, false);
         mCurtainColor = a.getColor(R.styleable.WheelPicker_wheel_curtain_color, 0x88FFFFFF);
+        hasAtmospheric = a.getBoolean(R.styleable.WheelPicker_wheel_atmospheric, false);
         a.recycle();
 
         // 可见Item改变后更新与之相关的参数
