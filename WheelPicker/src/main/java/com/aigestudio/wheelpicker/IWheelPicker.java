@@ -255,6 +255,22 @@ interface IWheelPicker {
      * @return ...
      */
     boolean hasAtmospheric();
+
+    /**
+     * 设置滚轮是否为透视状态
+     * 处于透视状态的滚轮将呈现一种中间大两端小并且两端向屏幕内弯曲的效果
+     *
+     * @param isPerspective 是否为透视状态
+     */
+    void setPerspective(boolean isPerspective);
+
+    /**
+     * 是否为透视状态
+     *
+     * @return ...
+     */
+    boolean isPerspective();
+
 //    /**
 //     * 设置Item在水平或垂直滚动器上的对齐方式
 //     * 滚动选择器默认的Item对齐方式为居中对齐{@link WheelCrossPicker#ALIGN_CENTER}
@@ -283,20 +299,4 @@ interface IWheelPicker {
 //     * @return Item对齐方式
 //     */
 //    int getItemAlign();
-//
-//    /**
-//     * 设置滚轮是否为透视状态
-//     * 处于透视状态的滚轮将呈现一种中间大两端小并且两端向屏幕内弯曲的效果
-//     *
-//     * @param isPerspective 是否为透视状态
-//     */
-//    void setPerspective(boolean isPerspective);
-//
-//    /**
-//     * 是否为透视状态
-//     *
-//     * @return ...
-//     */
-//    boolean isPerspective();
-//
 }

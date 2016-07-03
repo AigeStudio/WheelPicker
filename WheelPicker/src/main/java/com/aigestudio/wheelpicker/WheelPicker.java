@@ -131,6 +131,7 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
     private boolean hasIndicator;
     private boolean hasCurtain;
     private boolean hasAtmospheric;
+    private boolean isPerspective;
     private boolean isCyclic;
     private boolean isDebug;
 
@@ -702,6 +703,17 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
     @Override
     public boolean hasAtmospheric() {
         return hasAtmospheric;
+    }
+
+    @Override
+    public void setPerspective(boolean isPerspective) {
+        this.isPerspective = isPerspective;
+        invalidate();
+    }
+
+    @Override
+    public boolean isPerspective() {
+        return isPerspective;
     }
 
     /**
