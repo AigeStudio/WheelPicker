@@ -163,7 +163,8 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
                 (R.styleable.WheelPicker_wheel_current_item_text_color, -1);
         mItemTextColor = a.getColor(R.styleable.WheelPicker_wheel_item_text_color, 0xFF888888);
         mItemSpace = a.getDimensionPixelSize(R.styleable.WheelPicker_wheel_item_space,
-                getResources().getDimensionPixelSize(R.dimen.WheelItemSpace));
+//                getResources().getDimensionPixelSize(R.dimen.WheelItemSpace));
+                0);
         hasIndicator = a.getBoolean(R.styleable.WheelPicker_wheel_indicator, false);
         mIndicatorColor = a.getColor(R.styleable.WheelPicker_wheel_indicator_color, 0xFFEE3333);
         mIndicatorSize = a.getDimensionPixelSize(R.styleable.WheelPicker_wheel_indicator_size,
@@ -244,7 +245,9 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
 
         int resultWidth = mTextMaxWidth;
         int resultHeight = mTextMaxHeight * mVisibleItemCount + mItemSpace * (mVisibleItemCount - 1);
-
+        if (isPerspective) {
+            resultHeight = (int) (2 * resultHeight / Math.PI);
+        }
         resultWidth = measureSize(modeWidth, sizeWidth, resultWidth);
         resultHeight = measureSize(modeHeight, sizeHeight, resultHeight);
 
@@ -334,7 +337,29 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
                 float test = (mDrawnCenterY - Math.abs(mDrawnCenterY - mDrawnItemCenterY)) *
                         1.0F / mDrawnCenterY;
                 if (isDebug)
-                    Log.i(TAG, "" + test);
+                    Log.i(TAG, "" + (1 - test) * getHeight() / 2);
+
+                int xxx = getHeight()/2 + (drawnOffsetPos * mItemHeight) +
+                        mScrollOffsetY % mItemHeight;
+
+                mCamera.save();
+                int unit = 0;
+                if (drawnOffsetPos!=0)
+                    unit = drawnOffsetPos / Math.abs(drawnOffsetPos);
+                mCamera.rotateX(-(1 - test) * 90 * unit);
+                mCamera.getMatrix(mMatrixRotate);
+                mCamera.restore();
+                mMatrixRotate.preTranslate(-mWheelCenterX, -xxx);
+                mMatrixRotate.postTranslate(mWheelCenterX, xxx);
+
+                mCamera.save();
+                mCamera.translate(0, 0, (1 - test) * getHeight() / 2);
+                mCamera.getMatrix(mMatrixDepth);
+                mCamera.restore();
+                mMatrixDepth.preTranslate(-mWheelCenterX, -xxx);
+                mMatrixDepth.postTranslate(mWheelCenterX, xxx);
+
+                mMatrixRotate.postConcat(mMatrixDepth);
             }
             if (isDebug)
                 Log.i(TAG, "Item " + drawnOffsetPos + "'s draw centerY is" + mDrawnItemCenterY);
@@ -354,6 +379,8 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
                 if (isDebug)
                     Log.d(TAG, "Drawing different item color.");
                 canvas.save();
+                if (isPerspective)
+                    canvas.concat(mMatrixRotate);
                 canvas.clipRect(mRectCurrentItem, Region.Op.DIFFERENCE);
                 canvas.drawText(data, mDrawnCenterX, mDrawnItemCenterY, mPaint);
                 canvas.restore();
@@ -364,7 +391,11 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
                 canvas.drawText(data, mDrawnCenterX, mDrawnItemCenterY, mPaint);
                 canvas.restore();
             } else {
+                canvas.save();
+                if (isPerspective)
+                    canvas.concat(mMatrixRotate);
                 canvas.drawText(data, mDrawnCenterX, mDrawnItemCenterY, mPaint);
+                canvas.restore();
             }
             if (isDebug) {
                 mPaint.setColor(0xFFEE3333);

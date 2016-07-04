@@ -6,7 +6,9 @@ import android.os.Handler;
 
 import com.aigestudio.wheelpicker.WheelPicker;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author AigeStudio 2015-12-06
@@ -17,8 +19,13 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ac_main);
 
+        List<String> data = new ArrayList<>();
+        for (int i = 1000; i < 3000; i++) {
+            data.add(String.valueOf(i));
+        }
         final WheelPicker picker = (WheelPicker) findViewById(R.id.main_wheel);
         picker.setDebug(true);
+        picker.setData(data);
 
         new Handler().postDelayed(new Runnable() {
             @Override
