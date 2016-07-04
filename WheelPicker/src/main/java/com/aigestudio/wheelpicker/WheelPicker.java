@@ -2,7 +2,9 @@ package com.aigestudio.wheelpicker;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Camera;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Region;
@@ -48,6 +50,8 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
     private OnWheelChangeListener mOnWheelChangeListener;
     private Rect mRectIndicatorHead, mRectIndicatorFoot;
     private Rect mRectCurrentItem;
+    private Camera mCamera;
+    private Matrix mMatrixRotate, mMatrixDepth;
 
     /**
      *
@@ -131,7 +135,7 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
     private boolean hasIndicator;
     private boolean hasCurtain;
     private boolean hasAtmospheric;
-    private boolean isPerspective;
+    private boolean isPerspective = true;
     private boolean isCyclic;
     private boolean isDebug;
 
@@ -194,6 +198,11 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
         mRectIndicatorFoot = new Rect();
 
         mRectCurrentItem = new Rect();
+
+        mCamera = new Camera();
+
+        mMatrixRotate = new Matrix();
+        mMatrixDepth = new Matrix();
     }
 
     private void updateVisibleItemCount() {
@@ -321,6 +330,12 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
             mPaint.setStyle(Paint.Style.FILL);
             int mDrawnItemCenterY = mDrawnCenterY + (drawnOffsetPos * mItemHeight) +
                     mScrollOffsetY % mItemHeight;
+            if (isPerspective) {
+                float test = (mDrawnCenterY - Math.abs(mDrawnCenterY - mDrawnItemCenterY)) *
+                        1.0F / mDrawnCenterY;
+                if (isDebug)
+                    Log.i(TAG, "" + test);
+            }
             if (isDebug)
                 Log.i(TAG, "Item " + drawnOffsetPos + "'s draw centerY is" + mDrawnItemCenterY);
             if (hasAtmospheric) {
@@ -706,14 +721,14 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
     }
 
     @Override
-    public void setPerspective(boolean isPerspective) {
-        this.isPerspective = isPerspective;
-        invalidate();
+    public boolean isPerspective() {
+        return isPerspective;
     }
 
     @Override
-    public boolean isPerspective() {
-        return isPerspective;
+    public void setPerspective(boolean isPerspective) {
+        this.isPerspective = isPerspective;
+        invalidate();
     }
 
     /**
