@@ -257,6 +257,13 @@ interface IWheelPicker {
     boolean hasAtmospheric();
 
     /**
+     * 是否为透视状态
+     *
+     * @return ...
+     */
+    boolean isPerspective();
+
+    /**
      * 设置滚轮是否为透视状态
      * 处于透视状态的滚轮将呈现一种中间大两端小并且两端向屏幕内弯曲的效果
      *
@@ -265,11 +272,17 @@ interface IWheelPicker {
     void setPerspective(boolean isPerspective);
 
     /**
-     * 是否为透视状态
+     * 是否卷曲
      *
      * @return ...
      */
-    boolean isPerspective();
+    boolean isCurved();
+
+    /**
+     *
+     * @param isCurved
+     */
+    void setCurved(boolean isCurved);
 
 //    /**
 //     * 设置Item在水平或垂直滚动器上的对齐方式

@@ -21,7 +21,7 @@ public class MainActivity extends Activity {
 
         List<String> data = new ArrayList<>();
         for (int i = 1000; i < 3000; i++) {
-            data.add(String.valueOf(i));
+            data.add("00000000");
         }
         final WheelPicker picker = (WheelPicker) findViewById(R.id.main_wheel);
         picker.setDebug(true);

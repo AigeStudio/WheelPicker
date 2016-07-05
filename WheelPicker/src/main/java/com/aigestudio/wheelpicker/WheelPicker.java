@@ -128,6 +128,8 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
 
     private int mLastPointY;
 
+    private int mSlopPointY;
+
     /**
      * 滚轮选择器的每一个Item是否拥有相同的尺寸
      */
@@ -137,6 +139,7 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
     private boolean hasAtmospheric;
     private boolean isPerspective = true;
     private boolean isCyclic;
+    private boolean isCurved;
     private boolean isDebug;
 
     public WheelPicker(Context context) {
@@ -231,8 +234,6 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
         }
         Paint.FontMetrics metrics = mPaint.getFontMetrics();
         mTextMaxHeight = (int) (metrics.bottom - metrics.top);
-        if (isDebug)
-            Log.i(TAG, "Text's max size is: (" + mTextMaxWidth + "," + mTextMaxHeight + ")");
     }
 
     @Override
@@ -297,8 +298,6 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
     private void computeIndicatorRect() {
         if (!hasIndicator) return;
         int halfIndicatorSize = mIndicatorSize / 2;
-        if (isDebug)
-            Log.i(TAG, "Indicator size is" + mIndicatorSize);
         int indicatorHeadCenterY = mWheelCenterY + mHalfItemHeight;
         int indicatorFootCenterY = mWheelCenterY - mHalfItemHeight;
         mRectIndicatorHead.set(0, indicatorHeadCenterY - halfIndicatorSize, getWidth(),
@@ -333,20 +332,34 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
             mPaint.setStyle(Paint.Style.FILL);
             int mDrawnItemCenterY = mDrawnCenterY + (drawnOffsetPos * mItemHeight) +
                     mScrollOffsetY % mItemHeight;
+            float degree = 0;
+            int space = 0;
             if (isPerspective) {
                 float test = (mDrawnCenterY - Math.abs(mDrawnCenterY - mDrawnItemCenterY)) *
                         1.0F / mDrawnCenterY;
-                if (isDebug)
-                    Log.i(TAG, "" + (1 - test) * getHeight() / 2);
-
-                int xxx = getHeight()/2 + (drawnOffsetPos * mItemHeight) +
-                        mScrollOffsetY % mItemHeight;
 
                 mCamera.save();
-                int unit = 0;
-                if (drawnOffsetPos!=0)
-                    unit = drawnOffsetPos / Math.abs(drawnOffsetPos);
-                mCamera.rotateX(-(1 - test) * 90 * unit);
+                int unit = 1;
+
+                if (mDrawnItemCenterY > mDrawnCenterY) {
+                    unit = 1;
+                } else if (mDrawnItemCenterY < mDrawnCenterY) {
+                    unit = -1;
+                } else {
+                    unit = 0;
+                }
+
+                degree = (-(1 - test) * 90 * unit);
+                if (degree < -90) degree = -90;
+                if (degree > 90) degree = 90;
+                space = computeSpace((int) degree);
+
+                int xxx = getHeight() / 2 - space;
+//                int xxx = getHeight() / 2 + (drawnOffsetPos * mItemHeight) +
+//                        mScrollOffsetY % mItemHeight;
+                if (drawnOffsetPos == 0)
+                    Log.i(TAG, "" + degree);
+                mCamera.rotateX(degree);
                 mCamera.getMatrix(mMatrixRotate);
                 mCamera.restore();
                 mMatrixRotate.preTranslate(-mWheelCenterX, -xxx);
@@ -361,23 +374,14 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
 
                 mMatrixRotate.postConcat(mMatrixDepth);
             }
-            if (isDebug)
-                Log.i(TAG, "Item " + drawnOffsetPos + "'s draw centerY is" + mDrawnItemCenterY);
             if (hasAtmospheric) {
                 int alpha = (int) ((mDrawnCenterY - Math.abs(mDrawnCenterY - mDrawnItemCenterY)) *
                         1.0F / mDrawnCenterY * 255);
-                if (isDebug)
-                    Log.i(TAG, "Item " + drawnOffsetPos + "'s draw alpha is" + alpha);
                 alpha = alpha < 0 ? 0 : alpha;
                 mPaint.setAlpha(alpha);
             }
-            if (isDebug)
-                Log.i(TAG, "Current Item color is " + mCurrentItemTextColor);
-
             // 判断是否需要为当前Item绘制不同颜色
             if (mCurrentItemTextColor != -1) {
-                if (isDebug)
-                    Log.d(TAG, "Drawing different item color.");
                 canvas.save();
                 if (isPerspective)
                     canvas.concat(mMatrixRotate);
@@ -394,7 +398,7 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
                 canvas.save();
                 if (isPerspective)
                     canvas.concat(mMatrixRotate);
-                canvas.drawText(data, mDrawnCenterX, mDrawnItemCenterY, mPaint);
+                canvas.drawText(data, mDrawnCenterX, mDrawnCenterY - space, mPaint);
                 canvas.restore();
             }
             if (isDebug) {
@@ -425,10 +429,16 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
         return position >= 0 && position < mData.size();
     }
 
+    private int computeSpace(int degree) {
+        return (int) (Math.sin(Math.toRadians(degree)) * (getHeight() / 2));
+    }
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                if (null != getParent())
+                    getParent().requestDisallowInterceptTouchEvent(true);
                 if (null == mTracker)
                     mTracker = VelocityTracker.obtain();
                 else
@@ -447,6 +457,8 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
                 invalidate();
                 break;
             case MotionEvent.ACTION_UP:
+                if (null != getParent())
+                    getParent().requestDisallowInterceptTouchEvent(false);
                 mTracker.addMovement(event);
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.DONUT)
@@ -760,6 +772,16 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
     public void setPerspective(boolean isPerspective) {
         this.isPerspective = isPerspective;
         invalidate();
+    }
+
+    @Override
+    public boolean isCurved() {
+        return isCurved;
+    }
+
+    @Override
+    public void setCurved(boolean isCurved) {
+        this.isCurved = isCurved;
     }
 
     /**
