@@ -19,17 +19,17 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ac_main);
 
-        List<String> data = new ArrayList<>();
+        final List<String> data = new ArrayList<>();
         for (int i = 1000; i < 3000; i++) {
             data.add("00000000");
         }
         final WheelPicker picker = (WheelPicker) findViewById(R.id.main_wheel);
         picker.setDebug(true);
-        picker.setData(data);
 
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+                picker.setData(data);
 //                picker.setData(Arrays.asList(getResources().getStringArray(R.array.WheelArrayWeek)));
 //                picker.setItemTextSize(64);
 //                picker.setIndicatorSize(128);

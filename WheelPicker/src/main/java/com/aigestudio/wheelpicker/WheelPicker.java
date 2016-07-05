@@ -36,6 +36,11 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
      */
     public static final int SCROLL_STATE_IDLE = 0, SCROLL_STATE_DRAGGING = 1,
             SCROLL_STATE_SCROLLING = 2;
+    /**
+     * 数据项对齐方式标识值
+     */
+    public static final int ALIGN_CENTER = 0, ALIGN_LEFT = 1, ALIGN_RIGHT = 2, ALIGN_TOP = 3,
+            ALIGN_BOTTOM = 4;
 
     public static final int DIR_VER = 0, DIR_HOR = 1;
 
@@ -218,6 +223,7 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
     }
 
     private void computeTextSize() {
+        mTextMaxWidth = mTextMaxHeight = 0;
         if (hasSameWidth) {
             mTextMaxWidth = (int) mPaint.measureText(String.valueOf(mData.get(0)));
         } else if (isPosInRang(mTextMaxWidthPosition)) {
@@ -362,15 +368,15 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
                 mCamera.rotateX(degree);
                 mCamera.getMatrix(mMatrixRotate);
                 mCamera.restore();
-                mMatrixRotate.preTranslate(-mWheelCenterX, -xxx);
-                mMatrixRotate.postTranslate(mWheelCenterX, xxx);
+                mMatrixRotate.preTranslate(-getWidth(), -xxx);
+                mMatrixRotate.postTranslate(getWidth(), xxx);
 
                 mCamera.save();
                 mCamera.translate(0, 0, (1 - test) * getHeight() / 2);
                 mCamera.getMatrix(mMatrixDepth);
                 mCamera.restore();
-                mMatrixDepth.preTranslate(-mWheelCenterX, -xxx);
-                mMatrixDepth.postTranslate(mWheelCenterX, xxx);
+                mMatrixDepth.preTranslate(-getWidth(), -xxx);
+                mMatrixDepth.postTranslate(getWidth(), xxx);
 
                 mMatrixRotate.postConcat(mMatrixDepth);
             }
@@ -782,6 +788,16 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
     @Override
     public void setCurved(boolean isCurved) {
         this.isCurved = isCurved;
+    }
+
+    @Override
+    public void setItemAlign(int align) {
+
+    }
+
+    @Override
+    public int getItemAlign() {
+        return 0;
     }
 
     /**

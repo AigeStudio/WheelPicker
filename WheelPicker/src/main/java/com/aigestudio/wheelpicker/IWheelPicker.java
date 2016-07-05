@@ -284,32 +284,32 @@ interface IWheelPicker {
      */
     void setCurved(boolean isCurved);
 
-//    /**
-//     * 设置Item在水平或垂直滚动器上的对齐方式
-//     * 滚动选择器默认的Item对齐方式为居中对齐{@link WheelCrossPicker#ALIGN_CENTER}
-//     * 居中对齐{@link WheelCrossPicker#ALIGN_CENTER}适用于水平和垂直两个方向的滚轮选择器上
-//     * 靠左对齐{@link WheelCrossPicker#ALIGN_LEFT}和靠右{@link WheelCrossPicker#ALIGN_RIGHT}对齐只能用于垂直方向的滚轮选择器上
-//     * 置顶对齐{@link WheelCrossPicker#ALIGN_TOP}和置底对齐{@link WheelCrossPicker#ALIGN_BOTTOM}只能用于水平方向的滚轮选择器上
-//     * 当且仅当满足以下条件之一时Item的对齐方式才会生效：
-//     * 1.如果{@link #isPerspective()}返回true
-//     * 2.如果{@link #isPerspective()}返回false并且{@link #hasSameWidth()}返回false并且当前滚轮选择器为垂直滚动状态
-//     *
-//     * @param align 对齐方式标识值
-//     *              当滚动选择器为垂直滚动时该值仅能是下列值之一：
-//     *              {@link WheelCrossPicker#ALIGN_CENTER}
-//     *              {@link WheelCrossPicker#ALIGN_LEFT}
-//     *              {@link WheelCrossPicker#ALIGN_RIGHT}
-//     *              当滚动选择器为水平滚动时该值仅能是下列值之一：
-//     *              {@link WheelCrossPicker#ALIGN_CENTER}
-//     *              {@link WheelCrossPicker#ALIGN_TOP}
-//     *              {@link WheelCrossPicker#ALIGN_BOTTOM}
-//     */
-//    void setItemAlign(int align);
-//
-//    /**
-//     * 获取Item对齐方式
-//     *
-//     * @return Item对齐方式
-//     */
-//    int getItemAlign();
+    /**
+     * 设置Item在水平或垂直滚动器上的对齐方式
+     * 滚动选择器默认的Item对齐方式为居中对齐{@link WheelPicker#ALIGN_CENTER}
+     * 居中对齐{@link WheelPicker#ALIGN_CENTER}适用于水平和垂直两个方向的滚轮选择器上
+     * 靠左对齐{@link WheelPicker#ALIGN_LEFT}和靠右{@link WheelPicker#ALIGN_RIGHT}对齐只能用于垂直方向的滚轮选择器上
+     * 置顶对齐{@link WheelPicker#ALIGN_TOP}和置底对齐{@link WheelPicker#ALIGN_BOTTOM}只能用于水平方向的滚轮选择器上
+     * 当且仅当满足以下条件之一时Item的对齐方式才会生效：
+     * 1.如果{@link #isPerspective()}返回true
+     * 2.如果{@link #isPerspective()}返回false并且{@link #hasSameWidth()}返回false并且当前滚轮选择器为垂直滚动状态
+     *
+     * @param align 对齐方式标识值
+     *              当滚动选择器为垂直滚动时该值仅能是下列值之一：
+     *              {@link WheelPicker#ALIGN_CENTER}
+     *              {@link WheelPicker#ALIGN_LEFT}
+     *              {@link WheelPicker#ALIGN_RIGHT}
+     *              当滚动选择器为水平滚动时该值仅能是下列值之一：
+     *              {@link WheelPicker#ALIGN_CENTER}
+     *              {@link WheelPicker#ALIGN_TOP}
+     *              {@link WheelPicker#ALIGN_BOTTOM}
+     */
+    void setItemAlign(int align);
+
+    /**
+     * 获取Item对齐方式
+     *
+     * @return Item对齐方式
+     */
+    int getItemAlign();
 }
