@@ -96,6 +96,17 @@ compile project(':WheelPicker')
 
 ***
 
+# Donation
+如果您觉得该项目帮助了您那不妨赏小弟一杯咖啡钱 :)
+
+![Pay](https://github.com/AigeStudio/WheelPicker/blob/1.1.0/Previews/main/Pay.png)
+
+You can support the project and thank the author for his hard work :)
+
+* PayPal:xiaoaibaby@vip.qq.com
+
+***
+
 # LICENSE
 Copyright 2015-2017 [AigeStudio](https://github.com/AigeStudio)
 
