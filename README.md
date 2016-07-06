@@ -28,7 +28,7 @@ compile "cn.aigestudio.wheelpicker:WheelPicker:1.0.3"
 include ':YourMoudle',':WheelPicker'
 ```
 
-Notably, in some version of gradle you need to add module with comma-separated:
+Notably, in some version of gradle you need to add module single line:
 ```gradle
 include ':WheelPicker'
 ```
@@ -97,7 +97,7 @@ compile project(':WheelPicker')
 ***
 
 # LICENSE
-Copyright 2015-2016 [AigeStudio](https://github.com/AigeStudio)
+Copyright 2015-2017 [AigeStudio](https://github.com/AigeStudio)
 
 Licensed under the Apache License, Version 2.0 (the "License");you may not use this file except in compliance with the License.
 
