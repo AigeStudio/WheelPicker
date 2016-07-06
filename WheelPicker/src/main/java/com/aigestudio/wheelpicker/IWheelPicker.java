@@ -11,7 +11,7 @@ import java.util.List;
  * @author AigeStudio 2015-12-12
  * @author AigeStudio 2016-06-17
  *         更新项目结构
- * @version 1.1.0 beta
+ * @version 1.1.0
  */
 interface IWheelPicker {
 

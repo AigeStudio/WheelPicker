@@ -28,7 +28,7 @@ import java.util.List;
  * @author AigeStudio 2015-12-12
  * @author AigeStudio 2016-06-17
  *         更新项目结构
- * @version 1.1.0 beta
+ * @version 1.1.0
  */
 public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable {
     /**
@@ -39,8 +39,7 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
     /**
      * 数据项对齐方式标识值
      */
-    public static final int ALIGN_CENTER = 0, ALIGN_LEFT = 1, ALIGN_RIGHT = 2, ALIGN_TOP = 3,
-            ALIGN_BOTTOM = 4;
+    public static final int ALIGN_CENTER = 0, ALIGN_LEFT = 1, ALIGN_RIGHT = 2;
 
     public static final int DIR_VER = 0, DIR_HOR = 1;
 
@@ -96,6 +95,8 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
 
     private int mItemSpace;
 
+    private int mItemAlign;
+
     /**
      * 滚轮选择器单个Item宽高
      */
@@ -142,7 +143,7 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
     private boolean hasIndicator;
     private boolean hasCurtain;
     private boolean hasAtmospheric;
-    private boolean isPerspective = true;
+    private boolean isPerspective;
     private boolean isCyclic;
     private boolean isCurved;
     private boolean isDebug;
@@ -180,6 +181,9 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
         hasCurtain = a.getBoolean(R.styleable.WheelPicker_wheel_curtain, false);
         mCurtainColor = a.getColor(R.styleable.WheelPicker_wheel_curtain_color, 0x88FFFFFF);
         hasAtmospheric = a.getBoolean(R.styleable.WheelPicker_wheel_atmospheric, false);
+        isPerspective = a.getBoolean(R.styleable.WheelPicker_wheel_perspective, false);
+        isCurved = a.getBoolean(R.styleable.WheelPicker_wheel_curved, false);
+        mItemAlign = a.getInt(R.styleable.WheelPicker_wheel_item_align, ALIGN_CENTER);
         a.recycle();
 
         // 可见Item改变后更新与之相关的参数
@@ -252,9 +256,9 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
 
         int resultWidth = mTextMaxWidth;
         int resultHeight = mTextMaxHeight * mVisibleItemCount + mItemSpace * (mVisibleItemCount - 1);
-        if (isPerspective) {
-            resultHeight = (int) (2 * resultHeight / Math.PI);
-        }
+//        if (isPerspective) {
+//            resultHeight = (int) (2 * resultHeight / Math.PI);
+//        }
         resultWidth = measureSize(modeWidth, sizeWidth, resultWidth);
         resultHeight = measureSize(modeHeight, sizeHeight, resultHeight);
 
@@ -338,47 +342,52 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
             mPaint.setStyle(Paint.Style.FILL);
             int mDrawnItemCenterY = mDrawnCenterY + (drawnOffsetPos * mItemHeight) +
                     mScrollOffsetY % mItemHeight;
-            float degree = 0;
-            int space = 0;
+
+//            // Item绘制中心距离滚轮中心的距离
+//            int distanceToCenter = 0;
             if (isPerspective) {
-                float test = (mDrawnCenterY - Math.abs(mDrawnCenterY - mDrawnItemCenterY)) *
-                        1.0F / mDrawnCenterY;
+//                // 计算Item绘制中心距离滚轮中心的距离比率
+//                float ratio = (mDrawnCenterY - Math.abs(mDrawnCenterY - mDrawnItemCenterY)) *
+//                        1.0F / mDrawnCenterY;
+//
+//                // 计算单位
+//                int unit = 0;
+//                if (mDrawnItemCenterY > mDrawnCenterY)
+//                    unit = 1;
+//                else if (mDrawnItemCenterY < mDrawnCenterY)
+//                    unit = -1;
+//
+//                float degree = (-(1 - ratio) * 90 * unit);
+//                if (degree < -90) degree = -90;
+//                if (degree > 90) degree = 90;
+//                distanceToCenter = computeSpace((int) degree);
+//
+//                int transX = mWheelCenterX;
+//                switch (mItemAlign) {
+//                    case ALIGN_LEFT:
+//                        transX = 0;
+//                        break;
+//                    case ALIGN_RIGHT:
+//                        transX = getWidth();
+//                        break;
+//                }
+//                int transY = mWheelCenterY - distanceToCenter;
 
-                mCamera.save();
-                int unit = 1;
+//                mCamera.save();
+//                mCamera.rotateX(degree);
+//                mCamera.getMatrix(mMatrixRotate);
+//                mCamera.restore();
+//                mMatrixRotate.preTranslate(-transX, -transY);
+//                mMatrixRotate.postTranslate(transX, transY);
 
-                if (mDrawnItemCenterY > mDrawnCenterY) {
-                    unit = 1;
-                } else if (mDrawnItemCenterY < mDrawnCenterY) {
-                    unit = -1;
-                } else {
-                    unit = 0;
-                }
+//                mCamera.save();
+//                mCamera.translate(0, 0, computeDepth((int) degree));
+//                mCamera.getMatrix(mMatrixDepth);
+//                mCamera.restore();
+//                mMatrixDepth.preTranslate(-transX, -transY);
+//                mMatrixDepth.postTranslate(transX, transY);
 
-                degree = (-(1 - test) * 90 * unit);
-                if (degree < -90) degree = -90;
-                if (degree > 90) degree = 90;
-                space = computeSpace((int) degree);
-
-                int xxx = getHeight() / 2 - space;
-//                int xxx = getHeight() / 2 + (drawnOffsetPos * mItemHeight) +
-//                        mScrollOffsetY % mItemHeight;
-                if (drawnOffsetPos == 0)
-                    Log.i(TAG, "" + degree);
-                mCamera.rotateX(degree);
-                mCamera.getMatrix(mMatrixRotate);
-                mCamera.restore();
-                mMatrixRotate.preTranslate(-getWidth(), -xxx);
-                mMatrixRotate.postTranslate(getWidth(), xxx);
-
-                mCamera.save();
-                mCamera.translate(0, 0, (1 - test) * getHeight() / 2);
-                mCamera.getMatrix(mMatrixDepth);
-                mCamera.restore();
-                mMatrixDepth.preTranslate(-getWidth(), -xxx);
-                mMatrixDepth.postTranslate(getWidth(), xxx);
-
-                mMatrixRotate.postConcat(mMatrixDepth);
+//                mMatrixRotate.postConcat(mMatrixDepth);
             }
             if (hasAtmospheric) {
                 int alpha = (int) ((mDrawnCenterY - Math.abs(mDrawnCenterY - mDrawnItemCenterY)) *
@@ -386,11 +395,13 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
                 alpha = alpha < 0 ? 0 : alpha;
                 mPaint.setAlpha(alpha);
             }
+//             根据透视与否Item绘制Y方向中心坐标
+//            int drawnCenterY = isPerspective ? mDrawnCenterY - distanceToCenter : mDrawnItemCenterY;
+
             // 判断是否需要为当前Item绘制不同颜色
             if (mCurrentItemTextColor != -1) {
                 canvas.save();
-                if (isPerspective)
-                    canvas.concat(mMatrixRotate);
+//                if (isPerspective) canvas.concat(mMatrixDepth);
                 canvas.clipRect(mRectCurrentItem, Region.Op.DIFFERENCE);
                 canvas.drawText(data, mDrawnCenterX, mDrawnItemCenterY, mPaint);
                 canvas.restore();
@@ -402,21 +413,21 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
                 canvas.restore();
             } else {
                 canvas.save();
-                if (isPerspective)
-                    canvas.concat(mMatrixRotate);
-                canvas.drawText(data, mDrawnCenterX, mDrawnCenterY - space, mPaint);
+//                if (isPerspective) canvas.concat(mMatrixDepth);
+                canvas.drawText(data, mDrawnCenterX, mDrawnItemCenterY, mPaint);
                 canvas.restore();
             }
             if (isDebug) {
                 mPaint.setColor(0xFFEE3333);
-                int centerY = mWheelCenterY + (drawnOffsetPos * mItemHeight);
-                canvas.drawLine(0, centerY, getWidth(), centerY, mPaint);
+                int lineCenterY = mWheelCenterY + (drawnOffsetPos * mItemHeight);
+                canvas.drawLine(0, lineCenterY, getWidth(), lineCenterY, mPaint);
                 mPaint.setColor(0xFF3333EE);
                 mPaint.setStyle(Paint.Style.STROKE);
-                int top = centerY - mHalfItemHeight;
+                int top = lineCenterY - mHalfItemHeight;
                 canvas.drawRect(0, top, getWidth(), top + mItemHeight, mPaint);
             }
         }
+        // 是否需要绘制幕布
         if (hasCurtain) {
             mPaint.setColor(mCurtainColor);
             mPaint.setStyle(Paint.Style.FILL);
@@ -436,7 +447,11 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
     }
 
     private int computeSpace(int degree) {
-        return (int) (Math.sin(Math.toRadians(degree)) * (getHeight() / 2));
+        return (int) (Math.sin(Math.toRadians(degree)) * mWheelCenterY);
+    }
+
+    private int computeDepth(int degree) {
+        return (int) (mWheelCenterY - Math.cos(Math.toRadians(degree)) * mWheelCenterY);
     }
 
     @Override
@@ -604,16 +619,6 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
     public boolean hasSameWidth() {
         return hasSameWidth;
     }
-
-//    @Override
-//    public int getDirection() {
-//        return mDirection;
-//    }
-//
-//    @Override
-//    public void setDirection(int orientation) {
-//        // TODO Direction
-//    }
 
     @Override
     public void setOnWheelChangeListener(OnWheelChangeListener listener) {
@@ -791,13 +796,13 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
     }
 
     @Override
-    public void setItemAlign(int align) {
-
+    public int getItemAlign() {
+        return mItemAlign;
     }
 
     @Override
-    public int getItemAlign() {
-        return 0;
+    public void setItemAlign(int align) {
+        mItemAlign = align;
     }
 
     /**

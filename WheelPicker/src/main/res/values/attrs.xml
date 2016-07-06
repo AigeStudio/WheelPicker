@@ -9,10 +9,6 @@
         <attr name="wheel_same_width" format="boolean" />
         <attr name="wheel_maximum_width_text" format="string" />
         <attr name="wheel_maximum_width_text_position" format="integer" />
-        <attr name="wheel_direction" format="enum">
-            <enum name="vertical" value="0" />
-            <enum name="horizontal" value="1" />
-        </attr>
         <attr name="wheel_visible_item_count" format="integer" />
         <attr name="wheel_item_space" format="dimension" />
         <attr name="wheel_indicator" format="boolean" />
@@ -21,5 +17,12 @@
         <attr name="wheel_curtain" format="boolean" />
         <attr name="wheel_curtain_color" format="color" />
         <attr name="wheel_atmospheric" format="boolean" />
+        <attr name="wheel_perspective" format="boolean" />
+        <attr name="wheel_curved" format="boolean" />
+        <attr name="wheel_item_align" format="enum">
+            <enum name="center" value="0" />
+            <enum name="left" value="1" />
+            <enum name="right" value="2" />
+        </attr>
     </declare-styleable>
 </resources>
