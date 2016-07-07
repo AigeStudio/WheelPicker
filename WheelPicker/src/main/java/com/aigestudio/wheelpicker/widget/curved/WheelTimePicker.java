@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.Gravity;
@@ -182,6 +183,12 @@ public class WheelTimePicker extends LinearLayout implements IWheelPicker, IDigi
     public void setTextSize(int size) {
         pickerHour.setTextSize(size);
         pickerMinute.setTextSize(size);
+    }
+
+    @Override
+    public void setTypeface(Typeface typeface) {
+        pickerHour.setTypeface(typeface);
+        pickerMinute.setTypeface(typeface);
     }
 
     @Override

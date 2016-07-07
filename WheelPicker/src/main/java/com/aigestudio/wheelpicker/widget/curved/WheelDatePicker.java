@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.Gravity;
@@ -206,6 +207,13 @@ public class WheelDatePicker extends LinearLayout implements IWheelPicker {
         pickerYear.setTextSize(size);
         pickerMonth.setTextSize(size);
         pickerDay.setTextSize(size);
+    }
+
+    @Override
+    public void setTypeface(Typeface typeface) {
+        pickerYear.setTypeface(typeface);
+        pickerMonth.setTypeface(typeface);
+        pickerDay.setTypeface(typeface);
     }
 
     @Override
