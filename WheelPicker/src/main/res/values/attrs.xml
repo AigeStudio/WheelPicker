@@ -17,7 +17,6 @@
         <attr name="wheel_curtain" format="boolean" />
         <attr name="wheel_curtain_color" format="color" />
         <attr name="wheel_atmospheric" format="boolean" />
-        <attr name="wheel_perspective" format="boolean" />
         <attr name="wheel_curved" format="boolean" />
         <attr name="wheel_item_align" format="enum">
             <enum name="center" value="0" />

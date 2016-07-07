@@ -143,7 +143,6 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
     private boolean hasIndicator;
     private boolean hasCurtain;
     private boolean hasAtmospheric;
-    private boolean isPerspective;
     private boolean isCyclic;
     private boolean isCurved;
     private boolean isDebug;
@@ -181,7 +180,6 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
         hasCurtain = a.getBoolean(R.styleable.WheelPicker_wheel_curtain, false);
         mCurtainColor = a.getColor(R.styleable.WheelPicker_wheel_curtain_color, 0x88FFFFFF);
         hasAtmospheric = a.getBoolean(R.styleable.WheelPicker_wheel_atmospheric, false);
-        isPerspective = a.getBoolean(R.styleable.WheelPicker_wheel_perspective, false);
         isCurved = a.getBoolean(R.styleable.WheelPicker_wheel_curved, false);
         mItemAlign = a.getInt(R.styleable.WheelPicker_wheel_item_align, ALIGN_CENTER);
         a.recycle();
@@ -345,7 +343,7 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
 
 //            // Item绘制中心距离滚轮中心的距离
 //            int distanceToCenter = 0;
-            if (isPerspective) {
+            if (isCurved) {
 //                // 计算Item绘制中心距离滚轮中心的距离比率
 //                float ratio = (mDrawnCenterY - Math.abs(mDrawnCenterY - mDrawnItemCenterY)) *
 //                        1.0F / mDrawnCenterY;
@@ -772,17 +770,6 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
     @Override
     public boolean hasAtmospheric() {
         return hasAtmospheric;
-    }
-
-    @Override
-    public boolean isPerspective() {
-        return isPerspective;
-    }
-
-    @Override
-    public void setPerspective(boolean isPerspective) {
-        this.isPerspective = isPerspective;
-        invalidate();
     }
 
     @Override

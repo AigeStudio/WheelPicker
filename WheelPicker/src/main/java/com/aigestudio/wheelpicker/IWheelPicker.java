@@ -257,21 +257,6 @@ interface IWheelPicker {
     boolean hasAtmospheric();
 
     /**
-     * 是否为透视状态
-     *
-     * @return ...
-     */
-    boolean isPerspective();
-
-    /**
-     * 设置滚轮是否为透视状态
-     * 处于透视状态的滚轮将呈现一种中间大两端小并且两端向屏幕内弯曲的效果
-     *
-     * @param isPerspective 是否为透视状态
-     */
-    void setPerspective(boolean isPerspective);
-
-    /**
      * 是否卷曲
      *
      * @return ...
