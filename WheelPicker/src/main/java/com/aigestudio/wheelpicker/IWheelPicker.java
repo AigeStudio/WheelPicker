@@ -1,5 +1,7 @@
 package com.aigestudio.wheelpicker;
 
+import android.graphics.Typeface;
+
 import java.util.List;
 
 /**
@@ -264,10 +266,16 @@ interface IWheelPicker {
     boolean isCurved();
 
     /**
-     *
      * @param isCurved
      */
     void setCurved(boolean isCurved);
+
+    /**
+     * 获取Item对齐方式
+     *
+     * @return Item对齐方式
+     */
+    int getItemAlign();
 
     /**
      * 设置Item在水平或垂直滚动器上的对齐方式
@@ -292,9 +300,19 @@ interface IWheelPicker {
     void setItemAlign(int align);
 
     /**
-     * 获取Item对齐方式
+     * 获取数据项文本字体对象
+     * 默认情况下数据项都会有一个默认字体
+     * 该方法有可能会返回空
      *
-     * @return Item对齐方式
+     * @return 文本字体对象
      */
-    int getItemAlign();
+    Typeface getTypeface();
+
+    /**
+     * 设置数据项文本字体对象
+     * 数据项文本字体的设置可能会导致滚轮大小的改变
+     *
+     * @param tf 字体对象
+     */
+    void setTypeface(Typeface tf);
 }

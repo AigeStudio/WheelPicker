@@ -8,6 +8,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Region;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -790,6 +791,22 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
     @Override
     public void setItemAlign(int align) {
         mItemAlign = align;
+    }
+
+    @Override
+    public Typeface getTypeface() {
+        if (null != mPaint)
+            return mPaint.getTypeface();
+        return null;
+    }
+
+    @Override
+    public void setTypeface(Typeface tf) {
+        if (null != mPaint)
+            mPaint.setTypeface(tf);
+        computeTextSize();
+        requestLayout();
+        invalidate();
     }
 
     /**

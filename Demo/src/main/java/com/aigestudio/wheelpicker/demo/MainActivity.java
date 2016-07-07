@@ -1,6 +1,7 @@
 package com.aigestudio.wheelpicker.demo;
 
 import android.app.Activity;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 
@@ -26,9 +27,12 @@ public class MainActivity extends Activity {
         final WheelPicker picker = (WheelPicker) findViewById(R.id.main_wheel);
         picker.setDebug(true);
 
+//        final Typeface tf = Typeface.createFromAsset(getAssets(), "yyg.ttf");
+
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+//                picker.setTypeface(tf);
 //                picker.setData(data);
 //                picker.setData(Arrays.asList(getResources().getStringArray(R.array.WheelArrayWeek)));
 //                picker.setItemTextSize(64);
