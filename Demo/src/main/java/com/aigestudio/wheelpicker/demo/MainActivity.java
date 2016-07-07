@@ -27,26 +27,26 @@ public class MainActivity extends Activity {
         final WheelPicker picker = (WheelPicker) findViewById(R.id.main_wheel);
         picker.setDebug(true);
 
-//        final Typeface tf = Typeface.createFromAsset(getAssets(), "yyg.ttf");
+        final Typeface tf = Typeface.createFromAsset(getAssets(), "yyg.ttf");
 
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-//                picker.setTypeface(tf);
-//                picker.setData(data);
-//                picker.setData(Arrays.asList(getResources().getStringArray(R.array.WheelArrayWeek)));
-//                picker.setItemTextSize(64);
-//                picker.setIndicatorSize(128);
-//                picker.setIndicatorColor(0xFF3333EE);
-//                picker.setIndicator(true);
-//                picker.setCurtain(true);
-//                picker.setCyclic(true);
-//                picker.setCurrentItem(3);
-//                picker.setIndicator(true);
-//                picker.setCurtainColor(0x88EE3333);
-//                picker.setAtmospheric(true);
-//                picker.setCurrentItemTextColor(0xFF3333EE);
-//                picker.setPerspective(true);
+                picker.setItemAlign(WheelPicker.ALIGN_RIGHT);
+                picker.setCurved(true);
+                picker.setTypeface(tf);
+                picker.setData(data);
+                picker.setData(Arrays.asList(getResources().getStringArray(R.array.WheelArrayWeek)));
+                picker.setItemTextSize(64);
+                picker.setIndicatorSize(4);
+                picker.setIndicatorColor(0xFF3333EE);
+                picker.setIndicator(true);
+                picker.setCurtain(true);
+                picker.setCyclic(true);
+                picker.setCurrentItem(3);
+                picker.setCurtainColor(0x88EE3333);
+                picker.setAtmospheric(true);
+                picker.setCurrentItemTextColor(0xFF3333EE);
             }
         }, 3000);
     }

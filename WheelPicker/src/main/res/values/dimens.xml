@@ -2,5 +2,5 @@
 <resources>
     <dimen name="WheelItemTextSize">32sp</dimen>
     <dimen name="WheelItemSpace">16dp</dimen>
-    <dimen name="WheelIndicatorSize">4dp</dimen>
+    <dimen name="WheelIndicatorSize">2dp</dimen>
 </resources>
