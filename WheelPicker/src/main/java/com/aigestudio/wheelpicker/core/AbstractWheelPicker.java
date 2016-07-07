@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Handler;
 import android.text.TextPaint;
@@ -382,6 +383,13 @@ public abstract class AbstractWheelPicker extends View implements IWheelPicker {
     public void setTextSize(int size) {
         textSize = size;
         mTextPaint.setTextSize(size);
+        computeWheelSizes();
+        requestLayout();
+    }
+
+    @Override
+    public void setTypeface(Typeface typeface) {
+        mTextPaint.setTypeface(typeface);
         computeWheelSizes();
         requestLayout();
     }

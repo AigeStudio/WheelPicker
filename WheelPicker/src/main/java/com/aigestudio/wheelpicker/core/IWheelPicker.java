@@ -1,5 +1,7 @@
 package com.aigestudio.wheelpicker.core;
 
+import android.graphics.Typeface;
+
 import java.util.List;
 
 /**
@@ -75,6 +77,15 @@ public interface IWheelPicker {
      *             Text size
      */
     void setTextSize(int size);
+
+    /**
+     * 一套字样
+     * Set typeface
+     *
+     * @param typeface 字体
+     *             Typeface
+     */
+    void setTypeface(Typeface typeface);
 
     /**
      * 清除缓存
