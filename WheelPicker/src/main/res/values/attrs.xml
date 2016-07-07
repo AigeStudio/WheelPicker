@@ -11,6 +11,7 @@
         <attr name="wheel_maximum_width_text_position" format="integer" />
         <attr name="wheel_visible_item_count" format="integer" />
         <attr name="wheel_item_space" format="dimension" />
+        <attr name="wheel_cyclic" format="boolean" />
         <attr name="wheel_indicator" format="boolean" />
         <attr name="wheel_indicator_color" format="color" />
         <attr name="wheel_indicator_size" format="dimension" />
