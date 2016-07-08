@@ -34,6 +34,7 @@ import java.util.List;
 public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable {
     /**
      * 滚动状态标识值
+     * 用于标识滚动状态，该参数将会被用于{@link OnWheelChangeListener#onWheelScrollStateChanged(int)}
      */
     public static final int SCROLL_STATE_IDLE = 0, SCROLL_STATE_DRAGGING = 1,
             SCROLL_STATE_SCROLLING = 2;
@@ -375,6 +376,8 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
 
     @Override
     protected void onDraw(Canvas canvas) {
+        if (null != mOnWheelChangeListener)
+            mOnWheelChangeListener.onWheelScrolled(mScrollOffsetY);
         int drawnDataStartPos = -mScrollOffsetY / mItemHeight - mHalfDrawnItemCount;
         for (int drawnDataPos = drawnDataStartPos + mCurrentItemPosition,
              drawnOffsetPos = -mHalfDrawnItemCount;
@@ -536,6 +539,8 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
                 break;
             case MotionEvent.ACTION_MOVE:
                 mTracker.addMovement(event);
+                if (null != mOnWheelChangeListener)
+                    mOnWheelChangeListener.onWheelScrollStateChanged(SCROLL_STATE_DRAGGING);
 
                 // 滚动内容
                 mScrollOffsetY += ((event.getY() - mLastPointY));
@@ -599,10 +604,14 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
                 Log.i(TAG, position + ":" + mData.get(position) + ":" + mScrollOffsetY);
             if (null != mOnItemSelectedListener)
                 mOnItemSelectedListener.onItemSelected(this, mData.get(position), position);
-            if (null != mOnWheelChangeListener)
+            if (null != mOnWheelChangeListener) {
                 mOnWheelChangeListener.onWheelSelected(position);
+                mOnWheelChangeListener.onWheelScrollStateChanged(SCROLL_STATE_IDLE);
+            }
         }
         if (mScroller.computeScrollOffset()) {
+            if (null != mOnWheelChangeListener)
+                mOnWheelChangeListener.onWheelScrollStateChanged(SCROLL_STATE_SCROLLING);
             mScrollOffsetY = mScroller.getCurrY();
             postInvalidate();
             mHandler.postDelayed(this, 16);
@@ -644,12 +653,12 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
     }
 
     @Override
-    public int getCurrentItem() {
+    public int getCurrentItemPosition() {
         return mCurrentItemPosition;
     }
 
     @Override
-    public void setCurrentItem(int position) {
+    public void setCurrentItemPosition(int position) {
         if (!isPosInRang(position))
             throw new ArrayIndexOutOfBoundsException("Current item position must in [0, " +
                     mData.size() + "), but current is " + position);
@@ -889,13 +898,12 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
      */
     public interface OnItemSelectedListener {
         /**
-         * 当滚轮选择器Item被选中时
-         * 滚动选择器滚动停止后会回调该方法并将当前在滚轮中心显示的数据和数据在数据列表中对应的位置返回
-         * 该方法在滚动初始化设置数据后也会调用
+         * 当滚轮选择器数据项被选中时回调该方法
+         * 滚动选择器滚动停止后会回调该方法并将当前选中的数据和数据在数据列表中对应的位置返回
          *
          * @param picker   滚轮选择器
-         * @param data     当前位于滚轮中心显示的数据
-         * @param position 当前位于滚轮中心显示的数据在数据列表中的位置
+         * @param data     当前选中的数据
+         * @param position 当前选中的数据在数据列表中的位置
          */
         void onItemSelected(WheelPicker picker, Object data, int position);
     }
@@ -903,13 +911,21 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
     /**
      * 滚轮选择器滚动时监听接口
      *
-     * @author AigeStudio
+     * @author AigeStudio 2016-06-17
      *         新项目结构
+     *         <p>
+     *         New project structure
      * @since 2016-06-17
      */
     public interface OnWheelChangeListener {
         /**
          * 当滚轮选择器滚动时回调该方法
+         * 滚轮选择器滚动时会将当前滚动位置与滚轮初始位置之间的偏移距离返回，该偏移距离有正负之分，正值表示
+         * 滚轮正在往上滚动，负值则表示滚轮正在往下滚动
+         * <p>
+         * Invoke when WheelPicker scroll stopped
+         * WheelPicker will return a distance offset which between current scroll position and
+         * initial position, this offset is a positive or a negative,
          *
          * @param offset 当前滚轮滚动距离上一次滚轮滚动停止后偏移的距离
          */
@@ -917,18 +933,41 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
 
         /**
          * 当滚轮选择器停止后回调该方法
+         * 滚轮选择器停止后会回调该方法并将当前选中的数据项在数据列表中的位置返回
+         * <p>
+         * Invoke when WheelPicker scroll stopped
+         * This method will be called when WheelPicker stop and return current selected item data's
+         * position in list
          *
-         * @param position 当前位于滚轮中心的数据在数据列表中的位置
+         * @param position 当前选中的数据项在数据列表中的位置
+         *                 <p>
+         *                 Current selected item data's position in list
          */
         void onWheelSelected(int position);
 
         /**
          * 当滚轮选择器滚动状态改变时回调该方法
+         * 滚动选择器的状态总是会在静止、拖动和滑动三者之间切换，当状态改变时回调该方法
+         * <p>
+         * Invoke when WheelPicker's scroll state changed
+         * The state of WheelPicker always between idle, dragging, and scrolling, this method will
+         * be called when they switch
          *
          * @param state 滚轮选择器滚动状态，其值仅可能为下列之一
          *              {@link WheelPicker#SCROLL_STATE_IDLE}
+         *              表示滚动选择器处于静止状态
          *              {@link WheelPicker#SCROLL_STATE_DRAGGING}
+         *              表示滚动选择器处于拖动状态
          *              {@link WheelPicker#SCROLL_STATE_SCROLLING}
+         *              表示滚动选择器处于滑动状态
+         *              <p>
+         *              State of WheelPicker, only one of the following
+         *              {@link WheelPicker#SCROLL_STATE_IDLE}
+         *              Express WheelPicker in state of idle
+         *              {@link WheelPicker#SCROLL_STATE_DRAGGING}
+         *              Express WheelPicker in state of dragging
+         *              {@link WheelPicker#SCROLL_STATE_SCROLLING}
+         *              Express WheelPicker in state of scrolling
          */
         void onWheelScrollStateChanged(int state);
     }

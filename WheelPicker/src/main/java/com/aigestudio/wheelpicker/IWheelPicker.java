@@ -37,14 +37,14 @@ interface IWheelPicker {
      *
      * @return 当前被选中的Item所显示的数据在数据源中的位置
      */
-    int getCurrentItem();
+    int getCurrentItemPosition();
 
     /**
      * 设置当前被选中的Item所显示的数据在数据源中的位置
      *
      * @param position 当前被选中的Item所显示的数据在数据源中的位置
      */
-    void setCurrentItem(int position);
+    void setCurrentItemPosition(int position);
 
     /**
      * 获取数据列表
@@ -78,22 +78,6 @@ interface IWheelPicker {
      * @return ...
      */
     boolean hasSameWidth();
-
-//    /**
-//     * 获取滚轮选择器滚动方向
-//     *
-//     * @return ...
-//     */
-//    int getDirection();
-//
-//    /**
-//     * 设置滚轮选择器滚动方向
-//     *
-//     * @param orientation 滚动方向标识值，仅能是下列值之一：
-//     *                    {@link WheelPicker#DIR_VER}
-//     *                    {@link WheelPicker#DIR_HOR}
-//     */
-//    void setDirection(int orientation);
 
     /**
      * 设置滚轮滚动监听器
