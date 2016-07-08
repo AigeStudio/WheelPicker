@@ -49,7 +49,7 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
     private Paint mPaint;
     private Scroller mScroller;
     private VelocityTracker mTracker;
-    private OnItemSelectListener mOnItemSelectListener;
+    private OnItemSelectedListener mOnItemSelectedListener;
     private OnWheelChangeListener mOnWheelChangeListener;
     private Rect mRectDrawn;
     private Rect mRectIndicatorHead, mRectIndicatorFoot;
@@ -597,8 +597,8 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
             position = position < 0 ? position + mData.size() : position;
             if (isDebug)
                 Log.i(TAG, position + ":" + mData.get(position) + ":" + mScrollOffsetY);
-            if (null != mOnItemSelectListener)
-                mOnItemSelectListener.onItemSelected(this, mData.get(position), position);
+            if (null != mOnItemSelectedListener)
+                mOnItemSelectedListener.onItemSelected(this, mData.get(position), position);
             if (null != mOnWheelChangeListener)
                 mOnWheelChangeListener.onWheelSelected(position);
         }
@@ -639,8 +639,8 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
     }
 
     @Override
-    public void setOnItemSelectListener(OnItemSelectListener listener) {
-        mOnItemSelectListener = listener;
+    public void setOnItemSelectedListener(OnItemSelectedListener listener) {
+        mOnItemSelectedListener = listener;
     }
 
     @Override
@@ -887,7 +887,7 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
      *         新项目结构
      * @version 1.1.0
      */
-    public interface OnItemSelectListener {
+    public interface OnItemSelectedListener {
         /**
          * 当滚轮选择器Item被选中时
          * 滚动选择器滚动停止后会回调该方法并将当前在滚轮中心显示的数据和数据在数据列表中对应的位置返回

@@ -4,9 +4,9 @@
     <application
         android:icon="@mipmap/ic_launcher"
         android:label="WheelPickerDemo"
-        android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen">
+        android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen">
         <activity
-            android:name=".MainActivity"
+            android:name=".PreviewActivity"
             android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

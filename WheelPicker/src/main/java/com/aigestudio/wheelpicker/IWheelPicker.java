@@ -28,9 +28,9 @@ interface IWheelPicker {
     /**
      * 设置滚轮Item选中监听器
      *
-     * @param listener 滚轮Item选中监听器{@link WheelPicker.OnItemSelectListener}
+     * @param listener 滚轮Item选中监听器{@link WheelPicker.OnItemSelectedListener}
      */
-    void setOnItemSelectListener(WheelPicker.OnItemSelectListener listener);
+    void setOnItemSelectedListener(WheelPicker.OnItemSelectedListener listener);
 
     /**
      * 获取当前被选中的Item所显示的数据在数据源中的位置
