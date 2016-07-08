@@ -41,7 +41,7 @@ compile project(':WheelPicker')
 ```
 
 # Usage
-[WIKI](https://github.com/AigeStudio/WheelPicker/wiki) | [帮助文档](https://github.com/AigeStudio/WheelPicker/wiki)
+[WIKI](https://github.com/AigeStudio/WheelPicker/wiki/WIKI) | [帮助文档](https://github.com/AigeStudio/WheelPicker/wiki/%E5%B8%AE%E5%8A%A9%E6%96%87%E6%A1%A3)
 
 # Versions
 ### 1.0.0 beta
