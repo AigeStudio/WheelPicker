@@ -6,6 +6,7 @@ import java.util.List;
 
 /**
  * 滚轮选择器方法接口
+ * <p/>
  * Interface of WheelPicker
  *
  * @author AigeStudio 2015-12-03
@@ -13,16 +14,41 @@ import java.util.List;
  * @author AigeStudio 2015-12-12
  * @author AigeStudio 2016-06-17
  *         更新项目结构
+ *         <p/>
+ *         New project structure
  * @version 1.1.0
  */
 interface IWheelPicker {
 
+    /**
+     * 获取滚轮选择器可见数据项的数量
+     *
+     * @return 滚轮选择器可见数据项的数量
+     */
     int getVisibleItemCount();
 
+    /**
+     * 设置滚轮选择器可见数据项数量
+     * 滚轮选择器的可见数据项数量必须为大于1的整数
+     * 这里需要注意的是，滚轮选择器会始终显示奇数个数据项，即便你为其设置偶数个数据项，最终也会被转换为奇数
+     *
+     * @param count 滚轮选择器可见数据项数量
+     */
     void setVisibleItemCount(int count);
 
+    /**
+     * 滚轮选择器数据项是否为循环状态
+     *
+     * @return 是否为循环状态
+     */
     boolean isCyclic();
 
+    /**
+     * 设置滚轮选择器数据项是否为循环状态
+     * 开启数据循环会使滚轮选择器上下滚动不再有边界，会呈现数据首尾相接无限循环的效果
+     *
+     * @param isCyclic 是否为循环状态
+     */
     void setCyclic(boolean isCyclic);
 
     /**
@@ -33,23 +59,45 @@ interface IWheelPicker {
     void setOnItemSelectedListener(WheelPicker.OnItemSelectedListener listener);
 
     /**
-     * 获取当前被选中的Item所显示的数据在数据源中的位置
+     * 获取当前被选中的数据项所显示的数据在数据源中的位置
+     * 需要注意的是，当滚轮选择器滚动时并不会改变该方法的返回值，该方法会始终返回
+     * {@link #setSelectedItemPosition(int)}所设置的值，当且仅当调用
+     * {@link #setSelectedItemPosition(int)}设置新值后，该方法所返回的值才会改变
+     * 如果你只是想获取滚轮静止时当前被选中的数据项所显示的数据在数据源中的位置，你可以通过
+     * {@link com.aigestudio.wheelpicker.WheelPicker.OnItemSelectedListener}回调监听或调用
+     * {@link #getCurrentItemPosition()}
      *
-     * @return 当前被选中的Item所显示的数据在数据源中的位置
+     * @return 当前被选中的数据项所显示的数据在数据源中的位置
+     */
+    int getSelectedItemPosition();
+
+    /**
+     * 设置当前被选中的数据项所显示的数据在数据源中的位置
+     * 调用该方法会导致滚动选择器的位置被重新初始化，什么意思呢？假如你滑动选择到第五个数据项的时候调用该方法重新将
+     * 当前被选中的数据项所显示的数据在数据源中的位置设置为第三个，那么滚轮选择器会清除掉上一次滚动的相关数据参数，
+     * 并将重置一系列的数据，重新将第三个数据作为滚轮选择器的起点，这个行为很可能会影响你之前所根据这些参数改变的一
+     * 些属性，比如{@link com.aigestudio.wheelpicker.WheelPicker.OnWheelChangeListener}和
+     * {@link com.aigestudio.wheelpicker.WheelPicker.OnItemSelectedListener}监听器中方法参数的值，因此你
+     * 总该在调用该方法后考虑到相关影响
+     * 你总该为该方法传入一个大于等于0小于数据源{@link #getData()}长度的值，否则会抛出异常
+     * 默认情况下，当前被选中的数据项所显示的数据在数据源中的位置为0
+     *
+     * @param position 当前被选中的数据项所显示的数据在数据源中的位置
+     */
+    void setSelectedItemPosition(int position);
+
+    /**
+     * 获取当前被选中的数据项所显示的数据在数据源中的位置
+     * 与{@link #getSelectedItemPosition()}不同的是，该方法所返回的结果会因为滚轮选择器的改变而改变
+     *
+     * @return 当前被选中的数据项所显示的数据在数据源中的位置
      */
     int getCurrentItemPosition();
 
     /**
-     * 设置当前被选中的Item所显示的数据在数据源中的位置
-     *
-     * @param position 当前被选中的Item所显示的数据在数据源中的位置
-     */
-    void setCurrentItemPosition(int position);
-
-    /**
      * 获取数据列表
      *
-     * @return ...
+     * @return 数据列表
      */
     List getData();
 
@@ -63,26 +111,32 @@ interface IWheelPicker {
     void setData(List data);
 
     /**
-     * 设置Item是否有相同的大小
-     * 设置Item有相同大小可以大幅提升滚动选择器运行效率
-     * Item有相同大小分为两种情况，当滚轮为垂直时相同Item大小表示所有的Item宽度相同，当滚轮为水平时相同Item大小表示所有的Item高度相同
-     * 实际情况下为水平滚动选择器设置该值并无意义
+     * 设置数据项是否有相同的宽度
+     * 滚轮选择器在确定尺寸大小时会通过遍历数据源来计算每一条数据文本的宽度以找到最宽的文本作为滚轮选择器的最终宽度，
+     * 当数据源的数据非常多时，这个过程可能会消耗大量的时间导致效率降低，而且在大部分数据量多情况下，数据文本大都有
+     * 相同的宽度，这种情况下调用该方法告诉滚轮选择器数据宽度相同则可以免去上述计算时间，提升效率
+     * 有些时候，你所加载的数据源确实是每条数据文本的宽度都不同，但是你知道最宽的数据文本在数据源中的位置，这时你可
+     * 以调用{@link #setMaximumWidthTextPosition(int)}方法告诉滚轮选择器最宽的这条数据文本在数据源的什么位置，
+     * 滚轮选择器则会根据该位置找到该条数据文本并将其宽度作为滚轮选择器的宽度。如果你不知道位置，但是知道最宽的数据
+     * 文本，那么你也可以直接通过调用{@link #setMaximumWidthText(String)}告诉滚轮选择器最宽的文本是什么，滚轮
+     * 选择器会根据这条文本计算宽度并将其作为滚轮选择器的宽度
      *
-     * @param hasSameSize ...
+     * @param hasSameSize 是否有相同的宽度
      */
     void setSameWidth(boolean hasSameSize);
 
     /**
-     * Item是否有相同大小
+     * 数据项是否有相同宽度
      *
-     * @return ...
+     * @return 是否有相同宽度
      */
     boolean hasSameWidth();
 
     /**
-     * 设置滚轮滚动监听器
+     * 设置滚轮滚动状态改变监听器
      *
-     * @param listener ...
+     * @param listener 滚轮滚动状态改变监听器
+     * @see com.aigestudio.wheelpicker.WheelPicker.OnWheelChangeListener
      */
     void setOnWheelChangeListener(WheelPicker.OnWheelChangeListener listener);
 
@@ -97,6 +151,7 @@ interface IWheelPicker {
      * 设置最宽的文本
      *
      * @param text 最宽的文本
+     * @see #setSameWidth(boolean)
      */
     void setMaximumWidthText(String text);
 
@@ -111,175 +166,187 @@ interface IWheelPicker {
      * 设置最宽的文本在数据源中的位置
      *
      * @param position 最宽的文本在数据源中的位置
+     * @see #setSameWidth(boolean)
      */
     void setMaximumWidthTextPosition(int position);
 
     /**
-     * 获取当前Item文本颜色
+     * 获取当前选中的数据项文本颜色
      *
-     * @return 当前Item文本颜色
+     * @return 当前选中的数据项文本颜色
      */
-    int getCurrentItemTextColor();
+    int getSelectedItemTextColor();
 
     /**
-     * 设置当前Item文本颜色
+     * 设置当前选中的数据项文本颜色
      *
-     * @param color 当前Item文本颜色
+     * @param color 当前选中的数据项文本颜色，16位颜色值
      */
-    void setCurrentItemTextColor(int color);
+    void setSelectedItemTextColor(int color);
 
+    /**
+     * 获取数据项文本颜色
+     *
+     * @return 数据项文本颜色
+     */
     int getItemTextColor();
 
+    /**
+     * 设置数据项文本颜色
+     *
+     * @param color 数据项文本颜色，16位颜色值
+     */
     void setItemTextColor(int color);
 
+    /**
+     * 获取数据项文本尺寸大小
+     *
+     * @return 数据项文本尺寸大小
+     */
     int getItemTextSize();
 
+    /**
+     * 设置数据项文本尺寸大小
+     *
+     * @param size 设置数据项文本尺寸大小，单位：px
+     */
     void setItemTextSize(int size);
 
     /**
-     * 获取滚轮Item间距
+     * 获取滚轮选择器数据项之间间距
      *
-     * @return ...
+     * @return 滚轮选择器数据项之间间距
      */
     int getItemSpace();
 
     /**
-     * 设置滚轮Item间距
+     * 设置滚轮选择器数据项之间间距
      *
-     * @param space Item间距dp值
+     * @param space 滚轮选择器数据项之间间距，单位：px
      */
     void setItemSpace(int space);
 
     /**
-     * 设置滚轮是否显示指示器
-     * 如果设置滚轮显示指示器，那么将会在滚轮的当前项上下(垂直)/左右(水平)显示两根分割线
-     * 需要注意的是指示器的尺寸并不计入滚轮选择器的尺寸，
+     * 设置滚轮选择器是否显示指示器
+     * 如果设置滚轮选择器显示指示器，那么将会在滚轮选择器的当前选中数据项上下显示两根分割线
+     * 需要注意的是指示器的尺寸并不参与滚轮选择器的尺寸计算，其会绘制在滚轮选择器的上方
      *
      * @param hasIndicator 是否有指示器
      */
     void setIndicator(boolean hasIndicator);
 
     /**
-     * 是否有指示器
+     * 滚轮选择器是否有指示器
      *
-     * @return ...
+     * @return 滚轮选择器是否有指示器
      */
     boolean hasIndicator();
 
     /**
-     * 获取指示器尺寸
-     * 当滚轮滚动方向为垂直时指示器尺寸将返回指示器高度
-     * 当滚轮滚动方向为水平时指示器尺寸将返回指示器宽度
+     * 获取滚轮选择器指示器尺寸
      *
-     * @return 根据当前滚轮滚动方向返回的指示器尺寸
+     * @return 滚轮选择器指示器尺寸
      */
     int getIndicatorSize();
 
     /**
-     * 设置指示器尺寸
-     * 设置指示器分割线的高度(垂直)/宽度(水平)
+     * 设置滚轮选择器指示器尺寸
      *
-     * @param size 指示器尺寸值，单位dp
+     * @param size 滚轮选择器指示器尺寸，单位：px
      */
     void setIndicatorSize(int size);
 
     /**
-     * 获取指示器颜色
+     * 获取滚轮选择器指示器颜色
      *
-     * @return 16位颜色值
+     * @return 滚轮选择器指示器颜色，16位颜色值
      */
     int getIndicatorColor();
 
     /**
-     * 设置指示器颜色
+     * 设置滚轮选择器指示器颜色
      *
-     * @param color 16位指示器颜色
+     * @param color 滚轮选择器指示器颜色，16位颜色值
      */
     void setIndicatorColor(int color);
 
     /**
-     * 设置滚轮是否显示幕布
-     * 设置滚轮显示幕布的话将会在当前Item项上方绘制一个与当前Item项大小一致的矩形区域并填充指定颜色
+     * 设置滚轮选择器是否显示幕布
+     * 设置滚轮选择器显示幕布的话将会在当前选中的项上方绘制一个与当前数据项大小一致的矩形区域并填充指定颜色
      *
-     * @param hasCurtain 是否显示幕布
+     * @param hasCurtain 滚轮选择器是否显示幕布
      */
     void setCurtain(boolean hasCurtain);
 
     /**
-     * 是否显示幕布
+     * 滚轮选择器是否显示幕布
      *
-     * @return ...
+     * @return 滚轮选择器是否显示幕布
      */
     boolean hasCurtain();
 
     /**
-     * 获取幕布颜色
+     * 获取滚轮选择器幕布颜色
      *
-     * @return 16位颜色值
+     * @return 滚轮选择器幕布颜色，16位颜色值
      */
     int getCurtainColor();
 
     /**
-     * 设置滚轮幕布颜色
+     * 设置滚轮选择器幕布颜色
      *
-     * @param color 16位颜色值
+     * @param color 滚轮选择器幕布颜色，16位颜色值
      */
     void setCurtainColor(int color);
 
     /**
-     * 设置滚轮是否有空气感
-     * 开启空气感的滚轮将呈现中间不透明逐渐向两端透明过度的渐变效果
-     * 注意如果调用{@link #setCurrentItemTextColor(int)}为当前Item设置颜色，那么当前Item的空气感效果将会被设定的颜色值所覆盖
+     * 设置滚轮选择器是否有空气感
+     * 开启空气感的滚轮选择器将呈现中间不透明逐渐向两端透明过度的渐变效果
      *
-     * @param hasAtmospheric 是否有空气感
+     * @param hasAtmospheric 滚轮选择器是否有空气感
      */
     void setAtmospheric(boolean hasAtmospheric);
 
     /**
-     * 是否有空气感
+     * 滚轮选择器是否有空气感
      *
-     * @return ...
+     * @return 滚轮选择器是否有空气感
      */
     boolean hasAtmospheric();
 
     /**
-     * 是否卷曲
+     * 滚轮选择器是否开启卷曲效果
      *
-     * @return ...
+     * @return 滚轮选择器是否开启卷曲效果
      */
     boolean isCurved();
 
     /**
-     * @param isCurved
+     * 设置滚轮选择器是否开启卷曲效果
+     * 开启滚轮选择器的滚轮效果会呈现一种滚轮两端向屏幕内弯曲的效果
+     * 滚轮选择器的卷曲效果依赖于严格的几何模型，一些与尺寸相关的设置在该效果下可能会变得不再有效，例如在卷曲效果下
+     * 每一条数据项的尺寸大小因为透视关系看起来都不再一样，数据项之间的间隔也会因为卷曲的关系有微妙的视觉差距
+     *
+     * @param isCurved 滚轮选择器是否开启卷曲效果
      */
     void setCurved(boolean isCurved);
 
     /**
-     * 获取Item对齐方式
+     * 获取滚轮选择器数据项的对齐方式
      *
-     * @return Item对齐方式
+     * @return 滚轮选择器数据项的对齐方式
      */
     int getItemAlign();
 
     /**
-     * 设置Item在水平或垂直滚动器上的对齐方式
-     * 滚动选择器默认的Item对齐方式为居中对齐{@link WheelPicker#ALIGN_CENTER}
-     * 居中对齐{@link WheelPicker#ALIGN_CENTER}适用于水平和垂直两个方向的滚轮选择器上
-     * 靠左对齐{@link WheelPicker#ALIGN_LEFT}和靠右{@link WheelPicker#ALIGN_RIGHT}对齐只能用于垂直方向的滚轮选择器上
-     * 置顶对齐{@link WheelPicker#ALIGN_TOP}和置底对齐{@link WheelPicker#ALIGN_BOTTOM}只能用于水平方向的滚轮选择器上
-     * 当且仅当满足以下条件之一时Item的对齐方式才会生效：
-     * 1.如果{@link #isPerspective()}返回true
-     * 2.如果{@link #isPerspective()}返回false并且{@link #hasSameWidth()}返回false并且当前滚轮选择器为垂直滚动状态
+     * 设置滚轮选择器数据项的对齐方式
+     * 默认对齐方式为居中对齐{@link WheelPicker#ALIGN_CENTER}
      *
      * @param align 对齐方式标识值
-     *              当滚动选择器为垂直滚动时该值仅能是下列值之一：
+     *              该值仅能是下列值之一：
      *              {@link WheelPicker#ALIGN_CENTER}
      *              {@link WheelPicker#ALIGN_LEFT}
      *              {@link WheelPicker#ALIGN_RIGHT}
-     *              当滚动选择器为水平滚动时该值仅能是下列值之一：
-     *              {@link WheelPicker#ALIGN_CENTER}
-     *              {@link WheelPicker#ALIGN_TOP}
-     *              {@link WheelPicker#ALIGN_BOTTOM}
      */
     void setItemAlign(int align);
 

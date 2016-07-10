@@ -2,10 +2,10 @@
 <resources>
     <declare-styleable name="WheelPicker">
         <attr name="wheel_data" format="reference" />
-        <attr name="wheel_current_item_position" format="integer" />
+        <attr name="wheel_selected_item_position" format="integer" />
         <attr name="wheel_item_text_size" format="dimension" />
         <attr name="wheel_item_text_color" format="color" />
-        <attr name="wheel_current_item_text_color" format="color" />
+        <attr name="wheel_selected_item_text_color" format="color" />
         <attr name="wheel_same_width" format="boolean" />
         <attr name="wheel_maximum_width_text" format="string" />
         <attr name="wheel_maximum_width_text_position" format="integer" />
