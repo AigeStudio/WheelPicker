@@ -39,11 +39,15 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
     /**
      * 滚动状态标识值
      * 用于标识滚动状态
+     * <p/>
+     * Identity value of scroll state
+     * Used to identify Scroll state
      *
      * @see OnWheelChangeListener#onWheelScrollStateChanged(int)
      */
     public static final int SCROLL_STATE_IDLE = 0, SCROLL_STATE_DRAGGING = 1,
             SCROLL_STATE_SCROLLING = 2;
+
     /**
      * 数据项对齐方式标识值
      * 用于标识数据项对齐方式
@@ -271,7 +275,6 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
     public WheelPicker(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        // 从资源文件获取属性参数
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.WheelPicker);
         int idData = a.getResourceId(R.styleable.WheelPicker_wheel_data, 0);
         mData = Arrays.asList(getResources()
@@ -302,22 +305,22 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
         a.recycle();
 
         // 可见数据项改变后更新与之相关的参数
+        // Update relevant parameters when the count of visible item changed
         updateVisibleItemCount();
 
-        // 初始化画笔
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG | Paint.LINEAR_TEXT_FLAG);
         mPaint.setTextSize(mItemTextSize);
 
         // 更新文本对齐方式
+        // Update alignment of text
         updateItemTextAlign();
 
         // 计算文本尺寸
+        // Correct sizes of text
         computeTextSize();
 
-        // 初始化滚动器
         mScroller = new Scroller(getContext());
 
-        // 初始化配置参数
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.DONUT) {
             ViewConfiguration conf = ViewConfiguration.get(getContext());
             mMinimumVelocity = conf.getScaledMinimumFlingVelocity();
@@ -325,7 +328,6 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
         }
         mRectDrawn = new Rect();
 
-        // 初始化指示器区域
         mRectIndicatorHead = new Rect();
         mRectIndicatorFoot = new Rect();
 
@@ -341,7 +343,8 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
         if (mVisibleItemCount < 2)
             throw new ArithmeticException("Wheel's visible item count can not be less than 2!");
 
-        // 确保滚轮选择器可见Item数量为奇数
+        // 确保滚轮选择器可见数据项数量为奇数
+        // Be sure count of visible item is odd number
         if (mVisibleItemCount % 2 == 0)
             mVisibleItemCount += 1;
         mDrawnItemCount = mVisibleItemCount + 2;
@@ -391,10 +394,12 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
         int sizeHeight = MeasureSpec.getSize(heightMeasureSpec);
 
         // 计算原始内容尺寸
+        // Correct sizes of original content
         int resultWidth = mTextMaxWidth;
         int resultHeight = mTextMaxHeight * mVisibleItemCount + mItemSpace * (mVisibleItemCount - 1);
 
         // 如果开启弯曲效果则需要重新计算弯曲后的尺寸
+        // Correct view sizes again if curved is enable
         if (isCurved) {
             resultHeight = (int) (2 * resultHeight / Math.PI);
         }
@@ -402,12 +407,14 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
             Log.i(TAG, "Wheel's content size is (" + resultWidth + ":" + resultHeight + ")");
 
         // 考虑内边距对尺寸的影响
+        // Consideration padding influence the view sizes
         resultWidth += getPaddingLeft() + getPaddingRight();
         resultHeight += getPaddingTop() + getPaddingBottom();
         if (isDebug)
             Log.i(TAG, "Wheel's size is (" + resultWidth + ":" + resultHeight + ")");
 
         // 考虑父容器对尺寸的影响
+        // Consideration sizes of parent can influence the view sizes
         resultWidth = measureSize(modeWidth, sizeWidth, resultWidth);
         resultHeight = measureSize(modeHeight, sizeHeight, resultHeight);
 
@@ -429,6 +436,7 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
     @Override
     protected void onSizeChanged(int w, int h, int oldW, int oldH) {
         // 设置内容区域
+        // Set content region
         mRectDrawn.set(getPaddingLeft(), getPaddingTop(), getWidth() - getPaddingRight(),
                 getHeight() - getPaddingBottom());
         if (isDebug)
@@ -437,10 +445,12 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
                     mRectDrawn.top + ")");
 
         // 获取内容区域中心坐标
+        // Get the center coordinates of content region
         mWheelCenterX = mRectDrawn.centerX();
         mWheelCenterY = mRectDrawn.centerY();
 
         // 计算数据项绘制中心
+        // Correct item drawn center
         computeDrawnCenter();
 
         mHalfWheelHeight = mRectDrawn.height() / 2;
@@ -449,12 +459,15 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
         mHalfItemHeight = mItemHeight / 2;
 
         // 初始化滑动最大坐标
+        // Initialize fling max Y-coordinates
         computeFlingLimitY();
 
         // 计算指示器绘制区域
+        // Correct region of indicator
         computeIndicatorRect();
 
-        // 计算当前Item区域
+        // 计算当前选中的数据项区域
+        // Correct region of current select item
         computeCurrentItemRect();
     }
 
@@ -520,14 +533,15 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
             int mDrawnItemCenterY = mDrawnCenterY + (drawnOffsetPos * mItemHeight) +
                     mScrollOffsetY % mItemHeight;
 
-            // Item绘制中心距离滚轮中心的距离
             int distanceToCenter = 0;
             if (isCurved) {
-                // 计算Item绘制中心距离滚轮中心的距离比率
+                // 计算数据项绘制中心距离滚轮中心的距离比率
+                // Correct ratio of item's drawn center to wheel center
                 float ratio = (mDrawnCenterY - Math.abs(mDrawnCenterY - mDrawnItemCenterY) -
                         mRectDrawn.top) * 1.0F / (mDrawnCenterY - mRectDrawn.top);
 
                 // 计算单位
+                // Correct unit
                 int unit = 0;
                 if (mDrawnItemCenterY > mDrawnCenterY)
                     unit = 1;
@@ -572,10 +586,12 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
                 alpha = alpha < 0 ? 0 : alpha;
                 mPaint.setAlpha(alpha);
             }
-            // 根据透视与否Item绘制Y方向中心坐标
+            // 根据卷曲与否计算数据项绘制Y方向中心坐标
+            // Correct item's drawn centerY base on curved state
             int drawnCenterY = isCurved ? mDrawnCenterY - distanceToCenter : mDrawnItemCenterY;
 
-            // 判断是否需要为当前Item绘制不同颜色
+            // 判断是否需要为当前数据项绘制不同颜色
+            // Judges need to draw different color for current item or not
             if (mSelectedItemTextColor != -1) {
                 canvas.save();
                 if (isCurved) canvas.concat(mMatrixRotate);
@@ -611,12 +627,14 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
             }
         }
         // 是否需要绘制幕布
+        // Need to draw curtain or not
         if (hasCurtain) {
             mPaint.setColor(mCurtainColor);
             mPaint.setStyle(Paint.Style.FILL);
             canvas.drawRect(mRectCurrentItem, mPaint);
         }
         // 是否需要绘制指示器
+        // Need to draw indicator or not
         if (hasIndicator) {
             mPaint.setColor(mIndicatorColor);
             mPaint.setStyle(Paint.Style.FILL);
@@ -666,6 +684,7 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
                     mOnWheelChangeListener.onWheelScrollStateChanged(SCROLL_STATE_DRAGGING);
 
                 // 滚动内容
+                // Scroll WheelPicker's content
                 mScrollOffsetY += ((event.getY() - mLastPointY));
                 mLastPointY = (int) event.getY();
                 invalidate();
@@ -681,6 +700,7 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
                     mTracker.computeCurrentVelocity(1000);
 
                 // 根据速度判断是该滚动还是滑动
+                // Judges the WheelPicker is scroll or fling base on current velocity
                 int velocity = (int) mTracker.getYVelocity();
                 if (Math.abs(velocity) > mMinimumVelocity) {
                     mScroller.fling(0, mScrollOffsetY, 0, velocity, 0, 0, mMinFlingY, mMaxFlingY);
@@ -691,6 +711,7 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
                             computeDistanceToEndPoint(mScrollOffsetY % mItemHeight));
                 }
                 // 校正坐标
+                // Correct coordinates
                 if (!isCyclic)
                     if (mScroller.getFinalY() > mMaxFlingY)
                         mScroller.setFinalY(mMaxFlingY);
