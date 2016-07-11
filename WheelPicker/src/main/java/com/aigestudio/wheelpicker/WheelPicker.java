@@ -25,23 +25,19 @@ import java.util.List;
 
 /**
  * 滚轮选择器
- * <p/>
+ * <p>
  * WheelPicker
  *
  * @author AigeStudio 2015-12-12
  * @author AigeStudio 2016-06-17
  *         更新项目结构
- *         <p/>
+ *         <p>
  *         New project structure
  * @version 1.1.0
  */
 public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable {
     /**
      * 滚动状态标识值
-     * 用于标识滚动状态
-     * <p/>
-     * Identity value of scroll state
-     * Used to identify Scroll state
      *
      * @see OnWheelChangeListener#onWheelScrollStateChanged(int)
      */
@@ -50,7 +46,6 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
 
     /**
      * 数据项对齐方式标识值
-     * 用于标识数据项对齐方式
      *
      * @see #setItemAlign(int)
      */
@@ -64,6 +59,11 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
     private Scroller mScroller;
     private VelocityTracker mTracker;
 
+    /**
+     * 相关监听器
+     *
+     * @see OnWheelChangeListener,OnItemSelectedListener
+     */
     private OnItemSelectedListener mOnItemSelectedListener;
     private OnWheelChangeListener mOnWheelChangeListener;
 
@@ -87,12 +87,7 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
     private String mMaxWidthText;
 
     /**
-     * 滚轮选择器中可见的Item数量和滚轮选择器将会绘制的Item数量
-     * 滚轮选择器将会绘制的Item数量取决于可见Item数量，绘制的Item数量总会比可见Item数量多两个，你不必也不需要为滚
-     * 轮选择器指定将会绘制的Item数量，你只需通过{@link #setVisibleItemCount(int)}为滚轮选择器指定可见的Item
-     * 数量，滚轮选择器会根据可见Item数量自动计算绘制的Item数量。
-     * 滚轮选择器的可见Item数量应始终为奇数，如果你为可见Item数量设置一个偶数值，滚轮选择器会将其自动加一转换为奇
-     * 数，默认为情况下滚轮选择器的可见Item数量为5，绘制Item数量为7。
+     * 滚轮选择器中可见的数据项数量和滚轮选择器将会绘制的数据项数量
      *
      * @see #setVisibleItemCount(int)
      */
@@ -100,13 +95,11 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
 
     /**
      * 滚轮选择器将会绘制的Item数量的一半
-     * 该值主要用于偏移值的计算，该值由滚轮选择器计算赋值
      */
     private int mHalfDrawnItemCount;
 
     /**
      * 单个文本最大宽高
-     * 滚轮选择器会在初始化的时候遍历数据源计算每条数据文本的宽高以此来确定滚轮选择器自身的尺寸
      */
     private int mTextMaxWidth, mTextMaxHeight;
 
@@ -167,13 +160,11 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
 
     /**
      * 滚轮选择器内容区域高度的一半
-     * 所谓的内容区域指的是不包含内边距的区域部分
      */
     private int mHalfWheelHeight;
 
     /**
      * 当前被选中的数据项所显示的数据在数据源中的位置
-     * 该参数的值不会因为滚动选择器的滚动而改变，仅可通过{@link #setSelectedItemPosition(int)}方法改变
      *
      * @see #setSelectedItemPosition(int)
      */
@@ -181,7 +172,6 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
 
     /**
      * 当前被选中的数据项所显示的数据在数据源中的位置
-     * 与{@link #mSelectedItemPosition}不同的是该参数的值会因滚轮选择器的滚动而改变
      *
      * @see #getCurrentItemPosition()
      */
@@ -189,7 +179,6 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
 
     /**
      * 滚轮滑动时可以滑动到的最小/最大的Y坐标
-     * 滚轮为循环效果时无效
      */
     private int mMinFlingY, mMaxFlingY;
 
@@ -200,7 +189,6 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
 
     /**
      * 滚轮选择器中心坐标
-     * 滚轮选择器的中心坐标为滚轮正中心坐标，其X坐标取值为滚轮宽度的一半，而Y坐标取值为滚轮高度的一半
      */
     private int mWheelCenterX, mWheelCenterY;
 
@@ -1071,7 +1059,7 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
      *
      * @author AigeStudio 2016-06-17
      *         新项目结构
-     *         <p/>
+     *         <p>
      *         New project structure
      * @since 2016-06-17
      */
@@ -1080,14 +1068,14 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
          * 当滚轮选择器滚动时回调该方法
          * 滚轮选择器滚动时会将当前滚动位置与滚轮初始位置之间的偏移距离返回，该偏移距离有正负之分，正值表示
          * 滚轮正在往上滚动，负值则表示滚轮正在往下滚动
-         * <p/>
+         * <p>
          * Invoke when WheelPicker scroll stopped
          * WheelPicker will return a distance offset which between current scroll position and
          * initial position, this offset is a positive or a negative, positive means WheelPicker is
          * scrolling from bottom to top, negative means WheelPicker is scrolling from top to bottom
          *
          * @param offset 当前滚轮滚动距离上一次滚轮滚动停止后偏移的距离
-         *               <p/>
+         *               <p>
          *               Distance offset which between current scroll position and initial position
          */
         void onWheelScrolled(int offset);
@@ -1095,13 +1083,13 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
         /**
          * 当滚轮选择器停止后回调该方法
          * 滚轮选择器停止后会回调该方法并将当前选中的数据项在数据列表中的位置返回
-         * <p/>
+         * <p>
          * Invoke when WheelPicker scroll stopped
          * This method will be called when WheelPicker stop and return current selected item data's
          * position in list
          *
          * @param position 当前选中的数据项在数据列表中的位置
-         *                 <p/>
+         *                 <p>
          *                 Current selected item data's position in list
          */
         void onWheelSelected(int position);
@@ -1109,7 +1097,7 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
         /**
          * 当滚轮选择器滚动状态改变时回调该方法
          * 滚动选择器的状态总是会在静止、拖动和滑动三者之间切换，当状态改变时回调该方法
-         * <p/>
+         * <p>
          * Invoke when WheelPicker's scroll state changed
          * The state of WheelPicker always between idle, dragging, and scrolling, this method will
          * be called when they switch
@@ -1121,7 +1109,7 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
          *              表示滚动选择器处于拖动状态
          *              {@link WheelPicker#SCROLL_STATE_SCROLLING}
          *              表示滚动选择器处于滑动状态
-         *              <p/>
+         *              <p>
          *              State of WheelPicker, only one of the following
          *              {@link WheelPicker#SCROLL_STATE_IDLE}
          *              Express WheelPicker in state of idle
