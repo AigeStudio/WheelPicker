@@ -18,7 +18,7 @@ import java.util.List;
  *         New project structure
  * @version 1.1.0
  */
-interface IWheelPicker {
+public interface IWheelPicker {
 
     /**
      * 获取滚轮选择器可见数据项的数量
