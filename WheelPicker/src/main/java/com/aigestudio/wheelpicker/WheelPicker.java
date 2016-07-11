@@ -486,9 +486,9 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
         int halfIndicatorSize = mIndicatorSize / 2;
         int indicatorHeadCenterY = mWheelCenterY + mHalfItemHeight;
         int indicatorFootCenterY = mWheelCenterY - mHalfItemHeight;
-        mRectIndicatorHead.set(mRectDrawn.right, indicatorHeadCenterY - halfIndicatorSize,
+        mRectIndicatorHead.set(mRectDrawn.left, indicatorHeadCenterY - halfIndicatorSize,
                 mRectDrawn.right, indicatorHeadCenterY + halfIndicatorSize);
-        mRectIndicatorFoot.set(mRectDrawn.right, indicatorFootCenterY - halfIndicatorSize,
+        mRectIndicatorFoot.set(mRectDrawn.left, indicatorFootCenterY - halfIndicatorSize,
                 mRectDrawn.right, indicatorFootCenterY + halfIndicatorSize);
     }
 
