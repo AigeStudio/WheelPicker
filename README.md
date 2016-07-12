@@ -1,4 +1,4 @@
-![Banner](https://github.com/AigeStudio/WheelPicker/blob/1.1.0/Previews/main/Banner.jpg)
+![Banner](https://github.com/AigeStudio/WheelPicker/blob/master/Previews/main/Banner.jpg)
 
 ***
 
@@ -9,7 +9,7 @@
 [![QQ](https://img.shields.io/badge/QQ-1994099479-red.svg)](http://sighttp.qq.com/authd?IDKEY=404d62c783d5c76e312f4c9fa65819d75ce648bff94b8cd6) [![QQGroup](https://img.shields.io/badge/QQ%E7%BE%A4-361739851-blue.svg)](http://shang.qq.com/wpa/qunwpa?idkey=a62502df9a8f2f24f20f978070a9c93238c1fe91db8888dda78214cb83dc6002) [![Mail](https://img.shields.io/badge/mail-aigestudio%40qq.com-orange.svg)](http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=i_ri7O74--7v4uTL_vql6OTm)
 
 # Preview
-![Preview](https://github.com/AigeStudio/WheelPicker/blob/1.1.0/Previews/main/Preview.gif)
+![Preview](https://github.com/AigeStudio/WheelPicker/blob/master/Previews/main/Preview.gif)
 
 # Include
 ### Compile
@@ -107,7 +107,7 @@ Update soon...
 # Donation
 如果您觉得该项目帮助了您那不妨赏小弟一杯咖啡钱 :)
 
-![Pay](https://github.com/AigeStudio/WheelPicker/blob/1.1.0/Previews/main/Pay.png)
+![Pay](https://github.com/AigeStudio/WheelPicker/blob/master/Previews/main/Pay.png)
 
 You can support the project and thank the author for his hard work :)
 
