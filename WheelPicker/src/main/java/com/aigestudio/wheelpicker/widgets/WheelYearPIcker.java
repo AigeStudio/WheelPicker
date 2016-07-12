@@ -14,9 +14,8 @@ import java.util.List;
  * @since 2016-07-11
  */
 public class WheelYearPicker extends WheelPicker implements IWheelYearPicker {
-    private static final List<Integer> YEARS = new ArrayList<>();
-
     private final Calendar mCalendar = Calendar.getInstance();
+    private final List<Integer> mDataYears = new ArrayList<>();
 
     private int mYearStart = 1000, mYearEnd = 3000;
     private int mSelectedYear;
@@ -36,9 +35,10 @@ public class WheelYearPicker extends WheelPicker implements IWheelYearPicker {
     }
 
     private void updateYears() {
+        mDataYears.clear();
         for (int i = mYearStart; i <= mYearEnd; i++)
-            YEARS.add(i);
-        super.setData(YEARS);
+            mDataYears.add(i);
+        super.setData(mDataYears);
     }
 
     private void updateSelectedYear() {
@@ -69,14 +69,14 @@ public class WheelYearPicker extends WheelPicker implements IWheelYearPicker {
     }
 
     @Override
-    public int getYearEnd() {
-        return mYearEnd;
-    }
-
-    @Override
     public void setYearStart(int start) {
         mYearStart = start;
         updateYears();
+    }
+
+    @Override
+    public int getYearEnd() {
+        return mYearEnd;
     }
 
     @Override
@@ -86,8 +86,18 @@ public class WheelYearPicker extends WheelPicker implements IWheelYearPicker {
     }
 
     @Override
+    public int getSelectedYear() {
+        return mSelectedYear;
+    }
+
+    @Override
     public void setSelectedYear(int year) {
         mSelectedYear = year;
         updateSelectedYear();
+    }
+
+    @Override
+    public int getCurrentYear() {
+        return mDataYears.get(getCurrentItemPosition());
     }
 }
