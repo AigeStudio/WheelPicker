@@ -14,7 +14,7 @@
 # Include
 ### Compile
 ```Gradle
-compile "com.aigestudio.wheelpicker:WheelPicker:1.1.0"
+compile "com.aigestudio.wheelpicker:WheelPicker:1.1.0"(Available after a while)
 ```
 or
 ```Maven
