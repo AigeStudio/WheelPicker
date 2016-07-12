@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         android:background="#E5DEEB"
         aigestudio:wheel_atmospheric="true"
+        android:visibility="invisible"
         aigestudio:wheel_curved="true"
         aigestudio:wheel_cyclic="true"
         aigestudio:wheel_item_align="right"
@@ -22,6 +23,7 @@
 
     <com.aigestudio.wheelpicker.WheelPicker
         android:id="@+id/main_wheel_center"
+        android:padding="16dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="#E5DEEB"
@@ -36,6 +38,7 @@
         android:id="@+id/main_wheel_right"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:visibility="invisible"
         android:background="#E5DEEB"
         aigestudio:wheel_atmospheric="true"
         aigestudio:wheel_curved="true"

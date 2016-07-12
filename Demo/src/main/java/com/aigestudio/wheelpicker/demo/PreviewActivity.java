@@ -6,6 +6,9 @@ import android.widget.Toast;
 
 import com.aigestudio.wheelpicker.WheelPicker;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author AigeStudio 2015-12-06
  * @author AigeStudio 2016-07-08
@@ -18,8 +21,13 @@ public class PreviewActivity extends Activity implements WheelPicker.OnItemSelec
 
         WheelPicker wheelLeft = (WheelPicker) findViewById(R.id.main_wheel_left);
         wheelLeft.setOnItemSelectedListener(this);
-        WheelPicker wheelCenter = (WheelPicker) findViewById(R.id.main_wheel_center);
-        wheelCenter.setOnItemSelectedListener(this);
+
+        WheelPicker wheelPicker = (WheelPicker) findViewById(R.id.main_wheel_center);
+        List<Integer> data = new ArrayList<>();
+        for (int i = 1000; i < 3000; i++)
+            data.add(i);
+        wheelPicker.setData(data);
+
         WheelPicker wheelRight = (WheelPicker) findViewById(R.id.main_wheel_right);
         wheelRight.setOnItemSelectedListener(this);
     }
