@@ -14,7 +14,6 @@ import java.util.List;
  * @since 2016-07-11
  */
 public class WheelYearPicker extends WheelPicker implements IWheelYearPicker {
-    private final Calendar mCalendar = Calendar.getInstance();
     private final List<Integer> mDataYears = new ArrayList<>();
 
     private int mYearStart = 1000, mYearEnd = 3000;
@@ -28,7 +27,8 @@ public class WheelYearPicker extends WheelPicker implements IWheelYearPicker {
         super(context, attrs);
         setMaximumWidthText("0000");
 
-        mSelectedYear = mCalendar.get(Calendar.YEAR);
+        Calendar calendar = Calendar.getInstance();
+        mSelectedYear = calendar.get(Calendar.YEAR);
 
         updateYears();
         updateSelectedYear();
@@ -43,17 +43,16 @@ public class WheelYearPicker extends WheelPicker implements IWheelYearPicker {
 
     private void updateSelectedYear() {
         if (mSelectedYear < mYearStart || mSelectedYear > mYearEnd)
-            throw new ArrayIndexOutOfBoundsException("Selected year of WheelYearPicker" +
-                    "must greater than or equal to " + mYearStart + " and less than or" +
-                    "equal to " + mYearEnd);
+            throw new ArrayIndexOutOfBoundsException("Selected year of WheelYearPicker must" +
+                    "greater than or equal to " + mYearStart + " and less than or equal to " +
+                    mYearEnd);
         int position = mSelectedYear - mYearStart;
         setSelectedItemPosition(position);
     }
 
     @Override
     public void setData(List data) {
-        throw new UnsupportedOperationException("You can't set a data source for" +
-                "WheelYearPicker");
+        throw new UnsupportedOperationException("You can't set a data source for WheelYearPicker");
     }
 
     @Override
