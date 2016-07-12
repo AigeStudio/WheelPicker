@@ -91,8 +91,7 @@ compile project(':WheelPicker')
 * 在开启透视或弯曲效果后支持让数据项左右对齐
 
 # Widgets
-### WheelDatePicker
-![](https://github.com/AigeStudio/WheelPicker/blob/master/Previews/WheelDatePicker.gif)
+Update soon...
 
 ***
 
