@@ -826,6 +826,7 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
             throw new NullPointerException("WheelPicker's data can not be null!");
         mData = data;
         computeTextSize();
+        computeFlingLimitY();
         requestLayout();
         invalidate();
     }
