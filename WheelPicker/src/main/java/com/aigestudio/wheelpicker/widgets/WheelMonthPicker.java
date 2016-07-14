@@ -9,6 +9,14 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+/**
+ * 月份选择器
+ * <p>
+ * Picker for Months
+ *
+ * @author AigeStudio 2016-07-12
+ * @version 1
+ */
 public class WheelMonthPicker extends WheelPicker implements IWheelMonthPicker {
     private int mSelectedMonth;
 
