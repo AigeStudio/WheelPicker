@@ -25,13 +25,13 @@ import java.util.List;
 
 /**
  * 滚轮选择器
- * <p>
+ * <p/>
  * WheelPicker
  *
  * @author AigeStudio 2015-12-12
  * @author AigeStudio 2016-06-17
  *         更新项目结构
- *         <p>
+ *         <p/>
  *         New project structure
  * @version 1.1.0
  */
@@ -213,6 +213,16 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
     private int mLastPointY;
 
     /**
+     * 手指触摸屏幕时事件点的Y坐标
+     */
+    private int mDownPointY;
+
+    /**
+     * 点击与触摸的切换阀值
+     */
+    private int mTouchSlop = 8;
+
+    /**
      * 滚轮选择器的每一个数据项文本是否拥有相同的宽度
      *
      * @see #setSameWidth(boolean)
@@ -253,6 +263,16 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
      * @see #setCurved(boolean)
      */
     private boolean isCurved;
+
+    /**
+     * 是否为点击模式
+     */
+    private boolean isClick;
+
+    /**
+     * 是否为强制结束滑动
+     */
+    private boolean isForceFinishScroll;
 
     private boolean isDebug;
 
@@ -313,6 +333,7 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
             ViewConfiguration conf = ViewConfiguration.get(getContext());
             mMinimumVelocity = conf.getScaledMinimumFlingVelocity();
             mMaximumVelocity = conf.getScaledMaximumFlingVelocity();
+            mTouchSlop = conf.getScaledTouchSlop();
         }
         mRectDrawn = new Rect();
 
@@ -662,11 +683,18 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
                 else
                     mTracker.clear();
                 mTracker.addMovement(event);
-                if (!mScroller.isFinished())
+                if (!mScroller.isFinished()) {
                     mScroller.abortAnimation();
-                mLastPointY = (int) event.getY();
+                    isForceFinishScroll = true;
+                }
+                mDownPointY = mLastPointY = (int) event.getY();
                 break;
             case MotionEvent.ACTION_MOVE:
+                if (Math.abs(mDownPointY - event.getY()) < mTouchSlop) {
+                    isClick = true;
+                    break;
+                }
+                isClick = false;
                 mTracker.addMovement(event);
                 if (null != mOnWheelChangeListener)
                     mOnWheelChangeListener.onWheelScrollStateChanged(SCROLL_STATE_DRAGGING);
@@ -691,6 +719,7 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
 
                 // 根据速度判断是该滚动还是滑动
                 // Judges the WheelPicker is scroll or fling base on current velocity
+                isForceFinishScroll = false;
                 int velocity = (int) mTracker.getYVelocity();
                 if (Math.abs(velocity) > mMinimumVelocity) {
                     mScroller.fling(0, mScrollOffsetY, 0, velocity, 0, 0, mMinFlingY, mMaxFlingY);
@@ -737,7 +766,7 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
 
     @Override
     public void run() {
-        if (mScroller.isFinished()) {
+        if (mScroller.isFinished() && !isForceFinishScroll) {
             int position = (-mScrollOffsetY / mItemHeight + mSelectedItemPosition) % mData.size();
             position = position < 0 ? position + mData.size() : position;
             if (isDebug)
@@ -1066,7 +1095,7 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
      *
      * @author AigeStudio 2016-06-17
      *         新项目结构
-     *         <p>
+     *         <p/>
      *         New project structure
      * @since 2016-06-17
      */
@@ -1075,14 +1104,14 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
          * 当滚轮选择器滚动时回调该方法
          * 滚轮选择器滚动时会将当前滚动位置与滚轮初始位置之间的偏移距离返回，该偏移距离有正负之分，正值表示
          * 滚轮正在往上滚动，负值则表示滚轮正在往下滚动
-         * <p>
+         * <p/>
          * Invoke when WheelPicker scroll stopped
          * WheelPicker will return a distance offset which between current scroll position and
          * initial position, this offset is a positive or a negative, positive means WheelPicker is
          * scrolling from bottom to top, negative means WheelPicker is scrolling from top to bottom
          *
          * @param offset 当前滚轮滚动距离上一次滚轮滚动停止后偏移的距离
-         *               <p>
+         *               <p/>
          *               Distance offset which between current scroll position and initial position
          */
         void onWheelScrolled(int offset);
@@ -1090,13 +1119,13 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
         /**
          * 当滚轮选择器停止后回调该方法
          * 滚轮选择器停止后会回调该方法并将当前选中的数据项在数据列表中的位置返回
-         * <p>
+         * <p/>
          * Invoke when WheelPicker scroll stopped
          * This method will be called when WheelPicker stop and return current selected item data's
          * position in list
          *
          * @param position 当前选中的数据项在数据列表中的位置
-         *                 <p>
+         *                 <p/>
          *                 Current selected item data's position in list
          */
         void onWheelSelected(int position);
@@ -1104,7 +1133,7 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
         /**
          * 当滚轮选择器滚动状态改变时回调该方法
          * 滚动选择器的状态总是会在静止、拖动和滑动三者之间切换，当状态改变时回调该方法
-         * <p>
+         * <p/>
          * Invoke when WheelPicker's scroll state changed
          * The state of WheelPicker always between idle, dragging, and scrolling, this method will
          * be called when they switch
@@ -1116,7 +1145,7 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
          *              表示滚动选择器处于拖动状态
          *              {@link WheelPicker#SCROLL_STATE_SCROLLING}
          *              表示滚动选择器处于滑动状态
-         *              <p>
+         *              <p/>
          *              State of WheelPicker, only one of the following
          *              {@link WheelPicker#SCROLL_STATE_IDLE}
          *              Express WheelPicker in state of idle
