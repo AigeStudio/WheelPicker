@@ -835,6 +835,7 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
         mSelectedItemPosition = position;
         mCurrentItemPosition = position;
         mScrollOffsetY = 0;
+        computeFlingLimitY();
         requestLayout();
         invalidate();
     }
@@ -854,10 +855,11 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
         if (null == data)
             throw new NullPointerException("WheelPicker's data can not be null!");
         mData = data;
-        if (mSelectedItemPosition > data.size() - 1) {
-            mSelectedItemPosition = data.size() - 1;
-            mCurrentItemPosition = mSelectedItemPosition;
-        }
+
+        // 重置位置
+        if (mSelectedItemPosition > data.size() - 1 || mCurrentItemPosition > data.size() - 1)
+            mSelectedItemPosition = mCurrentItemPosition = data.size() - 1;
+        mScrollOffsetY = 0;
         computeTextSize();
         computeFlingLimitY();
         requestLayout();

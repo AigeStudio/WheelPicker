@@ -6,7 +6,7 @@ import java.util.List;
 
 /**
  * 滚轮选择器方法接口
- * <p/>
+ * <p>
  * Interface of WheelPicker
  *
  * @author AigeStudio 2015-12-03
@@ -14,7 +14,7 @@ import java.util.List;
  * @author AigeStudio 2015-12-12
  * @author AigeStudio 2016-06-17
  *         更新项目结构
- *         <p/>
+ *         <p>
  *         New project structure
  * @version 1.1.0
  */
@@ -22,7 +22,7 @@ public interface IWheelPicker {
 
     /**
      * 获取滚轮选择器可见数据项的数量
-     * <p/>
+     * <p>
      * Get the count of current visible items in WheelPicker
      *
      * @return 滚轮选择器可见数据项的数量
@@ -34,7 +34,7 @@ public interface IWheelPicker {
      * 滚轮选择器的可见数据项数量必须为大于1的整数
      * 这里需要注意的是，滚轮选择器会始终显示奇数个数据项，即便你为其设置偶数个数据项，最终也会被转换为奇数
      * 默认情况下滚轮选择器可见数据项数量为7
-     * <p/>
+     * <p>
      * Set the count of current visible items in WheelPicker
      * The count of current visible items in WheelPicker must greater than 1
      * Notice:count of current visible items in WheelPicker will always is an odd number, even you
@@ -47,7 +47,7 @@ public interface IWheelPicker {
 
     /**
      * 滚轮选择器数据项是否为循环状态
-     * <p/>
+     * <p>
      * Whether WheelPicker is cyclic or not
      *
      * @return 是否为循环状态
@@ -57,7 +57,7 @@ public interface IWheelPicker {
     /**
      * 设置滚轮选择器数据项是否为循环状态
      * 开启数据循环会使滚轮选择器上下滚动不再有边界，会呈现数据首尾相接无限循环的效果
-     * <p/>
+     * <p>
      * Set whether WheelPicker is cyclic or not
      * WheelPicker's items will be end to end and in an infinite loop if setCyclic true, and there
      * is no border whit scroll when WheelPicker in cyclic state
@@ -81,7 +81,7 @@ public interface IWheelPicker {
      * 如果你只是想获取滚轮静止时当前被选中的数据项所显示的数据在数据源中的位置，你可以通过
      * {@link com.aigestudio.wheelpicker.WheelPicker.OnItemSelectedListener}回调监听或调用
      * {@link #getCurrentItemPosition()}
-     * <p/>
+     * <p>
      * Get the position of current selected item in data source
      * Notice:The value by return will not change when WheelPicker scroll, this method will always
      * return the value which {@link #setSelectedItemPosition(int)} set, the value this method
@@ -108,7 +108,7 @@ public interface IWheelPicker {
      * 你总该为该方法传入一个大于等于0小于数据源{@link #getData()}长度
      * 的值，否则会抛出异常
      * 默认情况下，当前被选中的数据项所显示的数据在数据源中的位置为0
-     * <p/>
+     * <p>
      * Set the position of current selected item in data source
      * Call this method and set a new value may be reinitialize the location of WheelPicker. For
      * example, you call this method after scroll the WheelPicker and set selected item position
@@ -129,7 +129,7 @@ public interface IWheelPicker {
     /**
      * 获取当前被选中的数据项所显示的数据在数据源中的位置
      * 与{@link #getSelectedItemPosition()}不同的是，该方法所返回的结果会因为滚轮选择器的改变而改变
-     * <p/>
+     * <p>
      * Get the position of current selected item in data source
      * The difference between {@link #getSelectedItemPosition()}, the value this method return will
      * change by WheelPicker scrolled
@@ -140,7 +140,7 @@ public interface IWheelPicker {
 
     /**
      * 获取数据列表
-     * <p/>
+     * <p>
      * Get data source of WheelPicker
      *
      * @return 数据列表
@@ -151,11 +151,15 @@ public interface IWheelPicker {
      * 设置数据列表
      * 数据源可以是任意类型，但是需要注意的是WheelPicker在绘制数据的时候会将数据转换成String类型
      * 在没有设置数据源的情况下滚轮选择器会设置一个默认的数据源作为展示
-     * <p/>
+     * 为滚轮选择器设置数据源会重置滚轮选择器的各项状态，具体行为参考
+     * {@link #setSelectedItemPosition(int)}
+     * <p>
      * Set data source of WheelPicker
      * The data source can be any type, WheelPicker will change the data to string when it draw the
      * item.
      * There is a default data source when you not set the data source for WheelPicker.
+     * Set data source for WheelPicker will reset state of it, you can refer to
+     * {@link #setSelectedItemPosition(int)} for more details.
      *
      * @param data 数据列表
      */
@@ -172,7 +176,7 @@ public interface IWheelPicker {
      * 源的什么位置，滚轮选择器则会根据该位置找到该条数据文本并将其宽度作为滚轮选择器的宽度。如果你不知道位
      * 置，但是知道最宽的数据文本，那么你也可以直接通过调用{@link #setMaximumWidthText(String)}告诉滚轮选
      * 择器最宽的文本是什么，滚轮选择器会根据这条文本计算宽度并将其作为滚轮选择器的宽度
-     * <p/>
+     * <p>
      * Set items of WheelPicker if has same width
      * WheelPicker will traverse the data source to calculate each data text width to find out the
      * maximum text width for the final view width, this process maybe spends a lot of time and
@@ -193,7 +197,7 @@ public interface IWheelPicker {
 
     /**
      * 数据项是否有相同宽度
-     * <p/>
+     * <p>
      * Whether items has same width or not
      *
      * @return 是否有相同宽度
@@ -210,7 +214,7 @@ public interface IWheelPicker {
 
     /**
      * 获取最宽的文本
-     * <p/>
+     * <p>
      * Get maximum width text
      *
      * @return 最宽的文本
@@ -219,7 +223,7 @@ public interface IWheelPicker {
 
     /**
      * 设置最宽的文本
-     * <p/>
+     * <p>
      * Set maximum width text
      *
      * @param text 最宽的文本
@@ -229,7 +233,7 @@ public interface IWheelPicker {
 
     /**
      * 获取最宽的文本在数据源中的位置
-     * <p/>
+     * <p>
      * Get the position of maximum width text in data source
      *
      * @return 最宽的文本在数据源中的位置
@@ -238,7 +242,7 @@ public interface IWheelPicker {
 
     /**
      * 设置最宽的文本在数据源中的位置
-     * <p/>
+     * <p>
      * Set the position of maximum width text in data source
      *
      * @param position 最宽的文本在数据源中的位置
@@ -248,7 +252,7 @@ public interface IWheelPicker {
 
     /**
      * 获取当前选中的数据项文本颜色
-     * <p/>
+     * <p>
      * Get text color of current selected item
      * For example 0xFF123456
      *
@@ -258,7 +262,7 @@ public interface IWheelPicker {
 
     /**
      * 设置当前选中的数据项文本颜色
-     * <p/>
+     * <p>
      * Set text color of current selected item
      * For example 0xFF123456
      *
@@ -268,7 +272,7 @@ public interface IWheelPicker {
 
     /**
      * 获取数据项文本颜色
-     * <p/>
+     * <p>
      * Get text color of items
      * For example 0xFF123456
      *
@@ -278,7 +282,7 @@ public interface IWheelPicker {
 
     /**
      * 设置数据项文本颜色
-     * <p/>
+     * <p>
      * Set text color of items
      * For example 0xFF123456
      *
@@ -288,7 +292,7 @@ public interface IWheelPicker {
 
     /**
      * 获取数据项文本尺寸大小
-     * <p/>
+     * <p>
      * Get text size of items
      * Unit in px
      *
@@ -298,7 +302,7 @@ public interface IWheelPicker {
 
     /**
      * 设置数据项文本尺寸大小
-     * <p/>
+     * <p>
      * Set text size of items
      * Unit in px
      *
@@ -308,7 +312,7 @@ public interface IWheelPicker {
 
     /**
      * 获取滚轮选择器数据项之间间距
-     * <p/>
+     * <p>
      * Get space between items
      * Unit in px
      *
@@ -318,7 +322,7 @@ public interface IWheelPicker {
 
     /**
      * 设置滚轮选择器数据项之间间距
-     * <p/>
+     * <p>
      * Set space between items
      * Unit in px
      *
@@ -330,7 +334,7 @@ public interface IWheelPicker {
      * 设置滚轮选择器是否显示指示器
      * 如果设置滚轮选择器显示指示器，那么将会在滚轮选择器的当前选中数据项上下显示两根分割线
      * 需要注意的是指示器的尺寸并不参与滚轮选择器的尺寸计算，其会绘制在滚轮选择器的上方
-     * <p/>
+     * <p>
      * Set whether WheelPicker display indicator or not
      * WheelPicker will draw two lines above an below current selected item if display indicator
      * Notice:Indicator's size will not participate in WheelPicker's size calculation, it will drawn
@@ -342,7 +346,7 @@ public interface IWheelPicker {
 
     /**
      * 滚轮选择器是否有指示器
-     * <p/>
+     * <p>
      * Whether WheelPicker display indicator or not
      *
      * @return 滚轮选择器是否有指示器
@@ -351,7 +355,7 @@ public interface IWheelPicker {
 
     /**
      * 获取滚轮选择器指示器尺寸
-     * <p/>
+     * <p>
      * Get size of indicator
      * Unit in px
      *
@@ -361,7 +365,7 @@ public interface IWheelPicker {
 
     /**
      * 设置滚轮选择器指示器尺寸
-     * <p/>
+     * <p>
      * Set size of indicator
      * Unit in px
      *
@@ -371,7 +375,7 @@ public interface IWheelPicker {
 
     /**
      * 获取滚轮选择器指示器颜色
-     * <p/>
+     * <p>
      * Get color of indicator
      * For example 0xFF123456
      *
@@ -381,7 +385,7 @@ public interface IWheelPicker {
 
     /**
      * 设置滚轮选择器指示器颜色
-     * <p/>
+     * <p>
      * Set color of indicator
      * For example 0xFF123456
      *
@@ -392,7 +396,7 @@ public interface IWheelPicker {
     /**
      * 设置滚轮选择器是否显示幕布
      * 设置滚轮选择器显示幕布的话将会在当前选中的项上方绘制一个与当前数据项大小一致的矩形区域并填充指定颜色
-     * <p/>
+     * <p>
      * Set whether WheelPicker display curtain or not
      * WheelPicker will draw a rectangle as big as current selected item and fill specify color
      * above content if curtain display
@@ -403,7 +407,7 @@ public interface IWheelPicker {
 
     /**
      * 滚轮选择器是否显示幕布
-     * <p/>
+     * <p>
      * Whether WheelPicker display curtain or not
      *
      * @return 滚轮选择器是否显示幕布
@@ -412,7 +416,7 @@ public interface IWheelPicker {
 
     /**
      * 获取滚轮选择器幕布颜色
-     * <p/>
+     * <p>
      * Get color of curtain
      * For example 0xFF123456
      *
@@ -422,7 +426,7 @@ public interface IWheelPicker {
 
     /**
      * 设置滚轮选择器幕布颜色
-     * <p/>
+     * <p>
      * Set color of curtain
      * For example 0xFF123456
      *
@@ -433,7 +437,7 @@ public interface IWheelPicker {
     /**
      * 设置滚轮选择器是否有空气感
      * 开启空气感的滚轮选择器将呈现中间不透明逐渐向两端透明过度的渐变效果
-     * <p/>
+     * <p>
      * Set whether WheelPicker has atmospheric or not
      * WheelPicker's items will be transparent from center to ends if atmospheric display
      *
@@ -443,7 +447,7 @@ public interface IWheelPicker {
 
     /**
      * 滚轮选择器是否有空气感
-     * <p/>
+     * <p>
      * Whether WheelPicker has atmospheric or not
      *
      * @return 滚轮选择器是否有空气感
@@ -452,7 +456,7 @@ public interface IWheelPicker {
 
     /**
      * 滚轮选择器是否开启卷曲效果
-     * <p/>
+     * <p>
      * Whether WheelPicker enable curved effect or not
      *
      * @return 滚轮选择器是否开启卷曲效果
@@ -465,7 +469,7 @@ public interface IWheelPicker {
      * 滚轮选择器的卷曲效果依赖于严格的几何模型，一些与尺寸相关的设置在该效果下可能会变得不再有效，例如在卷
      * 曲效果下每一条数据项的尺寸大小因为透视关系看起来都不再一样，数据项之间的间隔也会因为卷曲的关系有微妙
      * 的视觉差距
-     * <p/>
+     * <p>
      * Set whether WheelPicker enable curved effect or not
      * If setCurved true, WheelPicker will display with curved effect looks like ends bend into
      * screen with perspective.
@@ -479,7 +483,7 @@ public interface IWheelPicker {
 
     /**
      * 获取滚轮选择器数据项的对齐方式
-     * <p/>
+     * <p>
      * Get alignment of WheelPicker
      *
      * @return 滚轮选择器数据项的对齐方式
@@ -489,7 +493,7 @@ public interface IWheelPicker {
     /**
      * 设置滚轮选择器数据项的对齐方式
      * 默认对齐方式为居中对齐{@link WheelPicker#ALIGN_CENTER}
-     * <p/>
+     * <p>
      * Set alignment of WheelPicker
      * The default alignment of WheelPicker is {@link WheelPicker#ALIGN_CENTER}
      *
@@ -503,7 +507,7 @@ public interface IWheelPicker {
 
     /**
      * 获取数据项文本字体对象
-     * <p/>
+     * <p>
      * Get typeface of item text
      *
      * @return 文本字体对象
@@ -513,7 +517,7 @@ public interface IWheelPicker {
     /**
      * 设置数据项文本字体对象
      * 数据项文本字体的设置可能会导致滚轮大小的改变
-     * <p/>
+     * <p>
      * Set typeface of item text
      * Set typeface of item text maybe cause WheelPicker size change
      *
