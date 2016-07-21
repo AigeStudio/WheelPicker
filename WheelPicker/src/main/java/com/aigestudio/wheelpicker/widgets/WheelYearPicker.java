@@ -53,6 +53,7 @@ public class WheelYearPicker extends WheelPicker implements IWheelYearPicker {
     public void setYearFrame(int start, int end) {
         mYearStart = start;
         mYearEnd = end;
+        mSelectedYear = getCurrentYear();
         updateYears();
         updateSelectedYear();
     }
@@ -65,6 +66,7 @@ public class WheelYearPicker extends WheelPicker implements IWheelYearPicker {
     @Override
     public void setYearStart(int start) {
         mYearStart = start;
+        mSelectedYear = getCurrentYear();
         updateYears();
         updateSelectedYear();
     }
