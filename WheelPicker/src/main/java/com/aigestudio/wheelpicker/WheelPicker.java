@@ -710,6 +710,7 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
             case MotionEvent.ACTION_UP:
                 if (null != getParent())
                     getParent().requestDisallowInterceptTouchEvent(false);
+                if (isClick) break;
                 mTracker.addMovement(event);
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.DONUT)
@@ -829,9 +830,8 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
 
     @Override
     public void setSelectedItemPosition(int position) {
-        if (!isPosInRang(position))
-            throw new ArrayIndexOutOfBoundsException("Current item position must in [0, " +
-                    mData.size() + "), but current is " + position);
+        position = Math.min(position, mData.size() - 1);
+        position = Math.max(position, 0);
         mSelectedItemPosition = position;
         mCurrentItemPosition = position;
         mScrollOffsetY = 0;
@@ -857,8 +857,11 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
         mData = data;
 
         // 重置位置
-        if (mSelectedItemPosition > data.size() - 1 || mCurrentItemPosition > data.size() - 1)
+        if (mSelectedItemPosition > data.size() - 1 || mCurrentItemPosition > data.size() - 1) {
             mSelectedItemPosition = mCurrentItemPosition = data.size() - 1;
+        } else {
+            mSelectedItemPosition = mCurrentItemPosition;
+        }
         mScrollOffsetY = 0;
         computeTextSize();
         computeFlingLimitY();
