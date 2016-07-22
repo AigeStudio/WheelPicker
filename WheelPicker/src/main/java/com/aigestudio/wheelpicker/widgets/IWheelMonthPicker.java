@@ -2,7 +2,7 @@ package com.aigestudio.wheelpicker.widgets;
 
 /**
  * 月份选择器方法接口
- * <p/>
+ * <p>
  * Interface of WheelMonthPicker
  *
  * @author AigeStudio 2016-07-12
