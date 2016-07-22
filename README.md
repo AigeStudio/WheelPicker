@@ -6,10 +6,13 @@
 [![Download](https://api.bintray.com/packages/aigestudio/maven/WheelPicker/images/download.svg) ](https://bintray.com/aigestudio/maven/WheelPicker/_latestVersion)  [![API](https://img.shields.io/badge/API-1%2B-brightgreen.svg)](https://github.com/AigeStudio/WheelPicker)  [![License](https://img.shields.io/badge/License-Apache%202-blue.svg)](https://github.com/AigeStudio/WheelPicker)  [![Size](https://img.shields.io/badge/Size-17 KB-e91e63.svg)](https://github.com/AigeStudio/WheelPicker)
 
 # Contact
-[![QQ](https://img.shields.io/badge/QQ-1994099479-red.svg)](http://sighttp.qq.com/authd?IDKEY=404d62c783d5c76e312f4c9fa65819d75ce648bff94b8cd6) [![QQGroup](https://img.shields.io/badge/QQ%E7%BE%A4-361739851-blue.svg)](http://shang.qq.com/wpa/qunwpa?idkey=a62502df9a8f2f24f20f978070a9c93238c1fe91db8888dda78214cb83dc6002) [![Mail](https://img.shields.io/badge/mail-aigestudio%40qq.com-orange.svg)](http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=i_ri7O74--7v4uTL_vql6OTm)
+[![QQ](https://img.shields.io/badge/QQ-1994099479-red.svg)](http://sighttp.qq.com/authd?IDKEY=404d62c783d5c76e312f4c9fa65819d75ce648bff94b8cd6) [![QQGroup](https://img.shields.io/badge/QQ%E7%BE%A4-361739851-blue.svg)](http://shang.qq.com/wpa/qunwpa?idkey=a62502df9a8f2f24f20f978070a9c93238c1fe91db8888dda78214cb83dc6002) [![Mail](https://img.shields.io/badge/mail-aigestudio%40qq.com-orange.svg)](http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=i_ri7O74--7v4uTL_vql6OTm) [![Sina](https://img.shields.io/badge/Sina-%40AigeStudio-red.svg)](http://weibo.com/aigestudio) [![Twitter](https://img.shields.io/badge/Twitter-%40AigeStudio-blue.svg)](https://twitter.com/AigeStudio)
 
 # Preview
 ![Preview](https://github.com/AigeStudio/WheelPicker/blob/master/Previews/main/Preview.gif)
+
+# Demo
+[WheelPicke.APK](https://github.com/AigeStudio/WheelPicker/blob/master/APK/Demo.apk)
 
 # Include
 ### Compile
