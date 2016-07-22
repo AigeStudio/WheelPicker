@@ -2,8 +2,12 @@ package com.aigestudio.wheelpicker.widgets;
 
 import android.widget.TextView;
 
+import java.util.Date;
+
 public interface IWheelDatePicker {
     void setOnDateSelectedListener(WheelDatePicker.OnDateSelectedListener listener);
+
+    Date getCurrentDate();
 
     int getItemAlignYear();
 

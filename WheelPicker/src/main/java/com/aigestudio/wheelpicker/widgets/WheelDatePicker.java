@@ -408,6 +408,17 @@ public class WheelDatePicker extends LinearLayout implements WheelPicker.OnItemS
     }
 
     @Override
+    public Date getCurrentDate() {
+        String date = mYear + "-" + mMonth + "-" + mDay;
+        try {
+            return SDF.parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
     public int getItemAlignYear() {
         return mPickerYear.getItemAlign();
     }
