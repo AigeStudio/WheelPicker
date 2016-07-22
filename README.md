@@ -14,26 +14,26 @@
 # Include
 ### Compile
 ```Gradle
-compile 'cn.aigestudio.wheelpicker:WheelPicker:1.1.0'
+compile 'cn.aigestudio.wheelpicker:WheelPicker:1.1.1'
 ```
 or
 ```Maven
 <dependency>
   <groupId>cn.aigestudio.wheelpicker</groupId>
   <artifactId>WheelPicker</artifactId>
-  <version>1.1.0</version>
+  <version>1.1.1</version>
   <type>pom</type>
 </dependency>
 ```
 or
 ```Ivy
-<dependency org='cn.aigestudio.wheelpicker' name='WheelPicker' rev='1.1.0'>
+<dependency org='cn.aigestudio.wheelpicker' name='WheelPicker' rev='1.1.1'>
   <artifact name='$AID' ext='pom'></artifact>
 </dependency>
 ```
 
 ### Import aar
-[WheelPicker-1.1.0.aar](https://dl.bintray.com/aigestudio/maven/cn/aigestudio/wheelpicker/WheelPicker/1.0.0/WheelPicker-1.0.0.aar)
+[WheelPicker-1.1.1.aar](https://dl.bintray.com/aigestudio/maven/cn/aigestudio/wheelpicker/WheelPicker/1.1.1/WheelPicker-1.1.1.aar)
 
 ### Import Module
 1.Import moudle WheelPicker in your project.
