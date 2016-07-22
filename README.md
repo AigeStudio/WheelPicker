@@ -77,6 +77,28 @@ compile project(':WheelPicker')
 * 重构项目发布稳定版修复测试版所有BUG以及新增功能
 * Beta版本会打上TAG方便老版本过渡但不再更新
 
+### 1.1.1
+* BugFix:Scroll automatically when touch but not move on WheelPicker in some low resolution phone
+* BugFix:Scroll range incorrect when invoke setData twice and set data source's length less than last
+* BugFix:Wheel state do not refresh when invoke setData twice and set data source's length-1 less than last selected position
+* BugFix:Switch between click and scroll event
+* BugFix:Call OnItemSelectedListener more time when user want to scroll continuously
+* BugFix:Scroll range incorrect when set current selected item again
+* BugFix:Scroll will be triggered when click WheelPicker
+* Function:All the parameters of WheelPicker will be reset when you setData
+* ADD WheelYearPicker, WheelMonthPicker, WheelDayPicker
+* ADD WheelDatePicker
+* 修复某些低分辨率手机触摸不动时自滑动问题
+* 修复第二次调用setData设置长度比上次小的数据时滑动范围不改变的问题
+* 修复第二次调用setData设置长度位置小于上次选中位置时滚轮状态不刷新问题
+* 修复点击与滑动事件切换的问题
+* 修复当用户想连续滑动时出现多次回调的问题
+* 修复重新设置选择的数据项位置后滑动范围错位问题
+* 修复点击后触发滚动的问题
+* 重新设置数据源后会重置滚轮选择器相关参数
+* 新增年份、月份、日期选择器
+* 新增三级联动的日期选择器
+
 # Function
 * Data display circulation
 * Set visible item count
@@ -106,7 +128,56 @@ compile project(':WheelPicker')
 * 在开启透视或弯曲效果后支持让数据项左右对齐
 
 # Widgets
-Update soon...
+## WheelDatePicker
+![WheelDatePicker](https://github.com/AigeStudio/WheelPicker/blob/master/Previews/main/WheelDatePicker.gif)
+### Method
+* setVisibleItemCount
+* setCyclic
+* setSelectedItemTextColor
+* setItemTextColor
+* setItemTextSize
+* setItemSpace
+* setIndicator
+* setIndicatorColor
+* setIndicatorSize
+* setCurtain
+* setCurtainColor
+* setAtmospheric
+* setCurved
+* setItemAlignYear
+* setItemAlignDay
+* setYearFrame
+* setSelectedYear
+* setSelectedMonth
+* setSelectedDay
+* etc...
+
+### WheelYearPicker
+![WheelYearPicker](https://github.com/AigeStudio/WheelPicker/blob/master/Previews/main/WheelYearPicker.gif)
+### Method
+* All method of WheelPicker
+* setYearFrame
+* set/getYearStart
+* set/getYearEnd
+* set/getSelectedYear
+* getCurrentYear
+
+### WheelMonthPicker
+![WheelMonthPicker](https://github.com/AigeStudio/WheelPicker/blob/master/Previews/main/WheelMonthPicker.gif)
+### Method
+* All method of WheelPicker
+* set/getSelectedMonth
+* getCurrentMonth
+
+### WheelDayPicker
+![WheelDayPicker](https://github.com/AigeStudio/WheelPicker/blob/master/Previews/main/WheelDayPicker.gif)
+### Method
+* All method of WheelPicker
+* set/getSelectedDay
+* getCurrentDay
+* setYearAndMonth
+* set/getYear
+* set/getMonth
 
 ***
 
