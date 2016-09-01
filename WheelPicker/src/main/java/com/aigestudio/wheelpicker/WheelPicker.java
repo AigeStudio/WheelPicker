@@ -767,7 +767,9 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
 
     @Override
     public void run() {
+        if (null == mData || mData.size() == 0) return;
         if (mScroller.isFinished() && !isForceFinishScroll) {
+            if (mItemHeight == 0) return;
             int position = (-mScrollOffsetY / mItemHeight + mSelectedItemPosition) % mData.size();
             position = position < 0 ? position + mData.size() : position;
             if (isDebug)

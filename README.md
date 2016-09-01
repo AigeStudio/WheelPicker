@@ -17,26 +17,26 @@
 # Include
 ### Compile
 ```Gradle
-compile 'cn.aigestudio.wheelpicker:WheelPicker:1.1.1'
+compile 'cn.aigestudio.wheelpicker:WheelPicker:1.1.2'
 ```
 or
 ```Maven
 <dependency>
   <groupId>cn.aigestudio.wheelpicker</groupId>
   <artifactId>WheelPicker</artifactId>
-  <version>1.1.1</version>
+  <version>1.1.2</version>
   <type>pom</type>
 </dependency>
 ```
 or
 ```Ivy
-<dependency org='cn.aigestudio.wheelpicker' name='WheelPicker' rev='1.1.1'>
+<dependency org='cn.aigestudio.wheelpicker' name='WheelPicker' rev='1.1.2'>
   <artifact name='$AID' ext='pom'></artifact>
 </dependency>
 ```
 
 ### Import aar
-[WheelPicker-1.1.1.aar](https://dl.bintray.com/aigestudio/maven/cn/aigestudio/wheelpicker/WheelPicker/1.1.1/WheelPicker-1.1.1.aar)
+[WheelPicker-1.1.2.aar](https://dl.bintray.com/aigestudio/maven/cn/aigestudio/wheelpicker/WheelPicker/1.1.2/WheelPicker-1.1.2.aar)
 
 ### Import Module
 1.Import moudle WheelPicker in your project.
@@ -102,6 +102,10 @@ compile project(':WheelPicker')
 * 新增年份、月份、日期选择器
 * 新增三级联动的日期选择器
 
+# 1.1.2
+* BugFix:WheelPicker can not get the height in some layout
+* Support Android Nougat
+
 # Function
 * Data display circulation
 * Set visible item count
@@ -155,7 +159,7 @@ compile project(':WheelPicker')
 * setSelectedDay
 * etc...
 
-### WheelYearPicker
+## WheelYearPicker
 ![WheelYearPicker](https://github.com/AigeStudio/WheelPicker/blob/master/Previews/main/WheelYearPicker.gif)
 ### Method
 * All method of WheelPicker
@@ -165,14 +169,14 @@ compile project(':WheelPicker')
 * set/getSelectedYear
 * getCurrentYear
 
-### WheelMonthPicker
+## WheelMonthPicker
 ![WheelMonthPicker](https://github.com/AigeStudio/WheelPicker/blob/master/Previews/main/WheelMonthPicker.gif)
 ### Method
 * All method of WheelPicker
 * set/getSelectedMonth
 * getCurrentMonth
 
-### WheelDayPicker
+## WheelDayPicker
 ![WheelDayPicker](https://github.com/AigeStudio/WheelPicker/blob/master/Previews/main/WheelDayPicker.gif)
 ### Method
 * All method of WheelPicker
@@ -181,6 +185,9 @@ compile project(':WheelPicker')
 * setYearAndMonth
 * set/getYear
 * set/getMonth
+
+## WheelAreaPicker
+中国行政区域划分根据国家统计局最新数据[国家统计局行政区域划分](http://www.stats.gov.cn/tjsj/tjbz/xzqhdm/201504/t20150415_712722.html)
 
 ***
 
