@@ -102,7 +102,7 @@ compile project(':WheelPicker')
 * 新增年份、月份、日期选择器
 * 新增三级联动的日期选择器
 
-# 1.1.2
+### 1.1.2
 * BugFix:WheelPicker can not get the height in some layout
 * Support Android Nougat
 
