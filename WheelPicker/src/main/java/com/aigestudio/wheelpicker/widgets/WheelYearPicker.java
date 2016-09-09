@@ -1,6 +1,7 @@
 package com.aigestudio.wheelpicker.widgets;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 
 import com.aigestudio.wheelpicker.WheelPicker;
@@ -45,7 +46,7 @@ public class WheelYearPicker extends WheelPicker implements IWheelYearPicker {
     }
 
     @Override
-    public void setData(List data) {
+    public void setData(@NonNull List data) {
         throw new UnsupportedOperationException("You can not invoke setData in WheelYearPicker");
     }
 

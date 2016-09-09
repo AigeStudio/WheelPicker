@@ -1,6 +1,7 @@
 package com.aigestudio.wheelpicker.widgets;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 
 import com.aigestudio.wheelpicker.WheelPicker;
@@ -66,7 +67,7 @@ public class WheelDayPicker extends WheelPicker implements IWheelDayPicker {
     }
 
     @Override
-    public void setData(List data) {
+    public void setData(@NonNull List data) {
         throw new UnsupportedOperationException("You can not invoke setData in WheelDayPicker");
     }
 

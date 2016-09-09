@@ -1,6 +1,7 @@
 package com.aigestudio.wheelpicker;
 
 import android.graphics.Typeface;
+import android.support.annotation.NonNull;
 
 import java.util.List;
 
@@ -163,7 +164,7 @@ public interface IWheelPicker {
      *
      * @param data 数据列表
      */
-    void setData(List data);
+    void setData(@NonNull List data);
 
     /**
      * 设置数据项是否有相同的宽度

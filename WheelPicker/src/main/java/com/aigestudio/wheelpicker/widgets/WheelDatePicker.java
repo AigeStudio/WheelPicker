@@ -2,6 +2,7 @@ package com.aigestudio.wheelpicker.widgets;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
@@ -161,7 +162,7 @@ public class WheelDatePicker extends LinearLayout implements WheelPicker.OnItemS
 
     @Deprecated
     @Override
-    public void setData(List data) {
+    public void setData(@NonNull List data) {
         throw new UnsupportedOperationException("You don't need to set data source for" +
                 "WheelDatePicker");
     }
