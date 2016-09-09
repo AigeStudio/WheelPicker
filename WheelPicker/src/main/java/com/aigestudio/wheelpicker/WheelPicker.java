@@ -11,6 +11,8 @@ import android.graphics.Region;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -64,6 +66,7 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
      *
      * @see OnWheelChangeListener,OnItemSelectedListener
      */
+    @Nullable
     private OnItemSelectedListener mOnItemSelectedListener;
     private OnWheelChangeListener mOnWheelChangeListener;
 
@@ -84,6 +87,7 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
      *
      * @see #setMaximumWidthText(String)
      */
+    @Nullable
     private String mMaxWidthText;
 
     /**
@@ -821,7 +825,7 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
     }
 
     @Override
-    public void setOnItemSelectedListener(OnItemSelectedListener listener) {
+    public void setOnItemSelectedListener(@Nullable OnItemSelectedListener listener) {
         mOnItemSelectedListener = listener;
     }
 
@@ -853,9 +857,7 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
     }
 
     @Override
-    public void setData(List data) {
-        if (null == data)
-            throw new NullPointerException("WheelPicker's data can not be null!");
+    public void setData(@NonNull List data) {
         mData = data;
 
         // 重置位置
@@ -894,9 +896,7 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
     }
 
     @Override
-    public void setMaximumWidthText(String text) {
-        if (null == text)
-            throw new NullPointerException("Maximum width text can not be null!");
+    public void setMaximumWidthText(@NonNull String text) {
         mMaxWidthText = text;
         computeTextSize();
         requestLayout();
