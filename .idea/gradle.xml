@@ -13,7 +13,13 @@
             <option value="$PROJECT_DIR$/WheelPicker" />
           </set>
         </option>
-        <option name="resolveModulePerSourceSet" value="false" />
+        <option name="myModules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/Demo" />
+            <option value="$PROJECT_DIR$/WheelPicker" />
+          </set>
+        </option>
       </GradleProjectSettings>
     </option>
   </component>
