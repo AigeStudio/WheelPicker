@@ -33,6 +33,7 @@ public class WheelDatePicker extends LinearLayout implements WheelPicker.OnItemS
     private TextView mTVYear, mTVMonth, mTVDay;
 
     private int mYear, mMonth, mDay;
+    private boolean mAllowClick;
 
     public WheelDatePicker(Context context) {
         this(context, null);
@@ -111,6 +112,11 @@ public class WheelDatePicker extends LinearLayout implements WheelPicker.OnItemS
         mPickerYear.setVisibleItemCount(count);
         mPickerMonth.setVisibleItemCount(count);
         mPickerDay.setVisibleItemCount(count);
+    }
+
+    @Override
+    public void setAllowClick(boolean allowClick) {
+        mAllowClick = allowClick;
     }
 
     @Override

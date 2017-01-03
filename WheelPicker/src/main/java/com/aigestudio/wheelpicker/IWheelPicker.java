@@ -46,6 +46,16 @@ public interface IWheelPicker {
     void setVisibleItemCount(int count);
 
     /**
+     *
+     * <p>
+     * 设置是否可以点击小部件（滑动小于 touchSlop）
+     * 如果是，则使用当前选择的项目触发OnItemSelected事件
+     *
+     * @param allowClick 允许用户单击以选择当前突出显示的项目
+     */
+    void setAllowClick(boolean allowClick);
+
+    /**
      * 滚轮选择器数据项是否为循环状态
      * <p>
      * Whether WheelPicker is cyclic or not
