@@ -710,7 +710,7 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
             case MotionEvent.ACTION_UP:
                 if (null != getParent())
                     getParent().requestDisallowInterceptTouchEvent(false);
-                if (isClick) break;
+                if (isClick && !isForceFinishScroll) break;
                 mTracker.addMovement(event);
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.DONUT)
