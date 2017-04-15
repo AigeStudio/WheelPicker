@@ -58,6 +58,11 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
     private Paint mPaint;
     private Scroller mScroller;
     private VelocityTracker mTracker;
+    /**
+     * Determines whether the current scrolling animation is triggered by touchEvent or setSelectedItemPosition.
+     * User added eventListeners will only be fired after touchEvents.
+     */
+    private boolean isTouchTriggered;
 
     /**
      * 相关监听器
@@ -676,6 +681,7 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                isTouchTriggered = true;
                 if (null != getParent())
                     getParent().requestDisallowInterceptTouchEvent(true);
                 if (null == mTracker)
@@ -775,9 +781,9 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
             if (isDebug)
                 Log.i(TAG, position + ":" + mData.get(position) + ":" + mScrollOffsetY);
             mCurrentItemPosition = position;
-            if (null != mOnItemSelectedListener)
+            if (null != mOnItemSelectedListener && isTouchTriggered)
                 mOnItemSelectedListener.onItemSelected(this, mData.get(position), position);
-            if (null != mOnWheelChangeListener) {
+            if (null != mOnWheelChangeListener && isTouchTriggered) {
                 mOnWheelChangeListener.onWheelSelected(position);
                 mOnWheelChangeListener.onWheelScrollStateChanged(SCROLL_STATE_IDLE);
             }
@@ -832,6 +838,24 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
 
     @Override
     public void setSelectedItemPosition(int position) {
+        setSelectedItemPosition(position, true);
+    }
+
+    public void setSelectedItemPosition(int position, final boolean animated) {
+      isTouchTriggered = false;
+      if (animated && mScroller.isFinished()) { // We go non-animated regardless of "animated" parameter if scroller is in motion
+        int length = getData().size();
+        int itemDifference = position - mCurrentItemPosition;
+        if (itemDifference == 0)
+          return;
+        if (isCyclic && Math.abs(itemDifference) > (length / 2)) { // Find the shortest path if it's cyclic
+          itemDifference += (itemDifference > 0) ? -length : length;
+        }
+        mScroller.startScroll(0, mScroller.getCurrY(), 0, (-itemDifference) * mItemHeight);
+        mHandler.post(this);
+      } else {
+        if (!mScroller.isFinished())
+          mScroller.abortAnimation();
         position = Math.min(position, mData.size() - 1);
         position = Math.max(position, 0);
         mSelectedItemPosition = position;
@@ -840,6 +864,7 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
         computeFlingLimitY();
         requestLayout();
         invalidate();
+      }
     }
 
     @Override
