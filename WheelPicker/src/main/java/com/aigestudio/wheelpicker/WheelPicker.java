@@ -279,6 +279,11 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
      */
     private boolean isForceFinishScroll;
 
+    /**
+     * Font typeface path from assets
+     */
+    private String fontPath;
+
     private boolean isDebug;
 
     public WheelPicker(Context context) {
@@ -315,6 +320,7 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
         hasAtmospheric = a.getBoolean(R.styleable.WheelPicker_wheel_atmospheric, false);
         isCurved = a.getBoolean(R.styleable.WheelPicker_wheel_curved, false);
         mItemAlign = a.getInt(R.styleable.WheelPicker_wheel_item_align, ALIGN_CENTER);
+        fontPath = a.getString(R.styleable.WheelPicker_wheel_font_path);
         a.recycle();
 
         // 可见数据项改变后更新与之相关的参数
@@ -323,6 +329,11 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
 
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG | Paint.LINEAR_TEXT_FLAG);
         mPaint.setTextSize(mItemTextSize);
+
+        if (fontPath != null) {
+            Typeface typeface = Typeface.createFromAsset(context.getAssets(), fontPath);
+            setTypeface(typeface);
+        }
 
         // 更新文本对齐方式
         // Update alignment of text
