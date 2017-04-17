@@ -539,6 +539,14 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
     protected void onDraw(Canvas canvas) {
         if (null != mOnWheelChangeListener)
             mOnWheelChangeListener.onWheelScrolled(mScrollOffsetY);
+
+        // Need to draw curtain or not (under the text)
+        if (hasCurtain) {
+            mPaint.setColor(mCurtainColor);
+            mPaint.setStyle(Paint.Style.FILL);
+            canvas.drawRect(mRectCurrentItem, mPaint);
+        }
+
         int drawnDataStartPos = -mScrollOffsetY / mItemHeight - mHalfDrawnItemCount;
         for (int drawnDataPos = drawnDataStartPos + mSelectedItemPosition,
              drawnOffsetPos = -mHalfDrawnItemCount;
@@ -651,13 +659,7 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
                 canvas.restore();
             }
         }
-        // 是否需要绘制幕布
-        // Need to draw curtain or not
-        if (hasCurtain) {
-            mPaint.setColor(mCurtainColor);
-            mPaint.setStyle(Paint.Style.FILL);
-            canvas.drawRect(mRectCurrentItem, mPaint);
-        }
+
         // 是否需要绘制指示器
         // Need to draw indicator or not
         if (hasIndicator) {
