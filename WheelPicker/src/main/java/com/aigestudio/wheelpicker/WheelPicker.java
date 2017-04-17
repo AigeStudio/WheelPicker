@@ -275,6 +275,11 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
     private boolean isClick;
 
     /**
+     * 是否允许点击触发事件
+     */
+    private boolean mAllowClick;
+
+    /**
      * 是否为强制结束滑动
      */
     private boolean isForceFinishScroll;
@@ -716,7 +721,14 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
             case MotionEvent.ACTION_UP:
                 if (null != getParent())
                     getParent().requestDisallowInterceptTouchEvent(false);
-                if (isClick) break;
+                if (isClick) {
+                    if(mAllowClick) {
+                        if (null != mOnItemSelectedListener) {
+                            int position = (-mScrollOffsetY / mItemHeight + mSelectedItemPosition) % mData.size();
+                            mOnItemSelectedListener.onItemSelected(this, mData.get(position), position);
+                        }
+                    }
+                }
                 mTracker.addMovement(event);
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.DONUT)
@@ -812,6 +824,11 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
         mVisibleItemCount = count;
         updateVisibleItemCount();
         requestLayout();
+    }
+
+    @Override
+    public void setAllowClick(boolean allowClick) {
+        mAllowClick = allowClick;
     }
 
     @Override
