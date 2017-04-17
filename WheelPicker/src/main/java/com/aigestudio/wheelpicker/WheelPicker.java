@@ -539,140 +539,143 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
     protected void onDraw(Canvas canvas) {
         if (null != mOnWheelChangeListener)
             mOnWheelChangeListener.onWheelScrolled(mScrollOffsetY);
-        int drawnDataStartPos = -mScrollOffsetY / mItemHeight - mHalfDrawnItemCount;
-        for (int drawnDataPos = drawnDataStartPos + mSelectedItemPosition,
-             drawnOffsetPos = -mHalfDrawnItemCount;
-             drawnDataPos < drawnDataStartPos + mSelectedItemPosition + mDrawnItemCount;
-             drawnDataPos++, drawnOffsetPos++) {
-            String data = "";
-            if (isCyclic) {
-                int actualPos = drawnDataPos % mData.size();
-                actualPos = actualPos < 0 ? (actualPos + mData.size()) : actualPos;
-                data = String.valueOf(mData.get(actualPos));
-            } else {
-                if (isPosInRang(drawnDataPos))
-                    data = String.valueOf(mData.get(drawnDataPos));
-            }
-            mPaint.setColor(mItemTextColor);
-            mPaint.setStyle(Paint.Style.FILL);
-            int mDrawnItemCenterY = mDrawnCenterY + (drawnOffsetPos * mItemHeight) +
-                    mScrollOffsetY % mItemHeight;
 
-            int distanceToCenter = 0;
-            if (isCurved) {
-                // 计算数据项绘制中心距离滚轮中心的距离比率
-                // Correct ratio of item's drawn center to wheel center
-                float ratio = (mDrawnCenterY - Math.abs(mDrawnCenterY - mDrawnItemCenterY) -
-                        mRectDrawn.top) * 1.0F / (mDrawnCenterY - mRectDrawn.top);
-
-                // 计算单位
-                // Correct unit
-                int unit = 0;
-                if (mDrawnItemCenterY > mDrawnCenterY)
-                    unit = 1;
-                else if (mDrawnItemCenterY < mDrawnCenterY)
-                    unit = -1;
-
-                float degree = (-(1 - ratio) * 90 * unit);
-                if (degree < -90) degree = -90;
-                if (degree > 90) degree = 90;
-                distanceToCenter = computeSpace((int) degree);
-
-                int transX = mWheelCenterX;
-                switch (mItemAlign) {
-                    case ALIGN_LEFT:
-                        transX = mRectDrawn.left;
-                        break;
-                    case ALIGN_RIGHT:
-                        transX = mRectDrawn.right;
-                        break;
+        if (mItemHeight != 0) {
+            int drawnDataStartPos = -mScrollOffsetY / mItemHeight - mHalfDrawnItemCount;
+            for (int drawnDataPos = drawnDataStartPos + mSelectedItemPosition,
+                 drawnOffsetPos = -mHalfDrawnItemCount;
+                 drawnDataPos < drawnDataStartPos + mSelectedItemPosition + mDrawnItemCount;
+                 drawnDataPos++, drawnOffsetPos++) {
+                String data = "";
+                if (isCyclic) {
+                    int actualPos = drawnDataPos % mData.size();
+                    actualPos = actualPos < 0 ? (actualPos + mData.size()) : actualPos;
+                    data = String.valueOf(mData.get(actualPos));
+                } else {
+                    if (isPosInRang(drawnDataPos))
+                        data = String.valueOf(mData.get(drawnDataPos));
                 }
-                int transY = mWheelCenterY - distanceToCenter;
+                mPaint.setColor(mItemTextColor);
+                mPaint.setStyle(Paint.Style.FILL);
+                int mDrawnItemCenterY = mDrawnCenterY + (drawnOffsetPos * mItemHeight) +
+                        mScrollOffsetY % mItemHeight;
 
-                mCamera.save();
-                mCamera.rotateX(degree);
-                mCamera.getMatrix(mMatrixRotate);
-                mCamera.restore();
-                mMatrixRotate.preTranslate(-transX, -transY);
-                mMatrixRotate.postTranslate(transX, transY);
+                int distanceToCenter = 0;
+                if (isCurved) {
+                    // 计算数据项绘制中心距离滚轮中心的距离比率
+                    // Correct ratio of item's drawn center to wheel center
+                    float ratio = (mDrawnCenterY - Math.abs(mDrawnCenterY - mDrawnItemCenterY) -
+                            mRectDrawn.top) * 1.0F / (mDrawnCenterY - mRectDrawn.top);
 
-                mCamera.save();
-                mCamera.translate(0, 0, computeDepth((int) degree));
-                mCamera.getMatrix(mMatrixDepth);
-                mCamera.restore();
-                mMatrixDepth.preTranslate(-transX, -transY);
-                mMatrixDepth.postTranslate(transX, transY);
+                    // 计算单位
+                    // Correct unit
+                    int unit = 0;
+                    if (mDrawnItemCenterY > mDrawnCenterY)
+                        unit = 1;
+                    else if (mDrawnItemCenterY < mDrawnCenterY)
+                        unit = -1;
 
-                mMatrixRotate.postConcat(mMatrixDepth);
+                    float degree = (-(1 - ratio) * 90 * unit);
+                    if (degree < -90) degree = -90;
+                    if (degree > 90) degree = 90;
+                    distanceToCenter = computeSpace((int) degree);
+
+                    int transX = mWheelCenterX;
+                    switch (mItemAlign) {
+                        case ALIGN_LEFT:
+                            transX = mRectDrawn.left;
+                            break;
+                        case ALIGN_RIGHT:
+                            transX = mRectDrawn.right;
+                            break;
+                    }
+                    int transY = mWheelCenterY - distanceToCenter;
+
+                    mCamera.save();
+                    mCamera.rotateX(degree);
+                    mCamera.getMatrix(mMatrixRotate);
+                    mCamera.restore();
+                    mMatrixRotate.preTranslate(-transX, -transY);
+                    mMatrixRotate.postTranslate(transX, transY);
+
+                    mCamera.save();
+                    mCamera.translate(0, 0, computeDepth((int) degree));
+                    mCamera.getMatrix(mMatrixDepth);
+                    mCamera.restore();
+                    mMatrixDepth.preTranslate(-transX, -transY);
+                    mMatrixDepth.postTranslate(transX, transY);
+
+                    mMatrixRotate.postConcat(mMatrixDepth);
+                }
+                if (hasAtmospheric) {
+                    int alpha = (int) ((mDrawnCenterY - Math.abs(mDrawnCenterY - mDrawnItemCenterY)) *
+                            1.0F / mDrawnCenterY * 255);
+                    alpha = alpha < 0 ? 0 : alpha;
+                    mPaint.setAlpha(alpha);
+                }
+                // 根据卷曲与否计算数据项绘制Y方向中心坐标
+                // Correct item's drawn centerY base on curved state
+                int drawnCenterY = isCurved ? mDrawnCenterY - distanceToCenter : mDrawnItemCenterY;
+
+                // 判断是否需要为当前数据项绘制不同颜色
+                // Judges need to draw different color for current item or not
+                if (mSelectedItemTextColor != -1) {
+                    canvas.save();
+                    if (isCurved) canvas.concat(mMatrixRotate);
+                    canvas.clipRect(mRectCurrentItem, Region.Op.DIFFERENCE);
+                    canvas.drawText(data, mDrawnCenterX, drawnCenterY, mPaint);
+                    canvas.restore();
+
+                    mPaint.setColor(mSelectedItemTextColor);
+                    canvas.save();
+                    if (isCurved) canvas.concat(mMatrixRotate);
+                    canvas.clipRect(mRectCurrentItem);
+                    canvas.drawText(data, mDrawnCenterX, drawnCenterY, mPaint);
+                    canvas.restore();
+                } else {
+                    canvas.save();
+                    canvas.clipRect(mRectDrawn);
+                    if (isCurved) canvas.concat(mMatrixRotate);
+                    canvas.drawText(data, mDrawnCenterX, drawnCenterY, mPaint);
+                    canvas.restore();
+                }
+                if (isDebug) {
+                    canvas.save();
+                    canvas.clipRect(mRectDrawn);
+                    mPaint.setColor(0xFFEE3333);
+                    int lineCenterY = mWheelCenterY + (drawnOffsetPos * mItemHeight);
+                    canvas.drawLine(mRectDrawn.left, lineCenterY, mRectDrawn.right, lineCenterY,
+                            mPaint);
+                    mPaint.setColor(0xFF3333EE);
+                    mPaint.setStyle(Paint.Style.STROKE);
+                    int top = lineCenterY - mHalfItemHeight;
+                    canvas.drawRect(mRectDrawn.left, top, mRectDrawn.right, top + mItemHeight, mPaint);
+                    canvas.restore();
+                }
             }
-            if (hasAtmospheric) {
-                int alpha = (int) ((mDrawnCenterY - Math.abs(mDrawnCenterY - mDrawnItemCenterY)) *
-                        1.0F / mDrawnCenterY * 255);
-                alpha = alpha < 0 ? 0 : alpha;
-                mPaint.setAlpha(alpha);
+            // 是否需要绘制幕布
+            // Need to draw curtain or not
+            if (hasCurtain) {
+                mPaint.setColor(mCurtainColor);
+                mPaint.setStyle(Paint.Style.FILL);
+                canvas.drawRect(mRectCurrentItem, mPaint);
             }
-            // 根据卷曲与否计算数据项绘制Y方向中心坐标
-            // Correct item's drawn centerY base on curved state
-            int drawnCenterY = isCurved ? mDrawnCenterY - distanceToCenter : mDrawnItemCenterY;
-
-            // 判断是否需要为当前数据项绘制不同颜色
-            // Judges need to draw different color for current item or not
-            if (mSelectedItemTextColor != -1) {
-                canvas.save();
-                if (isCurved) canvas.concat(mMatrixRotate);
-                canvas.clipRect(mRectCurrentItem, Region.Op.DIFFERENCE);
-                canvas.drawText(data, mDrawnCenterX, drawnCenterY, mPaint);
-                canvas.restore();
-
-                mPaint.setColor(mSelectedItemTextColor);
-                canvas.save();
-                if (isCurved) canvas.concat(mMatrixRotate);
-                canvas.clipRect(mRectCurrentItem);
-                canvas.drawText(data, mDrawnCenterX, drawnCenterY, mPaint);
-                canvas.restore();
-            } else {
-                canvas.save();
-                canvas.clipRect(mRectDrawn);
-                if (isCurved) canvas.concat(mMatrixRotate);
-                canvas.drawText(data, mDrawnCenterX, drawnCenterY, mPaint);
-                canvas.restore();
+            // 是否需要绘制指示器
+            // Need to draw indicator or not
+            if (hasIndicator) {
+                mPaint.setColor(mIndicatorColor);
+                mPaint.setStyle(Paint.Style.FILL);
+                canvas.drawRect(mRectIndicatorHead, mPaint);
+                canvas.drawRect(mRectIndicatorFoot, mPaint);
             }
             if (isDebug) {
-                canvas.save();
-                canvas.clipRect(mRectDrawn);
-                mPaint.setColor(0xFFEE3333);
-                int lineCenterY = mWheelCenterY + (drawnOffsetPos * mItemHeight);
-                canvas.drawLine(mRectDrawn.left, lineCenterY, mRectDrawn.right, lineCenterY,
-                        mPaint);
-                mPaint.setColor(0xFF3333EE);
-                mPaint.setStyle(Paint.Style.STROKE);
-                int top = lineCenterY - mHalfItemHeight;
-                canvas.drawRect(mRectDrawn.left, top, mRectDrawn.right, top + mItemHeight, mPaint);
-                canvas.restore();
+                mPaint.setColor(0x4433EE33);
+                mPaint.setStyle(Paint.Style.FILL);
+                canvas.drawRect(0, 0, getPaddingLeft(), getHeight(), mPaint);
+                canvas.drawRect(0, 0, getWidth(), getPaddingTop(), mPaint);
+                canvas.drawRect(getWidth() - getPaddingRight(), 0, getWidth(), getHeight(), mPaint);
+                canvas.drawRect(0, getHeight() - getPaddingBottom(), getWidth(), getHeight(), mPaint);
             }
-        }
-        // 是否需要绘制幕布
-        // Need to draw curtain or not
-        if (hasCurtain) {
-            mPaint.setColor(mCurtainColor);
-            mPaint.setStyle(Paint.Style.FILL);
-            canvas.drawRect(mRectCurrentItem, mPaint);
-        }
-        // 是否需要绘制指示器
-        // Need to draw indicator or not
-        if (hasIndicator) {
-            mPaint.setColor(mIndicatorColor);
-            mPaint.setStyle(Paint.Style.FILL);
-            canvas.drawRect(mRectIndicatorHead, mPaint);
-            canvas.drawRect(mRectIndicatorFoot, mPaint);
-        }
-        if (isDebug) {
-            mPaint.setColor(0x4433EE33);
-            mPaint.setStyle(Paint.Style.FILL);
-            canvas.drawRect(0, 0, getPaddingLeft(), getHeight(), mPaint);
-            canvas.drawRect(0, 0, getWidth(), getPaddingTop(), mPaint);
-            canvas.drawRect(getWidth() - getPaddingRight(), 0, getWidth(), getHeight(), mPaint);
-            canvas.drawRect(0, getHeight() - getPaddingBottom(), getWidth(), getHeight(), mPaint);
         }
     }
 
