@@ -11,7 +11,11 @@ import android.graphics.Region;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Handler;
+import android.text.Spannable;
+import android.text.TextPaint;
 import android.text.TextUtils;
+import android.text.style.CharacterStyle;
+import android.text.style.MetricAffectingSpan;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -19,7 +23,6 @@ import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.widget.Scroller;
-
 import java.util.Arrays;
 import java.util.List;
 
@@ -87,9 +90,9 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
     /**
      * 最宽的文本
      *
-     * @see #setMaximumWidthText(String)
+     * @see #setMaximumWidthText(CharSequence)
      */
-    private String mMaxWidthText;
+    private CharSequence mMaxWidthText;
 
     /**
      * 滚轮选择器中可见的数据项数量和滚轮选择器将会绘制的数据项数量
@@ -378,22 +381,82 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
 
     private void computeTextSize() {
         mTextMaxWidth = mTextMaxHeight = 0;
+
+        Paint paint = mPaint;
         if (hasSameWidth) {
-            mTextMaxWidth = (int) mPaint.measureText(String.valueOf(mData.get(0)));
+            CharSequence text = getDataAt(0);
+            paint = getMetricPaint(text);
+            mTextMaxWidth = measureText(text, paint);
         } else if (isPosInRang(mTextMaxWidthPosition)) {
-            mTextMaxWidth = (int) mPaint.measureText
-                    (String.valueOf(mData.get(mTextMaxWidthPosition)));
+            CharSequence text = getDataAt(mTextMaxWidthPosition);
+            paint = getMetricPaint(text);
+            mTextMaxWidth = measureText(text, paint);
         } else if (!TextUtils.isEmpty(mMaxWidthText)) {
-            mTextMaxWidth = (int) mPaint.measureText(mMaxWidthText);
+            paint = getMetricPaint(mMaxWidthText);
+            mTextMaxWidth = measureText(mMaxWidthText, paint);
         } else {
             for (Object obj : mData) {
-                String text = String.valueOf(obj);
-                int width = (int) mPaint.measureText(text);
+                CharSequence text = getText(obj);
+                Paint textPaint = getMetricPaint(text);
+                int width = measureText(text, textPaint);
+                if (width > mTextMaxWidth) {
+                    mTextMaxWidth = width;
+                    paint = textPaint;
+                }
                 mTextMaxWidth = Math.max(mTextMaxWidth, width);
             }
         }
-        Paint.FontMetrics metrics = mPaint.getFontMetrics();
+        Paint.FontMetrics metrics = paint.getFontMetrics();
         mTextMaxHeight = (int) (metrics.bottom - metrics.top);
+    }
+
+    private void drawText(Canvas canvas, CharSequence text, int drawnCenterY) {
+        Paint paint = getDrawPaint(text);
+        canvas.drawText(text, 0, text.length(), mDrawnCenterX, drawnCenterY, paint);
+    }
+
+    private Paint getMetricPaint(CharSequence text) {
+        Paint paint = mPaint;
+        if (text instanceof Spannable) {
+            Spannable spannable = (Spannable) text;
+            MetricAffectingSpan[] spans = spannable.getSpans(0, text.length(), MetricAffectingSpan.class);
+            if (spans != null) {
+                TextPaint textPaint = new TextPaint(paint);
+                for (MetricAffectingSpan span : spans) {
+                    span.updateMeasureState(textPaint);
+                }
+                paint = textPaint;
+            }
+        }
+        return paint;
+    }
+
+    private Paint getDrawPaint(CharSequence text) {
+        Paint paint = mPaint;
+        if (text instanceof Spannable) {
+            Spannable spannable = (Spannable) text;
+            CharacterStyle[] spans = spannable.getSpans(0, text.length(), CharacterStyle.class);
+            if (spans != null) {
+                TextPaint textPaint = new TextPaint(paint);
+                for (CharacterStyle span : spans) {
+                    span.updateDrawState(textPaint);
+                }
+                paint = textPaint;
+            }
+        }
+        return paint;
+    }
+
+    private int measureText(CharSequence text, Paint paint) {
+        return (int) paint.measureText(text, 0, text.length());
+    }
+
+    private CharSequence getDataAt(int index) {
+        return getText(mData.get(index));
+    }
+
+    private CharSequence getText(Object obj) {
+        return obj instanceof CharSequence ? (CharSequence)obj : String.valueOf(obj);
     }
 
     private void updateItemTextAlign() {
@@ -544,14 +607,14 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
              drawnOffsetPos = -mHalfDrawnItemCount;
              drawnDataPos < drawnDataStartPos + mSelectedItemPosition + mDrawnItemCount;
              drawnDataPos++, drawnOffsetPos++) {
-            String data = "";
+            CharSequence text = "";
             if (isCyclic) {
                 int actualPos = drawnDataPos % mData.size();
                 actualPos = actualPos < 0 ? (actualPos + mData.size()) : actualPos;
-                data = String.valueOf(mData.get(actualPos));
+                text = getDataAt(actualPos);
             } else {
                 if (isPosInRang(drawnDataPos))
-                    data = String.valueOf(mData.get(drawnDataPos));
+                    text = getDataAt(drawnDataPos);
             }
             mPaint.setColor(mItemTextColor);
             mPaint.setStyle(Paint.Style.FILL);
@@ -621,20 +684,20 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
                 canvas.save();
                 if (isCurved) canvas.concat(mMatrixRotate);
                 canvas.clipRect(mRectCurrentItem, Region.Op.DIFFERENCE);
-                canvas.drawText(data, mDrawnCenterX, drawnCenterY, mPaint);
+                drawText(canvas, text, drawnCenterY);
                 canvas.restore();
 
                 mPaint.setColor(mSelectedItemTextColor);
                 canvas.save();
                 if (isCurved) canvas.concat(mMatrixRotate);
                 canvas.clipRect(mRectCurrentItem);
-                canvas.drawText(data, mDrawnCenterX, drawnCenterY, mPaint);
+                drawText(canvas, text, drawnCenterY);
                 canvas.restore();
             } else {
                 canvas.save();
                 canvas.clipRect(mRectDrawn);
                 if (isCurved) canvas.concat(mMatrixRotate);
-                canvas.drawText(data, mDrawnCenterX, drawnCenterY, mPaint);
+                drawText(canvas, text, drawnCenterY);
                 canvas.restore();
             }
             if (isDebug) {
@@ -925,12 +988,12 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
     }
 
     @Override
-    public String getMaximumWidthText() {
+    public CharSequence getMaximumWidthText() {
         return mMaxWidthText;
     }
 
     @Override
-    public void setMaximumWidthText(String text) {
+    public void setMaximumWidthText(CharSequence text) {
         if (null == text)
             throw new NullPointerException("Maximum width text can not be null!");
         mMaxWidthText = text;

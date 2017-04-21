@@ -196,7 +196,7 @@ public class WheelDatePicker extends LinearLayout implements WheelPicker.OnItemS
 
     @Deprecated
     @Override
-    public void setMaximumWidthText(String text) {
+    public void setMaximumWidthText(CharSequence text) {
         throw new UnsupportedOperationException("You don't need to set maximum width text for" +
                 "WheelDatePicker");
     }
