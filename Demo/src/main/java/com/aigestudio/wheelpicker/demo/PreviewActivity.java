@@ -29,6 +29,7 @@ public class PreviewActivity extends Activity implements WheelPicker.OnItemSelec
         wheelLeft = (WheelPicker) findViewById(R.id.main_wheel_left);
         wheelLeft.setOnItemSelectedListener(this);
         wheelCenter = (WheelPicker) findViewById(R.id.main_wheel_center);
+        wheelCenter.setSelectedItemPosition(2);
         wheelCenter.setOnItemSelectedListener(this);
         wheelRight = (WheelPicker) findViewById(R.id.main_wheel_right);
         wheelRight.setOnItemSelectedListener(this);

@@ -854,7 +854,8 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
 
     public void setSelectedItemPosition(int position, final boolean animated) {
       isTouchTriggered = false;
-      if (animated && mScroller.isFinished()) { // We go non-animated regardless of "animated" parameter if scroller is in motion
+      boolean isComponentDrawn = mItemHeight > 0;
+      if (animated && isComponentDrawn && mScroller.isFinished()) { // We go non-animated regardless of "animated" parameter if scroller is in motion, or component is not drawn yet
         int length = getData().size();
         int itemDifference = position - mCurrentItemPosition;
         if (itemDifference == 0)
