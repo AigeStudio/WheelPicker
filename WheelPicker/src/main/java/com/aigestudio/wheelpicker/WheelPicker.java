@@ -727,7 +727,17 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
             case MotionEvent.ACTION_UP:
                 if (null != getParent())
                     getParent().requestDisallowInterceptTouchEvent(false);
-                if (isClick && !isForceFinishScroll) break;
+                if (isClick && !isForceFinishScroll) {
+                    float offsetPx = event.getY() - mDrawnCenterY;
+                    int offset = (int) (offsetPx / mItemHeight);
+                    if (isDebug) {
+                        Log.i(TAG, "Got click with offset " + offset + ", adding to " + mCurrentItemPosition);
+                    }
+                    if (offset != 0) {
+                        setSelectedItemPosition(mCurrentItemPosition + offset, true);
+                    }
+                    break;
+                }
                 mTracker.addMovement(event);
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.DONUT)
