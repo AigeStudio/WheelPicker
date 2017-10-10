@@ -692,6 +692,7 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                isClick = true;
                 isTouchTriggered = true;
                 if (null != getParent())
                     getParent().requestDisallowInterceptTouchEvent(true);
@@ -727,7 +728,18 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
             case MotionEvent.ACTION_UP:
                 if (null != getParent())
                     getParent().requestDisallowInterceptTouchEvent(false);
-                if (isClick && !isForceFinishScroll) break;
+                if (isClick && !isForceFinishScroll) {
+                    int topOfCurrentItemY = mWheelCenterY - mHalfItemHeight;
+                    float offsetPx = event.getY() - topOfCurrentItemY;
+                    int offset = (int) Math.floor(offsetPx / mItemHeight);
+                    if (isDebug) {
+                        Log.i(TAG, "Got click with dY (" + offsetPx + ") offset " + offset + ", adding to " + mCurrentItemPosition);
+                    }
+                    if (offset != 0) {
+                        setSelectedItemPosition(mCurrentItemPosition + offset, true);
+                    }
+                    break;
+                }
                 mTracker.addMovement(event);
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.DONUT)
