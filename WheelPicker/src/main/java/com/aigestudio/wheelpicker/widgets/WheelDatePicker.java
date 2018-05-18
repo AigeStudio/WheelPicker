@@ -146,6 +146,18 @@ public class WheelDatePicker extends LinearLayout implements WheelPicker.OnItemS
                 "WheelDatePicker");
     }
 
+    public void setmTVYearColor(int mTVYearColor) {
+        this.mTVYear.setTextColor(mTVYearColor);
+    }
+
+    public void setmTVMonthColor(int mTVMonthColor) {
+        this.mTVMonth.setTextColor(mTVMonthColor);
+    }
+
+    public void setmTVDayColor(int mTVDayColor) {
+        this.mTVDay.setTextColor(mTVDayColor);
+    }
+
     @Deprecated
     @Override
     public int getCurrentItemPosition() {

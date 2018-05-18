@@ -157,6 +157,9 @@ compile project(':WheelPicker')
 * setSelectedYear
 * setSelectedMonth
 * setSelectedDay
+* setmTVYearColor
+* setmTVMonthColor
+* setmTVDayColor
 * etc...
 
 ## WheelYearPicker
