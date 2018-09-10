@@ -767,12 +767,15 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
                     mScroller.abortAnimation();
                     isForceFinishScroll = true;
                 }
-                mDownPointY = mLastPointY = (int) event.getY();
+                mDownPointY = mLastPointY = Math.round(event.getY());
                 break;
             case MotionEvent.ACTION_MOVE:
-                if (Math.abs(mDownPointY - event.getY()) < mTouchSlop) {
+                if (mDownPointY == mLastPointY && Math.abs(mDownPointY - event.getY()) < mTouchSlop) {
                     isClick = true;
                     break;
+                }
+                if (isClick) {
+                    mLastPointY = Math.round(event.getY());
                 }
                 isClick = false;
                 mTracker.addMovement(event);
@@ -784,7 +787,7 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
                 float move = event.getY() - mLastPointY;
                 if (Math.abs(move) < 1) break;
                 mScrollOffsetY += move;
-                mLastPointY = (int) event.getY();
+                mLastPointY = Math.round(event.getY());
                 invalidate();
                 break;
             case MotionEvent.ACTION_UP:
