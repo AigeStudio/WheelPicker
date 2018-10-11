@@ -219,7 +219,7 @@ public interface IWheelPicker {
      *
      * @return 最宽的文本
      */
-    String getMaximumWidthText();
+    CharSequence getMaximumWidthText();
 
     /**
      * 设置最宽的文本
@@ -229,7 +229,7 @@ public interface IWheelPicker {
      * @param text 最宽的文本
      * @see #setSameWidth(boolean)
      */
-    void setMaximumWidthText(String text);
+    void setMaximumWidthText(CharSequence text);
 
     /**
      * 获取最宽的文本在数据源中的位置
