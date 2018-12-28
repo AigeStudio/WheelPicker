@@ -1,11 +1,10 @@
 apply plugin: 'com.android.library'
 android {
-    compileSdkVersion 24
-    buildToolsVersion "23.0.3"
+    compileSdkVersion 28
 
     defaultConfig {
-        minSdkVersion 1
-        targetSdkVersion 24
+        minSdkVersion 14
+        targetSdkVersion 28
         versionCode 7
         versionName "1.1.2"
     }
@@ -17,7 +16,4 @@ android {
         }
     }
     sourceSets { main { assets.srcDirs = ['src/main/assets', 'src/main/assets/'] } }
-}
-dependencies {
-    compile 'com.google.code.gson:gson:2.2.4'
 }
