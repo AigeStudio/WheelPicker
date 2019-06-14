@@ -17,26 +17,26 @@
 # Include
 ### Compile
 ```Gradle
-compile 'cn.aigestudio.wheelpicker:WheelPicker:1.1.2'
+compile 'cn.aigestudio.wheelpicker:WheelPicker:1.1.3'
 ```
 or
 ```Maven
 <dependency>
   <groupId>cn.aigestudio.wheelpicker</groupId>
   <artifactId>WheelPicker</artifactId>
-  <version>1.1.2</version>
+  <version>1.1.3</version>
   <type>pom</type>
 </dependency>
 ```
 or
 ```Ivy
-<dependency org='cn.aigestudio.wheelpicker' name='WheelPicker' rev='1.1.2'>
+<dependency org='cn.aigestudio.wheelpicker' name='WheelPicker' rev='1.1.3'>
   <artifact name='$AID' ext='pom'></artifact>
 </dependency>
 ```
 
 ### Import aar
-[WheelPicker-1.1.2.aar](https://dl.bintray.com/aigestudio/maven/cn/aigestudio/wheelpicker/WheelPicker/1.1.2/WheelPicker-1.1.2.aar)
+[WheelPicker-1.1.3.aar](https://dl.bintray.com/aigestudio/maven/cn/aigestudio/wheelpicker/WheelPicker/1.1.3/WheelPicker-1.1.3.aar)
 
 ### Import Module
 1.Import moudle WheelPicker in your project.
@@ -105,6 +105,9 @@ compile project(':WheelPicker')
 ### 1.1.2
 * BugFix:WheelPicker can not get the height in some layout
 * Support Android Nougat
+
+### 1.1.3
+* BugFix:Divide by zero
 
 # Function
 * Data display circulation
