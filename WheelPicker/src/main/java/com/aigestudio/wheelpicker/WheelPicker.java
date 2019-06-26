@@ -54,60 +54,60 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
 
     private static final String TAG = WheelPicker.class.getSimpleName();
 
-    private final Handler mHandler = new Handler();
+    protected final Handler mHandler = new Handler();
 
-    private Paint mPaint;
-    private Scroller mScroller;
-    private VelocityTracker mTracker;
+    protected Paint mPaint;
+    protected Scroller mScroller;
+    protected VelocityTracker mTracker;
     /**
      * Determines whether the current scrolling animation is triggered by touchEvent or setSelectedItemPosition.
      * User added eventListeners will only be fired after touchEvents.
      */
-    private boolean isTouchTriggered;
+    protected boolean isTouchTriggered;
 
     /**
      * 相关监听器
      *
      * @see OnWheelChangeListener,OnItemSelectedListener
      */
-    private OnItemSelectedListener mOnItemSelectedListener;
-    private OnWheelChangeListener mOnWheelChangeListener;
+    protected OnItemSelectedListener mOnItemSelectedListener;
+    protected OnWheelChangeListener mOnWheelChangeListener;
 
-    private Rect mRectDrawn;
-    private Rect mRectIndicatorHead, mRectIndicatorFoot;
-    private Rect mRectCurrentItem;
+    protected Rect mRectDrawn;
+    protected Rect mRectIndicatorHead, mRectIndicatorFoot;
+    protected Rect mRectCurrentItem;
 
-    private Camera mCamera;
-    private Matrix mMatrixRotate, mMatrixDepth;
+    protected Camera mCamera;
+    protected Matrix mMatrixRotate, mMatrixDepth;
 
     /**
      * 数据源
      */
-    private List mData;
+    protected List mData;
 
     /**
      * 最宽的文本
      *
      * @see #setMaximumWidthText(String)
      */
-    private String mMaxWidthText;
+    protected String mMaxWidthText;
 
     /**
      * 滚轮选择器中可见的数据项数量和滚轮选择器将会绘制的数据项数量
      *
      * @see #setVisibleItemCount(int)
      */
-    private int mVisibleItemCount, mDrawnItemCount;
+    protected int mVisibleItemCount, mDrawnItemCount;
 
     /**
      * 滚轮选择器将会绘制的Item数量的一半
      */
-    private int mHalfDrawnItemCount;
+    protected int mHalfDrawnItemCount;
 
     /**
      * 单个文本最大宽高
      */
-    private int mTextMaxWidth, mTextMaxHeight;
+    protected int mTextMaxWidth, mTextMaxHeight;
 
     /**
      * 数据项文本颜色以及被选中的数据项文本颜色
@@ -115,177 +115,177 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
      * @see #setItemTextColor(int)
      * @see #setSelectedItemTextColor(int)
      */
-    private int mItemTextColor, mSelectedItemTextColor;
+    protected int mItemTextColor, mSelectedItemTextColor;
 
     /**
      * 数据项文本尺寸
      *
      * @see #setItemTextSize(int)
      */
-    private int mItemTextSize;
+    protected int mItemTextSize;
 
     /**
      * 指示器尺寸
      *
      * @see #setIndicatorSize(int)
      */
-    private int mIndicatorSize;
+    protected int mIndicatorSize;
 
     /**
      * 指示器颜色
      *
      * @see #setIndicatorColor(int)
      */
-    private int mIndicatorColor;
+    protected int mIndicatorColor;
 
     /**
      * 幕布颜色
      *
      * @see #setCurtainColor(int)
      */
-    private int mCurtainColor;
+    protected int mCurtainColor;
 
     /**
      * 数据项之间间距
      *
      * @see #setItemSpace(int)
      */
-    private int mItemSpace;
+    protected int mItemSpace;
 
     /**
      * 数据项对齐方式
      *
      * @see #setItemAlign(int)
      */
-    private int mItemAlign;
+    protected int mItemAlign;
 
     /**
      * 滚轮选择器单个数据项高度以及单个数据项一半的高度
      */
-    private int mItemHeight, mHalfItemHeight;
+    protected int mItemHeight, mHalfItemHeight;
 
     /**
      * 滚轮选择器内容区域高度的一半
      */
-    private int mHalfWheelHeight;
+    protected int mHalfWheelHeight;
 
     /**
      * 当前被选中的数据项所显示的数据在数据源中的位置
      *
      * @see #setSelectedItemPosition(int)
      */
-    private int mSelectedItemPosition;
+    protected int mSelectedItemPosition;
 
     /**
      * 当前被选中的数据项所显示的数据在数据源中的位置
      *
      * @see #getCurrentItemPosition()
      */
-    private int mCurrentItemPosition;
+    protected int mCurrentItemPosition;
 
     /**
      * 滚轮滑动时可以滑动到的最小/最大的Y坐标
      */
-    private int mMinFlingY, mMaxFlingY;
+    protected int mMinFlingY, mMaxFlingY;
 
     /**
      * 滚轮滑动时的最小/最大速度
      */
-    private int mMinimumVelocity = 50, mMaximumVelocity = 8000;
+    protected int mMinimumVelocity = 50, mMaximumVelocity = 8000;
 
     /**
      * 滚轮选择器中心坐标
      */
-    private int mWheelCenterX, mWheelCenterY;
+    protected int mWheelCenterX, mWheelCenterY;
 
     /**
      * 滚轮选择器绘制中心坐标
      */
-    private int mDrawnCenterX, mDrawnCenterY;
+    protected int mDrawnCenterX, mDrawnCenterY;
 
     /**
      * 滚轮选择器视图区域在Y轴方向上的偏移值
      */
-    private int mScrollOffsetY;
+    protected int mScrollOffsetY;
 
     /**
      * 滚轮选择器中最宽或最高的文本在数据源中的位置
      */
-    private int mTextMaxWidthPosition;
+    protected int mTextMaxWidthPosition;
 
     /**
      * 用户手指上一次触摸事件发生时事件Y坐标
      */
-    private int mLastPointY;
+    protected int mLastPointY;
 
     /**
      * 手指触摸屏幕时事件点的Y坐标
      */
-    private int mDownPointY;
+    protected int mDownPointY;
 
     /**
      * 点击与触摸的切换阀值
      */
-    private int mTouchSlop = 8;
+    protected int mTouchSlop = 8;
 
     /**
      * 滚轮选择器的每一个数据项文本是否拥有相同的宽度
      *
      * @see #setSameWidth(boolean)
      */
-    private boolean hasSameWidth;
+    protected boolean hasSameWidth;
 
     /**
      * 是否显示指示器
      *
      * @see #setIndicator(boolean)
      */
-    private boolean hasIndicator;
+    protected boolean hasIndicator;
 
     /**
      * 是否显示幕布
      *
      * @see #setCurtain(boolean)
      */
-    private boolean hasCurtain;
+    protected boolean hasCurtain;
 
     /**
      * 是否显示空气感效果
      *
      * @see #setAtmospheric(boolean)
      */
-    private boolean hasAtmospheric;
+    protected boolean hasAtmospheric;
 
     /**
      * 数据是否循环展示
      *
      * @see #setCyclic(boolean)
      */
-    private boolean isCyclic;
+    protected boolean isCyclic;
 
     /**
      * 滚轮是否为卷曲效果
      *
      * @see #setCurved(boolean)
      */
-    private boolean isCurved;
+    protected boolean isCurved;
 
     /**
      * 是否为点击模式
      */
-    private boolean isClick;
+    protected boolean isClick;
 
     /**
      * 是否为强制结束滑动
      */
-    private boolean isForceFinishScroll;
+    protected boolean isForceFinishScroll;
 
     /**
      * Font typeface path from assets
      */
-    private String fontPath;
+    protected String fontPath;
 
-    private boolean isDebug;
+    protected boolean isDebug;
 
     public WheelPicker(Context context) {
         this(context, null);
