@@ -25,5 +25,6 @@
             <enum name="right" value="2" />
         </attr>
         <attr name="wheel_font_path" format="string" />
+        <attr name="wheel_font_family" format="reference" />
     </declare-styleable>
 </resources>
