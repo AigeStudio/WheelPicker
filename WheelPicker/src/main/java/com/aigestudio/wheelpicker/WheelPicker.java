@@ -11,6 +11,7 @@ import android.graphics.Region;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Handler;
+import android.support.v4.content.res.ResourcesCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -20,7 +21,6 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.widget.Scroller;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -322,6 +322,7 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
         isCurved = a.getBoolean(R.styleable.WheelPicker_wheel_curved, false);
         mItemAlign = a.getInt(R.styleable.WheelPicker_wheel_item_align, ALIGN_CENTER);
         fontPath = a.getString(R.styleable.WheelPicker_wheel_font_path);
+        int fontFamily = a.getResourceId(R.styleable.WheelPicker_wheel_font_family, 0);
         a.recycle();
 
         // 可见数据项改变后更新与之相关的参数
@@ -334,6 +335,15 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
         if (fontPath != null) {
             Typeface typeface = Typeface.createFromAsset(context.getAssets(), fontPath);
             setTypeface(typeface);
+        }
+
+        if (fontFamily != 0) {
+            try {
+                Typeface typeface = ResourcesCompat.getFont(context, fontFamily);
+                setTypeface(typeface);
+            } catch (Exception e) {
+                Log.e("Error setting typeface", e.getMessage(), e);
+            }
         }
 
         // 更新文本对齐方式
